@@ -61,11 +61,13 @@ export default function Header() {
         <div className="container-xl flex items-center justify-between h-[70px] lg:h-[80px]">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 z-10">
-            <img
-              src="/images/logo.png"
-              alt="Andoh & Dohgad Consulting"
-              className="h-14 lg:h-16 w-auto rounded-xl"
-            />
+            <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-white shadow-lg flex items-center justify-center p-1">
+              <img
+                src="/images/logo.png"
+                alt="Andoh & Dohgad Consulting"
+                className="w-full h-full object-contain rounded-full"
+              />
+            </div>
           </Link>
 
           {/* Desktop Nav */}

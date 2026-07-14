@@ -126,7 +126,7 @@ export default function UsersAdmin() {
 
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8">
+      <div className="p-6 lg:p-8 mt-6">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -159,7 +159,7 @@ export default function UsersAdmin() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {Object.entries(roleLabels).map(([role, config]) => {
-            const count = users.filter(u => u.role === role).length;
+            const count = filteredUsers.filter(u => u.role === role).length;
             return (
               <div key={role} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
                 <div className="flex items-center gap-2 mb-1">

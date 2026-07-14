@@ -114,7 +114,7 @@ export default function BlogAdmin() {
 
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8">
+      <div className="p-6 lg:p-8 mt-6">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>

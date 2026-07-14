@@ -102,7 +102,7 @@ export default function AppointmentsAdmin() {
 
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8">
+      <div className="p-6 lg:p-8 mt-6">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-dark mb-2">Gestion des Rendez-vous</h1>

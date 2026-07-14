@@ -33,11 +33,13 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-4">
-              <img
-                src="/images/logo.png"
-                alt="Andoh & Dohgad Consulting"
-                className="h-16 lg:h-20 w-auto rounded-xl"
-              />
+              <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-white shadow-lg flex items-center justify-center p-1">
+                <img
+                  src="/images/logo.png"
+                  alt="Andoh & Dohgad Consulting"
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
             </Link>
             <p className="text-white/70 text-sm italic mb-6 font-display">
               &ldquo;{t("footer.tagline")}&rdquo;

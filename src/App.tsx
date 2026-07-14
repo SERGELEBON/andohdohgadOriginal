@@ -26,6 +26,8 @@ import UsersAdmin from "@/pages/admin/UsersAdmin";
 import AppointmentsAdmin from "@/pages/admin/AppointmentsAdmin";
 import MessagesAdmin from "@/pages/admin/MessagesAdmin";
 import Settings from "@/pages/admin/Settings";
+import CoworkingAdmin from "@/pages/admin/CoworkingAdmin";
+import DocumentationAdmin from "@/pages/admin/DocumentationAdmin";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -39,85 +41,98 @@ function App() {
   return (
     <AuthProvider>
       <ScrollToTop />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/a-propos" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
-          <Route path="/solutions" element={<SolutionsPage />} />
-          <Route path="/documentation" element={<Documentation />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/rendez-vous" element={<Appointment />} />
-          <Route path="/co-working" element={<Coworking />} />
-          <Route path="/sondages" element={<Surveys />} />
-          <Route path="/contact" element={<Contact />} />
+      <Routes>
+        {/* Public routes with Layout (Header + Footer) */}
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/a-propos" element={<Layout><About /></Layout>} />
+        <Route path="/services" element={<Layout><Services /></Layout>} />
+        <Route path="/services/:slug" element={<Layout><ServiceDetail /></Layout>} />
+        <Route path="/solutions" element={<Layout><SolutionsPage /></Layout>} />
+        <Route path="/documentation" element={<Layout><Documentation /></Layout>} />
+        <Route path="/blog" element={<Layout><Blog /></Layout>} />
+        <Route path="/blog/:slug" element={<Layout><BlogPost /></Layout>} />
+        <Route path="/rendez-vous" element={<Layout><Appointment /></Layout>} />
+        <Route path="/co-working" element={<Layout><Coworking /></Layout>} />
+        <Route path="/sondages" element={<Layout><Surveys /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
 
-          {/* Auth routes */}
-          <Route path="/connexion" element={<Login />} />
-          <Route path="/inscription" element={<Signup />} />
-          <Route path="/super-admin" element={<SuperAdminLogin />} />
+        {/* Auth routes without Layout */}
+        <Route path="/connexion" element={<Login />} />
+        <Route path="/inscription" element={<Signup />} />
+        <Route path="/super-admin" element={<SuperAdminLogin />} />
 
-          {/* Protected routes */}
-          <Route path="/mon-compte" element={
+        {/* Protected routes with Layout */}
+        <Route path="/mon-compte" element={
+          <Layout>
             <ProtectedRoute>
               <MyAccount />
             </ProtectedRoute>
-          } />
+          </Layout>
+        } />
 
-          {/* Admin routes */}
-          <Route path="/admin" element={
-            <ProtectedRoute allowedRoles="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          } />
+        {/* Admin routes WITHOUT Layout (AdminLayout handles everything) */}
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/blog" element={
-            <ProtectedRoute allowedRoles="admin">
-              <BlogAdmin />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/blog" element={
+          <ProtectedRoute allowedRoles="admin">
+            <BlogAdmin />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/blog/new" element={
-            <ProtectedRoute allowedRoles="admin">
-              <BlogEditor />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/blog/new" element={
+          <ProtectedRoute allowedRoles="admin">
+            <BlogEditor />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/blog/edit/:id" element={
-            <ProtectedRoute allowedRoles="admin">
-              <BlogEditor />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/blog/edit/:id" element={
+          <ProtectedRoute allowedRoles="admin">
+            <BlogEditor />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/users" element={
-            <ProtectedRoute allowedRoles="admin">
-              <UsersAdmin />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/users" element={
+          <ProtectedRoute allowedRoles="admin">
+            <UsersAdmin />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/appointments" element={
-            <ProtectedRoute allowedRoles="admin">
-              <AppointmentsAdmin />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/appointments" element={
+          <ProtectedRoute allowedRoles="admin">
+            <AppointmentsAdmin />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/messages" element={
-            <ProtectedRoute allowedRoles="admin">
-              <MessagesAdmin />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/messages" element={
+          <ProtectedRoute allowedRoles="admin">
+            <MessagesAdmin />
+          </ProtectedRoute>
+        } />
 
-          <Route path="/admin/settings" element={
-            <ProtectedRoute allowedRoles="admin">
-              <Settings />
-            </ProtectedRoute>
-          } />
+        <Route path="/admin/settings" element={
+          <ProtectedRoute allowedRoles="admin">
+            <Settings />
+          </ProtectedRoute>
+        } />
 
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </Layout>
+        <Route path="/admin/coworking" element={
+          <ProtectedRoute allowedRoles="admin">
+            <CoworkingAdmin />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/admin/docs" element={
+          <ProtectedRoute allowedRoles="admin">
+            <DocumentationAdmin />
+          </ProtectedRoute>
+        } />
+
+        <Route path="*" element={<Layout><Home /></Layout>} />
+      </Routes>
     </AuthProvider>
   );
 }

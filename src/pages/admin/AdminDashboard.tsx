@@ -142,7 +142,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         {/* Header with gradient */}
-        <div className="bg-gradient-to-r from-primary via-purple-700 to-primary py-8 px-6 lg:px-8 mb-8">
+        <div className="bg-gradient-to-r from-primary via-purple-700 to-primary py-8 px-6 lg:px-8 mb-8 mt-6">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -172,6 +172,7 @@ export default function AdminDashboard() {
               subValue={`+${stats.newUsersThisMonth} ce mois`}
               color="blue"
               trend="up"
+              href="/admin/users"
             />
             <StatCard
               icon={<DollarSign className="w-6 h-6" />}
@@ -180,6 +181,7 @@ export default function AdminDashboard() {
               subValue={`${Number(revenueGrowth) >= 0 ? '+' : ''}${revenueGrowth}% vs mois dernier`}
               color="emerald"
               trend={Number(revenueGrowth) >= 0 ? 'up' : 'down'}
+              href="/admin/docs"
             />
             <StatCard
               icon={<Calendar className="w-6 h-6" />}
@@ -188,6 +190,7 @@ export default function AdminDashboard() {
               subValue="À traiter"
               color="amber"
               badge={stats.pendingAppointments > 0}
+              href="/admin/appointments"
             />
             <StatCard
               icon={<MessageSquare className="w-6 h-6" />}
@@ -196,6 +199,7 @@ export default function AdminDashboard() {
               subValue="Nécessite attention"
               color="purple"
               badge={stats.newMessages > 0}
+              href="/admin/messages"
             />
           </div>
 
@@ -242,162 +246,61 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Activity - Takes 2 columns */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-dark flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-primary" />
-                    Activité Récente
-                  </h2>
-                  <button className="text-sm text-primary hover:text-primary/80 font-medium">Tout voir</button>
-                </div>
-                <div className="divide-y divide-gray-100">
-                  {recentActivity.length > 0 ? (
-                    recentActivity.map((activity) => (
-                      <div key={activity.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
-                        <div className="flex items-start gap-4">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                            activity.type === 'appointment' ? 'bg-amber-100 text-amber-600' :
-                            activity.type === 'message' ? 'bg-blue-100 text-blue-600' :
-                            activity.type === 'survey' ? 'bg-purple-100 text-purple-600' :
-                            'bg-emerald-100 text-emerald-600'
-                          }`}>
-                            {activity.type === 'appointment' ? <Calendar className="w-5 h-5" /> :
-                             activity.type === 'message' ? <MessageSquare className="w-5 h-5" /> :
-                             activity.type === 'survey' ? <FileText className="w-5 h-5" /> :
-                             <DollarSign className="w-5 h-5" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-dark mb-1">{activity.title}</p>
-                            <p className="text-sm text-gray-600 truncate">{activity.description}</p>
-                            <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {activity.time}
-                            </p>
-                          </div>
-                          <div>
-                            {activity.status === 'pending' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-                                <AlertCircle className="w-3 h-3" />
-                                En attente
-                              </span>
-                            )}
-                            {activity.status === 'new' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                                Nouveau
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="px-6 py-12 text-center text-gray-500">
-                      <Activity className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                      <p>Aucune activité récente</p>
-                    </div>
-                  )}
-                </div>
-              </div>
+          {/* Recent Activity - Full Width */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-dark flex items-center gap-2">
+                <Activity className="w-5 h-5 text-primary" />
+                Activité Récente
+              </h2>
+              <button className="text-sm text-primary hover:text-primary/80 font-medium">Tout voir</button>
             </div>
-
-            {/* Quick Actions - Takes 1 column */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 className="text-lg font-bold text-dark mb-4 flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-primary" />
-                  Actions Rapides
-                </h2>
-                <div className="space-y-3">
-                  <Link to="/admin/users" className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                        <Users className="w-5 h-5 text-blue-600" />
+            <div className="divide-y divide-gray-100">
+              {recentActivity.length > 0 ? (
+                recentActivity.map((activity) => (
+                  <div key={activity.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        activity.type === 'appointment' ? 'bg-amber-100 text-amber-600' :
+                        activity.type === 'message' ? 'bg-blue-100 text-blue-600' :
+                        activity.type === 'survey' ? 'bg-purple-100 text-purple-600' :
+                        'bg-emerald-100 text-emerald-600'
+                      }`}>
+                        {activity.type === 'appointment' ? <Calendar className="w-5 h-5" /> :
+                         activity.type === 'message' ? <MessageSquare className="w-5 h-5" /> :
+                         activity.type === 'survey' ? <FileText className="w-5 h-5" /> :
+                         <DollarSign className="w-5 h-5" />}
                       </div>
-                      <span className="font-medium text-dark">Gérer utilisateurs</span>
-                    </div>
-                    <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
-                  </Link>
-
-                  <Link to="/admin/blog" className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                        <FileEdit className="w-5 h-5 text-purple-600" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-dark mb-1">{activity.title}</p>
+                        <p className="text-sm text-gray-600 truncate">{activity.description}</p>
+                        <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {activity.time}
+                        </p>
                       </div>
-                      <span className="font-medium text-dark">Gérer le blog</span>
-                    </div>
-                    <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
-                  </Link>
-
-                  <Link to="/admin/services" className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
-                        <Settings className="w-5 h-5 text-emerald-600" />
+                      <div>
+                        {activity.status === 'pending' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                            <AlertCircle className="w-3 h-3" />
+                            En attente
+                          </span>
+                        )}
+                        {activity.status === 'new' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                            Nouveau
+                          </span>
+                        )}
                       </div>
-                      <span className="font-medium text-dark">Gérer services</span>
                     </div>
-                    <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" />
-                  </Link>
-
-                  <Link to="/admin/appointments" className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center group-hover:bg-amber-200 transition-colors">
-                        <Calendar className="w-5 h-5 text-amber-600" />
-                      </div>
-                      <span className="font-medium text-dark">Rendez-vous</span>
-                    </div>
-                    {stats.pendingAppointments > 0 && (
-                      <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">{stats.pendingAppointments}</span>
-                    )}
-                  </Link>
-
-                  <Link to="/admin/messages" className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                        <MessageSquare className="w-5 h-5 text-blue-600" />
-                      </div>
-                      <span className="font-medium text-dark">Messages</span>
-                    </div>
-                    {stats.newMessages > 0 && (
-                      <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">{stats.newMessages}</span>
-                    )}
-                  </Link>
-                </div>
-              </div>
-
-              {/* System Status */}
-              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border border-emerald-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-                  <h3 className="font-bold text-dark">Système Opérationnel</h3>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Base de données</span>
-                    <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                      <CheckCircle className="w-4 h-4" />
-                      OK
-                    </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">API Supabase</span>
-                    <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                      <CheckCircle className="w-4 h-4" />
-                      OK
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Emails</span>
-                    <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                      <CheckCircle className="w-4 h-4" />
-                      OK
-                    </span>
-                  </div>
+                ))
+              ) : (
+                <div className="px-6 py-12 text-center text-gray-500">
+                  <Activity className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <p>Aucune activité récente</p>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -414,9 +317,10 @@ interface StatCardProps {
   color: string;
   trend?: 'up' | 'down';
   badge?: boolean;
+  href?: string;
 }
 
-function StatCard({ icon, label, value, subValue, color, trend, badge }: StatCardProps) {
+function StatCard({ icon, label, value, subValue, color, trend, badge, href }: StatCardProps) {
   const colorClasses = {
     blue: 'bg-blue-100 text-blue-600',
     amber: 'bg-amber-100 text-amber-600',
@@ -426,8 +330,8 @@ function StatCard({ icon, label, value, subValue, color, trend, badge }: StatCar
     cyan: 'bg-cyan-100 text-cyan-600',
   };
 
-  return (
-    <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all relative overflow-hidden group">
+  const content = (
+    <>
       {badge && (
         <div className="absolute top-3 right-3">
           <span className="flex h-3 w-3">
@@ -449,6 +353,20 @@ function StatCard({ icon, label, value, subValue, color, trend, badge }: StatCar
       <h3 className="text-gray-600 text-sm font-medium mb-1">{label}</h3>
       <p className="text-3xl font-bold text-dark mb-1">{value}</p>
       {subValue && <p className="text-xs text-gray-500">{subValue}</p>}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link to={href} className="block bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all relative overflow-hidden group cursor-pointer">
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all relative overflow-hidden group">
+      {content}
     </div>
   );
 }
