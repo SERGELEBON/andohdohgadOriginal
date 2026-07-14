@@ -79,8 +79,8 @@ export default function AdminDashboard() {
         supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3)
       ]);
 
-      const revenue = purchases?.reduce((sum, p) => sum + parseFloat(p.amount_paid), 0) || 0;
-      const lastRevenue = lastMonthPurchases?.reduce((sum, p) => sum + parseFloat(p.amount_paid), 0) || 0;
+      const revenue = purchases?.reduce((sum: number, p: any) => sum + parseFloat(p.amount_paid), 0) || 0;
+      const lastRevenue = lastMonthPurchases?.reduce((sum: number, p: any) => sum + parseFloat(p.amount_paid), 0) || 0;
 
       setStats({
         totalUsers: usersCount || 0,
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
 
       // Combine recent activity
       const activities: RecentActivity[] = [
-        ...((recentAppointments || []).map(a => ({
+        ...((recentAppointments || []).map((a: any) => ({
           id: a.id,
           type: 'appointment' as const,
           title: `Nouveau RDV - ${a.first_name} ${a.last_name}`,
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
           time: new Date(a.created_at).toLocaleString('fr-FR'),
           status: a.status
         }))),
-        ...((recentMessages || []).map(m => ({
+        ...((recentMessages || []).map((m: any) => ({
           id: m.id,
           type: 'message' as const,
           title: `Message de ${m.name}`,
