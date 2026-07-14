@@ -13,6 +13,7 @@ const signupSchema = z.object({
   phone: z.string().min(8, 'Minimum 8 caractères'),
   password: z.string().min(6, 'Minimum 6 caractères'),
   confirmPassword: z.string(),
+  accountType: z.enum(['standard_client', 'coworking_client']),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
@@ -43,6 +44,7 @@ export default function SignupForm() {
         first_name: data.firstName,
         last_name: data.lastName,
         phone: data.phone,
+        role: data.accountType, // Pass the selected role
       });
       setSuccess(true);
       setTimeout(() => navigate('/connexion'), 3000);
@@ -194,6 +196,24 @@ export default function SignupForm() {
               />
             </div>
             {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-dark mb-1.5">Type de compte *</label>
+            <select
+              {...register('accountType')}
+              className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${
+                errors.accountType ? 'border-red-500' : 'border-gray-200'
+              }`}
+            >
+              <option value="">-- Sélectionnez --</option>
+              <option value="standard_client">Client Standard</option>
+              <option value="coworking_client">Client Co-working</option>
+            </select>
+            {errors.accountType && <p className="text-red-500 text-xs mt-1">{errors.accountType.message}</p>}
+            <p className="text-xs text-gray-500 mt-1">
+              Choisissez "Client Co-working" si vous souhaitez accéder aux espaces de co-working
+            </p>
           </div>
 
           <button
