@@ -321,7 +321,7 @@ export default function BlogEditor() {
                   <input
                     type="text"
                     value={form.tags_fr.join(', ')}
-                    onChange={(e) => setForm({ ...form, tags_fr: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                    onChange={(e) => setForm({ ...form, tags_fr: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     placeholder="fiscalité, PME, Côte d'Ivoire"
                   />
@@ -358,7 +358,7 @@ export default function BlogEditor() {
                 <input
                   type="text"
                   value={form.tags_en.join(', ')}
-                  onChange={(e) => setForm({ ...form, tags_en: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                  onChange={(e) => setForm({ ...form, tags_en: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Tags (comma separated)"
                 />
@@ -394,7 +394,7 @@ export default function BlogEditor() {
                 <input
                   type="text"
                   value={form.tags_es.join(', ')}
-                  onChange={(e) => setForm({ ...form, tags_es: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                  onChange={(e) => setForm({ ...form, tags_es: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Etiquetas (separadas por comas)"
                 />

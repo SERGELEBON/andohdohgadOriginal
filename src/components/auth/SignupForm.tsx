@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, User, Phone, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, Phone, AlertCircle } from 'lucide-react';
 
 const signupSchema = z.object({
   firstName: z.string().min(2, 'Minimum 2 caractères'),

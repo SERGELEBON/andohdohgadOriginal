@@ -59,7 +59,7 @@ export default function Blog() {
       if (error) throw error;
 
       // Map data to flatten structure
-      const mappedArticles = (data || []).map(post => ({
+      const mappedArticles = (data || []).map((post: any) => ({
         id: post.id,
         slug: post.slug,
         category: post.category,

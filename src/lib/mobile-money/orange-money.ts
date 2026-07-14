@@ -21,7 +21,7 @@ export interface OrangeMoneyPaymentResponse {
 }
 
 const ORANGE_MONEY_API_URL = import.meta.env.ORANGE_MONEY_API_URL;
-const ORANGE_MONEY_MERCHANT_KEY = import.meta.env.ORANGE_MONEY_MERCHANT_KEY;
+// const ORANGE_MONEY_MERCHANT_KEY = import.meta.env.ORANGE_MONEY_MERCHANT_KEY;
 const ORANGE_MONEY_API_KEY = import.meta.env.ORANGE_MONEY_API_KEY;
 
 export const initiateOrangeMoneyPayment = async (

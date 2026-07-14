@@ -99,7 +99,7 @@ export default function CoworkingAdmin() {
     pending: subscriptions.filter(s => s.status === 'pending').length,
     revenue: subscriptions
       .filter(s => s.status === 'active')
-      .reduce((sum, s) => sum + parseFloat(s.price_paid || '0'), 0),
+      .reduce((sum, s) => sum + parseFloat(String(s.price_paid || '0')), 0),
   };
 
   if (loading) {
@@ -248,7 +248,7 @@ export default function CoworkingAdmin() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-medium text-dark">
-                          {parseFloat(sub.price_paid || '0').toLocaleString()} F
+                          {parseFloat(String(sub.price_paid || '0')).toLocaleString()} F
                         </div>
                         <div className="text-xs text-gray-500">{sub.payment_method}</div>
                       </td>

@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase/client';
 import AdminLayout from '@/components/layout/AdminLayout';
 import {
   Users, Calendar, FileText, MessageSquare, DollarSign, TrendingUp,
-  ArrowUpRight, ArrowDownRight, Clock, CheckCircle, AlertCircle,
-  FileEdit, Settings, BarChart3, Activity, Zap
+  ArrowUpRight, ArrowDownRight, Clock, AlertCircle,
+  Settings, Activity, Zap
 } from 'lucide-react';
 
 interface Stats {

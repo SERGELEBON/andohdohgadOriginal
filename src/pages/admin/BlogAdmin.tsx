@@ -41,7 +41,7 @@ export default function BlogAdmin() {
       if (error) throw error;
 
       // Map the data to flatten the structure
-      const postsWithTitles = (data || []).map(post => ({
+      const postsWithTitles = (data || []).map((post: any) => ({
         ...post,
         title_fr: post.translations_fr?.[0]?.title || 'Sans titre',
       }));
@@ -98,7 +98,7 @@ export default function BlogAdmin() {
   };
 
   const filteredPosts = posts.filter(post =>
-    post.title_fr.toLowerCase().includes(search.toLowerCase()) ||
+    (post.title_fr || '').toLowerCase().includes(search.toLowerCase()) ||
     post.slug.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -167,7 +167,7 @@ export default function BlogAdmin() {
                 filteredPosts.map((post) => (
                   <tr key={post.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-dark">{post.title_fr}</div>
+                      <div className="font-medium text-dark">{post.title_fr || 'Sans titre'}</div>
                       <div className="text-sm text-gray-500">{post.slug}</div>
                     </td>
                     <td className="px-6 py-4">
