@@ -1,0 +1,211 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              🏢 ANDOH & DOHGAD CONSULTING - PROJET WEB                    ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  ⚠️  ATTENTION - LISEZ CECI EN PREMIER                                    │
+└───────────────────────────────────────────────────────────────────────────┘
+
+🔴 PROBLÈME ACTUEL :
+   Le projet ne fonctionne PAS car le dossier /src/ a été supprimé.
+
+✅ SOLUTION :
+   Exécutez 2 commandes pour tout réparer automatiquement :
+
+   1️⃣  chmod +x REPARER_PROJET.sh
+   2️⃣  ./REPARER_PROJET.sh
+
+   ⏱️  Durée : 3-5 minutes
+   ✨  Résultat : Projet 100% fonctionnel
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  📚 DOCUMENTATION DISPONIBLE                                              │
+└───────────────────────────────────────────────────────────────────────────┘
+
+📄 README.md
+   → Vue d'ensemble du projet + installation complète
+
+⚡ SOLUTION_RAPIDE.md
+   → Guide de réparation en 5 minutes (RECOMMANDÉ)
+
+🔍 DIAGNOSTIC_COMPLET.md
+   → Analyse détaillée du problème + solutions
+
+💻 COMMANDES_ESSENTIELLES.md
+   → Toutes les commandes utiles (aide-mémoire)
+
+📊 COMPARATIF_AVANT_APRES.md
+   → Structure du projet avant/après réparation
+
+📚 INDEX_DOCUMENTATION.md
+   → Index complet de toute la documentation
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  🚀 DÉMARRAGE RAPIDE (après réparation)                                  │
+└───────────────────────────────────────────────────────────────────────────┘
+
+1. Installer les dépendances :
+   npm install
+
+2. Configurer .env.local :
+   nano .env.local
+   (Ajoutez vos clés API Supabase, Stripe, EmailJS)
+
+3. Démarrer le serveur :
+   npm run dev
+
+4. Accéder au site :
+   http://localhost:3000
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  ✨ CE QUE CONTIENT LE PROJET                                            │
+└───────────────────────────────────────────────────────────────────────────┘
+
+✅ Site public avec 14 pages (React 19 + TypeScript + Vite)
+✅ Dashboard admin complet (authentification Supabase)
+✅ Multilingue : Français, Anglais, Espagnol
+✅ Animations GSAP + design Tailwind CSS
+✅ Backend Supabase : 13 tables PostgreSQL
+✅ Paiements : Stripe + Orange Money + MTN Mobile Money
+✅ Formulaires : Contact, Rendez-vous, Co-working
+✅ CMS : Gestion services, blog, documentation
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  ⚙️  TECHNOLOGIES UTILISÉES                                              │
+└───────────────────────────────────────────────────────────────────────────┘
+
+Frontend
+├─ React 19.2
+├─ TypeScript 5.9
+├─ Vite 7.2
+├─ Tailwind CSS + shadcn/ui
+├─ GSAP (animations)
+└─ i18next (traductions)
+
+Backend
+├─ Supabase (PostgreSQL + Auth + Storage)
+├─ Stripe (paiements)
+├─ EmailJS (emails)
+└─ Mobile Money (Orange + MTN)
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  🎯 PARCOURS RECOMMANDÉ                                                   │
+└───────────────────────────────────────────────────────────────────────────┘
+
+Vous découvrez le projet ?
+
+   1️⃣  Lire ce fichier (vous y êtes ✅)
+   2️⃣  Exécuter ./REPARER_PROJET.sh
+   3️⃣  Lire SOLUTION_RAPIDE.md
+   4️⃣  Lire README.md
+   5️⃣  Commencer à développer !
+
+Vous voulez comprendre en profondeur ?
+
+   1️⃣  DIAGNOSTIC_COMPLET.md
+   2️⃣  COMPARATIF_AVANT_APRES.md
+   3️⃣  CLAUDE.md
+   4️⃣  new_andoh-dohgad/BACKEND_README.md
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  📊 STATISTIQUES DU PROJET                                               │
+└───────────────────────────────────────────────────────────────────────────┘
+
+📦 Dépendances npm      : 70+
+📝 Lignes de code       : 15,000+
+🧩 Composants React     : 80+
+📄 Pages                : 24 (14 publiques + 10 admin)
+🗄️  Tables Supabase     : 13
+🌍 Langues supportées   : 3 (FR, EN, ES)
+🎨 Composants UI        : 50+ (shadcn/ui)
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  🐛 PROBLÈMES COURANTS                                                    │
+└───────────────────────────────────────────────────────────────────────────┘
+
+❌ "npm run dev" ne fonctionne pas
+   → Exécuter ./REPARER_PROJET.sh
+
+❌ "Cannot find module @/..."
+   → Le dossier src/ est manquant → ./REPARER_PROJET.sh
+
+❌ "UNMET DEPENDENCY"
+   → npm install (après réparation)
+
+❌ Port 3000 déjà utilisé
+   → lsof -ti:3000 | xargs kill -9
+
+📖 Voir COMMANDES_ESSENTIELLES.md pour plus de solutions
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  ✅ CHECKLIST DE VALIDATION                                              │
+└───────────────────────────────────────────────────────────────────────────┘
+
+Après réparation, vérifiez :
+
+[ ] src/ existe et contient App.tsx, main.tsx
+[ ] .env.local existe avec les clés API
+[ ] npm install réussit
+[ ] npm run dev démarre le serveur
+[ ] http://localhost:3000 affiche le site
+[ ] Les pages publiques sont accessibles
+[ ] Le changement de langue fonctionne
+[ ] /login affiche le formulaire
+[ ] Dashboard admin accessible après login
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  📞 CONTACT & SUPPORT                                                     │
+└───────────────────────────────────────────────────────────────────────────┘
+
+Email    : andoh.dohgad@gmail.com
+Docs     : Voir fichiers .md dans ce dossier
+Support  : Consulter INDEX_DOCUMENTATION.md
+
+
+┌───────────────────────────────────────────────────────────────────────────┐
+│  🚀 COMMANDES ESSENTIELLES                                               │
+└───────────────────────────────────────────────────────────────────────────┘
+
+Réparation (À FAIRE EN PREMIER)
+   chmod +x REPARER_PROJET.sh && ./REPARER_PROJET.sh
+
+Installation
+   npm install
+
+Développement
+   npm run dev              # Démarre sur http://localhost:3000
+
+Build
+   npm run build            # Build de production
+   npm run preview          # Preview du build
+
+Lint
+   npm run lint             # Vérifier le code
+
+Git
+   git status               # Voir les changements
+   git add .                # Ajouter tous les fichiers
+   git commit -m "message"  # Créer un commit
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+                    🎉 PRÊT À COMMENCER ! 🎉
+
+           Exécutez : ./REPARER_PROJET.sh
+
+═══════════════════════════════════════════════════════════════════════════
+
+Made with ❤️ by Andoh & Dohgad Consulting
+Version 2.0 - 14 juillet 2026
