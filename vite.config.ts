@@ -14,4 +14,18 @@ export default defineConfig({
       '@': path.resolve(process.cwd(), 'src'),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          'form-vendor': ['react-hook-form', 'zod', '@hookform/resolvers'],
+          'supabase': ['@supabase/supabase-js'],
+          'animations': ['gsap', 'framer-motion'],
+        },
+      },
+    },
+  },
 });
