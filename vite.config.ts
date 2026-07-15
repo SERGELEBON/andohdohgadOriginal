@@ -1,12 +1,32 @@
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { fileURLToPath, URL } from 'url'
+import fs from 'fs'
+
+// Custom plugin to resolve .ts files explicitly
+function resolveExtensions(): Plugin {
+  return {
+    name: 'resolve-ts-extensions',
+    resolveId(source, importer) {
+      if (source.includes('@/lib/supabase/client') || source.includes('@/lib/stripe/client')) {
+        const basePath = fileURLToPath(new URL('.', import.meta.url));
+        const filePath = source.replace('@/', basePath + 'src/');
+
+        // Try with .ts extension
+        if (fs.existsSync(filePath + '.ts')) {
+          return filePath + '.ts';
+        }
+      }
+      return null;
+    },
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [react()],
+  plugins: [react(), resolveExtensions()],
   server: {
     port: 3000,
   },
