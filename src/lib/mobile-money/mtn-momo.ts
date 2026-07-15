@@ -24,10 +24,10 @@ export interface MTNMomoPaymentResponse {
   reason?: string;
 }
 
-const MTN_MOMO_API_URL = import.meta.env.MTN_MOMO_API_URL;
-const MTN_MOMO_SUBSCRIPTION_KEY = import.meta.env.MTN_MOMO_SUBSCRIPTION_KEY;
-const MTN_MOMO_API_USER = import.meta.env.MTN_MOMO_API_USER;
-const MTN_MOMO_API_KEY = import.meta.env.MTN_MOMO_API_KEY;
+const MTN_MOMO_API_URL = import.meta.env.MTN_MOMO_API_URL || '';
+const MTN_MOMO_SUBSCRIPTION_KEY = import.meta.env.MTN_MOMO_SUBSCRIPTION_KEY || '';
+const MTN_MOMO_API_USER = import.meta.env.MTN_MOMO_API_USER || '';
+const MTN_MOMO_API_KEY = import.meta.env.MTN_MOMO_API_KEY || '';
 
 /**
  * Generate access token for MTN MoMo API
