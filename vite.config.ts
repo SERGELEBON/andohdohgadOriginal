@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-// Get __dirname equivalent in ESM
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// Support both ESM and CommonJS environments
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,9 +15,9 @@ export default defineConfig({
     port: 3000,
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname, 'src') }
+    ],
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
   build: {
