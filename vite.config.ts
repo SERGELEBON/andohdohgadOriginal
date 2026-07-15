@@ -1,30 +1,21 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+// Get __dirname equivalent in ESM
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [
-    react(),
-    {
-      name: 'resolve-ts-extensions',
-      resolveId(source) {
-        if (source.includes('@/lib/supabase/client')) {
-          return path.resolve(process.cwd(), 'src/lib/supabase/client.ts');
-        }
-        if (source.includes('@/lib/stripe/client')) {
-          return path.resolve(process.cwd(), 'src/lib/stripe/client.ts');
-        }
-      },
-    },
-  ],
+  plugins: [react()],
   server: {
     port: 3000,
   },
   resolve: {
     alias: {
-      '@': path.resolve(process.cwd(), 'src'),
+      '@': path.resolve(__dirname, 'src'),
     },
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
