@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Search, FileText, Download, CheckCircle, Clock, Eye } from 'lucide-react';
 

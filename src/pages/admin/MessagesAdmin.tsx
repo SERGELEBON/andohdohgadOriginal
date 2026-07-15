@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Mail, MailOpen, Trash2 } from 'lucide-react';
 

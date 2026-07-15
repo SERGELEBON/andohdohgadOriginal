@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Search, Building2, Users, CheckCircle, XCircle, Clock, Eye, Mail, Phone } from 'lucide-react';
 

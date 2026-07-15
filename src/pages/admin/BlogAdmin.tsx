@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Plus, Edit, Trash2, Eye, Search } from 'lucide-react';
 
