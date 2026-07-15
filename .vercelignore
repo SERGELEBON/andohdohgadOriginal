@@ -8,3 +8,6 @@ dist
 .DS_Store
 supabase
 new_andoh-dohgad
+tsconfig.json
+tsconfig.app.json
+tsconfig.node.json
