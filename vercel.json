@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "vite build",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=2048' npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
   "installCommand": "npm install",
