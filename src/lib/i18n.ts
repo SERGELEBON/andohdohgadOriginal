@@ -7,8 +7,8 @@ const resources = {
     translation: {
       nav: {
         home: "Accueil",
-        about: "A propos",
-        services: "Services",
+        about: "À propos",
+        services: "Nos Services",
         solutions: "Nos Solutions",
         documentation: "Nos Documents",
         blog: "Blog",
@@ -84,7 +84,7 @@ const resources = {
       nav: {
         home: "Home",
         about: "About",
-        services: "Services",
+        services: "Our Services",
         solutions: "Our Solutions",
         documentation: "Our Documents",
         blog: "Blog",
@@ -161,7 +161,7 @@ const resources = {
       nav: {
         home: "Inicio",
         about: "Nosotros",
-        services: "Servicios",
+        services: "Nuestros Servicios",
         solutions: "Nuestras Soluciones",
         documentation: "Nuestros Documentos",
         blog: "Blog",

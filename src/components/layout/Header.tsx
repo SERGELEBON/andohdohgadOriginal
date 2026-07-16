@@ -83,7 +83,7 @@ export default function Header() {
               >
                 <Link
                   to={link.href}
-                  className={`flex items-center gap-1 px-3 py-2 text-[15px] font-medium text-white/90 hover:text-white transition-colors rounded-md ${
+                  className={`flex items-center gap-1 px-3 py-2 text-[15px] font-medium text-white/90 hover:text-white transition-colors rounded-md whitespace-nowrap ${
                     location.pathname === link.href || location.pathname.startsWith(link.href + "/")
                       ? "text-white"
                       : ""
