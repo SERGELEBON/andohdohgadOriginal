@@ -1,21 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
-import { fileURLToPath, URL } from 'url'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react()],
   server: {
     port: 3000,
   },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': path.resolve(__dirname, './src'),
     },
-    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
   build: {
     chunkSizeWarningLimit: 1000,
