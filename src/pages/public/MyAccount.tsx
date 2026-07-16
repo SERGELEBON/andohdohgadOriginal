@@ -4,15 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 export default function MyAccount() {
-  const { profile, signOut } = useAuth();
+  const { profile, user, signOut } = useAuth();
   const navigate = useNavigate();
 
   // Redirect admins to admin dashboard
   useEffect(() => {
+    // EXCEPTION : Super admin toujours redirigé vers /admin
+    if (user?.email === 'contact@andoh-dohgad.com') {
+      navigate('/admin', { replace: true });
+      return;
+    }
+
+    // Pour les autres : vérifier le rôle dans profile
     if (profile?.role === 'admin') {
       navigate('/admin', { replace: true });
     }
-  }, [profile, navigate]);
+  }, [profile, user, navigate]);
 
   const handleLogout = async () => {
     await signOut();

@@ -39,8 +39,15 @@ export default function LoginForm() {
 
       // Get fresh session to check user role
       const { data: { session } } = await supabase.auth.getSession();
+
       if (session?.user) {
-        // Fetch profile to check role
+        // EXCEPTION : Redirection directe pour le super admin
+        if (session.user.email === 'contact@andoh-dohgad.com') {
+          navigate('/admin', { replace: true });
+          return;
+        }
+
+        // Pour les autres utilisateurs : vérifier le rôle dans profiles
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
@@ -49,12 +56,12 @@ export default function LoginForm() {
 
         // Redirect based on role
         if (profile?.role === 'admin') {
-          navigate('/admin');
+          navigate('/admin', { replace: true });
         } else {
-          navigate('/mon-compte');
+          navigate('/mon-compte', { replace: true });
         }
       } else {
-        navigate('/mon-compte');
+        navigate('/mon-compte', { replace: true });
       }
     } catch (err: any) {
       setError(err.message || 'Échec de la connexion');
