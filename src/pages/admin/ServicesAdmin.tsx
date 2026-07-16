@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search } from 'lucide-react';
 import type { Service } from '@/hooks/useDynamicContent';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 
 // Hook générique pour charger n'importe quelle table
 export function useDynamicContent<T>(

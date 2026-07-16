@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
 import ImageUpload from '@/components/admin/ImageUpload';
 import { Save, ArrowLeft, Eye } from 'lucide-react';

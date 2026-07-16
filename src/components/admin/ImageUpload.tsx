@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import { Upload, X, Loader2, CheckCircle } from 'lucide-react';
 
 interface ImageUploadProps {

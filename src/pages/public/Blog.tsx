@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Clock, Send } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/supabaseClient";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const categories = ["Tous", "fiscalite", "rh", "strategie", "comptabilite", "entrepreneuriat", "reglementation"];
