@@ -24,6 +24,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const location = useLocation();
   const { t } = useTranslation();
   const { user, profile, signOut } = useAuth();
@@ -37,6 +38,7 @@ export default function Header() {
   useEffect(() => {
     setIsMobileOpen(false);
     setActiveDropdown(null);
+    setMobileServicesOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -179,26 +181,40 @@ export default function Header() {
           <div className="flex flex-col items-center justify-center h-full gap-6 pt-20 pb-8 px-6 overflow-y-auto">
             {navLinks.map((link) => (
               <div key={link.href} className="w-full text-center">
-                <Link
-                  to={link.href}
-                  className="text-xl font-medium text-white/90 hover:text-white transition-colors block py-2"
-                  onClick={() => !link.children && setIsMobileOpen(false)}
-                >
-                  {t(`nav.${link.label}`)}
-                </Link>
-                {link.children && (
-                  <div className="mt-2 space-y-2">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        to={child.href}
-                        className="block text-sm text-white/70 hover:text-white py-1"
-                        onClick={() => setIsMobileOpen(false)}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
+                {link.children ? (
+                  // Menu déroulant pour Services
+                  <div className="w-full">
+                    <button
+                      onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                      className="flex items-center justify-center gap-2 text-xl font-medium text-white/90 hover:text-white transition-colors py-2 mx-auto"
+                    >
+                      {t(`nav.${link.label}`)}
+                      <ChevronDown className={`w-5 h-5 transition-transform ${mobileServicesOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {mobileServicesOpen && (
+                      <div className="mt-3 space-y-2 bg-white/10 rounded-lg py-3 px-4 backdrop-blur-sm">
+                        {link.children.map((child) => (
+                          <Link
+                            key={child.href}
+                            to={child.href}
+                            className="block text-base text-white/80 hover:text-white py-2 hover:bg-white/10 rounded transition-colors"
+                            onClick={() => setIsMobileOpen(false)}
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
+                ) : (
+                  // Lien normal
+                  <Link
+                    to={link.href}
+                    className="text-xl font-medium text-white/90 hover:text-white transition-colors block py-2"
+                    onClick={() => setIsMobileOpen(false)}
+                  >
+                    {t(`nav.${link.label}`)}
+                  </Link>
                 )}
               </div>
             ))}
