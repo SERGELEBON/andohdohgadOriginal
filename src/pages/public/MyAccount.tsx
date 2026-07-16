@@ -1,10 +1,18 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { User, Mail, Phone, Building2, Shield, LogOut, Calendar, FileText, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function MyAccount() {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect admins to admin dashboard
+  useEffect(() => {
+    if (profile?.role === 'admin') {
+      navigate('/admin', { replace: true });
+    }
+  }, [profile, navigate]);
 
   const handleLogout = async () => {
     await signOut();

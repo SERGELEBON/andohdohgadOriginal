@@ -34,30 +34,31 @@ export default function LoginForm() {
       setLoading(true);
       await signIn(data.email, data.password);
 
-      // Wait a bit for the profile to be fetched after sign in
-      setTimeout(async () => {
-        // Get fresh session to check user role
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          // Fetch profile to check role
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
+      // Wait a bit for the auth state to update
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-          // Redirect based on role
-          if (profile?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/mon-compte');
-          }
+      // Get fresh session to check user role
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        // Fetch profile to check role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        // Redirect based on role
+        if (profile?.role === 'admin') {
+          navigate('/admin');
         } else {
           navigate('/mon-compte');
         }
-      }, 500);
+      } else {
+        navigate('/mon-compte');
+      }
     } catch (err: any) {
       setError(err.message || 'Échec de la connexion');
+    } finally {
       setLoading(false);
     }
   };
