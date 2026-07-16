@@ -1,0 +1,42 @@
+# Variables d'environnement pour Netlify
+# Copiez-collez ces valeurs dans https://app.netlify.com/sites/celebrated-paletas-b0cc40/configuration/env
+
+# Variable 1
+VITE_SUPABASE_URL
+https://tszsvbzfufglvdcsjzpo.supabase.co
+
+# Variable 2
+VITE_SUPABASE_ANON_KEY
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzenN2YnpmdWZnbHZkY3NqenBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyMDYwMjcsImV4cCI6MjA5ODc4MjAyN30.vr_Ogp2zk7hrl3gR7m-yt3T_nBO7sJCR0vkX0DMJ__c
+
+# Variable 3
+VITE_EMAILJS_SERVICE_ID
+service_qtc3k0o
+
+# Variable 4
+VITE_EMAILJS_TEMPLATE_ID
+template_1l8t012
+
+# Variable 5
+VITE_EMAILJS_PUBLIC_KEY
+jAfoT8qEUMzZ6WLf5
+
+# Variable 6
+VITE_APP_URL
+https://andoh-dohgad.netlify.app
+
+# Variable 7
+VITE_SUPER_ADMIN_EMAIL
+contact@andoh-dohgad.com
+
+# Variable 8
+VITE_SUPER_ADMIN_PASSWORD
+SuperAdmin@2026!
+
+===================================
+IMPORTANT: Après avoir ajouté toutes les variables :
+1. Allez sur https://app.netlify.com/sites/celebrated-paletas-b0cc40/deploys
+2. Cliquez sur "Trigger deploy" → "Clear cache and deploy site"
+3. Attendez 2-3 minutes
+4. Testez https://andoh-dohgad.netlify.app/
+===================================

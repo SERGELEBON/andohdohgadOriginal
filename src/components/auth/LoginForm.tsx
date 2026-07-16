@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 
 const loginSchema = z.object({
@@ -32,10 +33,31 @@ export default function LoginForm() {
       setError('');
       setLoading(true);
       await signIn(data.email, data.password);
-      navigate('/mon-compte');
+
+      // Wait a bit for the profile to be fetched after sign in
+      setTimeout(async () => {
+        // Get fresh session to check user role
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          // Fetch profile to check role
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          // Redirect based on role
+          if (profile?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/mon-compte');
+          }
+        } else {
+          navigate('/mon-compte');
+        }
+      }, 500);
     } catch (err: any) {
       setError(err.message || 'Échec de la connexion');
-    } finally {
       setLoading(false);
     }
   };
