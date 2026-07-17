@@ -22,7 +22,8 @@ const menuItems = [
   { icon: Calendar, label: 'Rendez-vous', path: '/admin/appointments' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
   { icon: Building2, label: 'Co-working', path: '/admin/coworking' },
-  { icon: FolderOpen, label: 'Documentation', path: '/admin/docs' },
+  { icon: FolderOpen, label: 'Documents', path: '/admin/documents' },
+  { icon: FileText, label: 'Achats docs', path: '/admin/docs' },
   { icon: Settings, label: 'Paramètres', path: '/admin/settings' },
 ];
 

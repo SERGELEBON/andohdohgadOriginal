@@ -1,19 +1,40 @@
 import { useState } from "react";
 import { FileText, X, CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
-import { documents } from "@/data/documentation";
+import { useDocuments, type Document } from "@/hooks/useDocuments";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const filters = ["Tous", "Guides", "Fiscaux", "Modeles", "Notes"];
+const filterMapping: Record<string, string> = {
+  "Tous": "all",
+  "Guides": "guides",
+  "Fiscaux": "fiscaux",
+  "Modeles": "modeles",
+  "Notes": "notes",
+};
+
+const categoryLabels: Record<string, string> = {
+  guides: "Guides",
+  fiscaux: "Fiscaux",
+  modeles: "Modèles",
+  notes: "Notes",
+};
 
 export default function Documentation() {
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language || 'fr';
+
+  const { documents, loading } = useDocuments(currentLanguage);
   const [activeFilter, setActiveFilter] = useState("Tous");
-  const [selectedDoc, setSelectedDoc] = useState<typeof documents[0] | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const { ref, isInView } = useScrollAnimation();
 
-  const filtered = activeFilter === "Tous" ? documents : documents.filter((d) => d.type === activeFilter);
+  // Filtrer les documents
+  const filtered = activeFilter === "Tous"
+    ? documents
+    : documents.filter((d) => d.doc_type === filterMapping[activeFilter]);
 
   const handlePurchase = () => {
     setShowSuccess(true);
@@ -37,7 +58,7 @@ export default function Documentation() {
 
           {/* Filter tabs */}
           <div className="flex flex-wrap gap-2 mb-10 justify-center">
-            {filters.map((f) => (
+            {Object.keys(filterMapping).map((f) => (
               <button
                 key={f}
                 onClick={() => setActiveFilter(f)}
@@ -52,32 +73,47 @@ export default function Documentation() {
             ))}
           </div>
 
-          {/* Document Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {filtered.map((doc, i) => (
-              <div
-                key={doc.id}
-                className={`bg-white border border-gray-200 rounded-xl p-6 transition-all duration-400 hover:border-primary/40 hover:shadow-card ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-                style={{ transitionDelay: `${i * 80}ms` }}
-              >
-                <FileText className="w-10 h-10 text-primary mb-4" />
-                <span className="inline-block px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold rounded-full mb-3">
-                  {doc.type}
-                </span>
-                <h4 className="font-body text-base font-semibold text-dark mb-2 line-clamp-2">{doc.title}</h4>
-                <p className="text-body text-sm line-clamp-2 mb-4">{doc.description}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-accent font-bold text-lg">{doc.price}</span>
-                  <button
-                    onClick={() => setSelectedDoc(doc)}
-                    className="btn-primary text-xs px-4 py-2"
+          {/* Loading state */}
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            /* Document Grid */
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {filtered.map((doc, i) => {
+                const translation = doc.translations?.find(t => t.language === currentLanguage) ||
+                                    doc.translations?.find(t => t.language === 'fr');
+                return (
+                  <div
+                    key={doc.id}
+                    className={`bg-white border border-gray-200 rounded-xl p-6 transition-all duration-400 hover:border-primary/40 hover:shadow-card ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                    style={{ transitionDelay: `${i * 80}ms` }}
                   >
-                    Acheter
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+                    <FileText className="w-10 h-10 text-primary mb-4" />
+                    <span className="inline-block px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold rounded-full mb-3">
+                      {categoryLabels[doc.doc_type]}
+                    </span>
+                    <h4 className="font-body text-base font-semibold text-dark mb-2 line-clamp-2">
+                      {translation?.title || 'Sans titre'}
+                    </h4>
+                    <p className="text-body text-sm line-clamp-2 mb-4">
+                      {translation?.description || ''}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-accent font-bold text-lg">{doc.price?.toLocaleString()} FCFA</span>
+                      <button
+                        onClick={() => setSelectedDoc(doc)}
+                        className="btn-primary text-xs px-4 py-2"
+                      >
+                        Acheter
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -93,8 +129,11 @@ export default function Documentation() {
             {!showSuccess ? (
               <>
                 <FileText className="w-12 h-12 text-primary mb-4" />
-                <h3 className="font-display text-xl font-semibold text-dark mb-1">{selectedDoc.title}</h3>
-                <p className="text-accent font-bold text-xl mb-6">{selectedDoc.price}</p>
+                <h3 className="font-display text-xl font-semibold text-dark mb-1">
+                  {selectedDoc.translations?.find(t => t.language === currentLanguage)?.title ||
+                   selectedDoc.translations?.find(t => t.language === 'fr')?.title}
+                </h3>
+                <p className="text-accent font-bold text-xl mb-6">{selectedDoc.price?.toLocaleString()} FCFA</p>
 
                 <div className="space-y-3 mb-6">
                   <input type="text" placeholder="Nom complet" className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />

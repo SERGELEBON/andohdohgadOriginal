@@ -28,6 +28,7 @@ import MessagesAdmin from "@/pages/admin/MessagesAdmin";
 import Settings from "@/pages/admin/Settings";
 import CoworkingAdmin from "@/pages/admin/CoworkingAdmin";
 import DocumentationAdmin from "@/pages/admin/DocumentationAdmin";
+import DocumentsManagement from "@/pages/admin/DocumentsManagement";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -128,6 +129,12 @@ function App() {
         <Route path="/admin/docs" element={
           <ProtectedRoute allowedRoles="admin">
             <DocumentationAdmin />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/admin/documents" element={
+          <ProtectedRoute allowedRoles="admin">
+            <DocumentsManagement />
           </ProtectedRoute>
         } />
 
