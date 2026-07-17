@@ -18,6 +18,8 @@ import Contact from "@/pages/public/Contact";
 import Login from "@/pages/admin/Login";
 import Signup from "@/pages/admin/Signup";
 import SuperAdminLogin from "@/pages/admin/SuperAdminLogin";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
 import MyAccount from "@/pages/public/MyAccount";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import BlogAdmin from "@/pages/admin/BlogAdmin";
@@ -61,6 +63,8 @@ function App() {
         <Route path="/connexion" element={<Login />} />
         <Route path="/inscription" element={<Signup />} />
         <Route path="/super-admin" element={<SuperAdminLogin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected routes with Layout */}
         <Route path="/mon-compte" element={
