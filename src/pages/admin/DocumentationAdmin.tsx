@@ -179,8 +179,8 @@ export default function DocumentationAdmin() {
                       <td className="px-6 py-4">
                         <div className="font-medium text-dark">{frTitle}</div>
                         <div className="text-xs text-gray-500">ID: {purchase.document?.id?.substring(0, 8)}</div>
-                    </td>
-                    <td className="px-6 py-4">
+                      </td>
+                      <td className="px-6 py-4">
                       <div className="font-medium text-dark">
                         {parseFloat(purchase.amount_paid).toLocaleString()} F
                       </div>
@@ -217,7 +217,7 @@ export default function DocumentationAdmin() {
                     </td>
                   </tr>
                 );
-              }))
+              })
               )}
             </tbody>
           </table>
