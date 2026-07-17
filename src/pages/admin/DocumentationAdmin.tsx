@@ -17,8 +17,11 @@ interface Purchase {
     email: string;
   };
   document?: {
-    title_fr: string;
-    category: string;
+    id: string;
+    translations?: {
+      title: string;
+      language: string;
+    }[];
   };
 }
 
@@ -38,7 +41,10 @@ export default function DocumentationAdmin() {
         .select(`
           *,
           user:profiles(first_name, last_name, email),
-          document:documentation_items(title_fr, category)
+          document:documentation(
+            id,
+            translations:documentation_translations(title, language)
+          )
         `)
         .order('created_at', { ascending: false });
 
@@ -51,12 +57,15 @@ export default function DocumentationAdmin() {
     }
   };
 
-  const filteredPurchases = purchases.filter(p =>
-    p.user?.first_name?.toLowerCase().includes(search.toLowerCase()) ||
-    p.user?.last_name?.toLowerCase().includes(search.toLowerCase()) ||
-    p.user?.email?.toLowerCase().includes(search.toLowerCase()) ||
-    p.document?.title_fr?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredPurchases = purchases.filter(p => {
+    const frTitle = p.document?.translations?.find(t => t.language === 'fr')?.title || '';
+    return (
+      p.user?.first_name?.toLowerCase().includes(search.toLowerCase()) ||
+      p.user?.last_name?.toLowerCase().includes(search.toLowerCase()) ||
+      p.user?.email?.toLowerCase().includes(search.toLowerCase()) ||
+      frTitle.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   const stats = {
     total: purchases.length,
@@ -155,19 +164,21 @@ export default function DocumentationAdmin() {
                   </td>
                 </tr>
               ) : (
-                filteredPurchases.map((purchase) => (
-                  <tr key={purchase.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="font-medium text-dark">
-                          {purchase.user?.first_name} {purchase.user?.last_name}
+                filteredPurchases.map((purchase) => {
+                  const frTitle = purchase.document?.translations?.find(t => t.language === 'fr')?.title || 'Document';
+                  return (
+                    <tr key={purchase.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div>
+                          <div className="font-medium text-dark">
+                            {purchase.user?.first_name} {purchase.user?.last_name}
+                          </div>
+                          <div className="text-sm text-gray-500">{purchase.user?.email}</div>
                         </div>
-                        <div className="text-sm text-gray-500">{purchase.user?.email}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-dark">{purchase.document?.title_fr}</div>
-                      <div className="text-xs text-gray-500">{purchase.document?.category}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="font-medium text-dark">{frTitle}</div>
+                        <div className="text-xs text-gray-500">ID: {purchase.document?.id?.substring(0, 8)}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="font-medium text-dark">
@@ -205,7 +216,8 @@ export default function DocumentationAdmin() {
                       </div>
                     </td>
                   </tr>
-                ))
+                );
+              }))
               )}
             </tbody>
           </table>
