@@ -1,10 +1,9 @@
 -- ===============================================
 -- MIGRATION: Création de la table surveys
 -- Date: 2026-08-19
--- Description: Table pour stocker les formulaires de sondages (création d'entreprise, RH, etc.)
 -- ===============================================
 
--- Créer la table surveys si elle n'existe pas
+-- Créer la table surveys
 CREATE TABLE IF NOT EXISTS public.surveys (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     survey_type TEXT NOT NULL CHECK (survey_type IN ('creation', 'service', 'rh', 'domiciliation', 'coworking')),
@@ -19,75 +18,59 @@ CREATE TABLE IF NOT EXISTS public.surveys (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Créer les index pour optimiser les requêtes
+-- Index
 CREATE INDEX IF NOT EXISTS idx_surveys_survey_type ON public.surveys(survey_type);
 CREATE INDEX IF NOT EXISTS idx_surveys_email ON public.surveys(email);
 CREATE INDEX IF NOT EXISTS idx_surveys_status ON public.surveys(status);
 CREATE INDEX IF NOT EXISTS idx_surveys_created_at ON public.surveys(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_surveys_assigned_to ON public.surveys(assigned_to);
 
--- Activer Row Level Security
+-- RLS
 ALTER TABLE public.surveys ENABLE ROW LEVEL SECURITY;
 
--- Policy: Les utilisateurs peuvent créer leur propre survey (public)
-CREATE POLICY "Anyone can insert surveys"
+-- Policy 1: Insertion publique (anonymous users can submit forms)
+CREATE POLICY "surveys_insert_policy"
     ON public.surveys
     FOR INSERT
     WITH CHECK (true);
 
--- Policy: Les utilisateurs peuvent voir leurs propres surveys (via profiles.email)
-CREATE POLICY "Users can view own surveys"
-    ON public.surveys
-    FOR SELECT
-    USING (
-        -- Comparaison avec l'email du profil de l'utilisateur connecté
-        email = (
-            SELECT p.email
-            FROM public.profiles p
-            WHERE p.id = auth.uid()
-        )
-    );
-
--- Policy: Les admins peuvent tout voir
-CREATE POLICY "Admins can view all surveys"
+-- Policy 2: Admins peuvent tout voir
+CREATE POLICY "surveys_select_admin_policy"
     ON public.surveys
     FOR SELECT
     USING (
         EXISTS (
             SELECT 1 FROM public.profiles
-            WHERE id = auth.uid() AND role = 'admin'
+            WHERE profiles.id = auth.uid()
+            AND profiles.role = 'admin'
         )
     );
 
--- Policy: Les admins peuvent tout modifier
-CREATE POLICY "Admins can update all surveys"
+-- Policy 3: Admins peuvent tout modifier
+CREATE POLICY "surveys_update_admin_policy"
     ON public.surveys
     FOR UPDATE
     USING (
         EXISTS (
             SELECT 1 FROM public.profiles
-            WHERE id = auth.uid() AND role = 'admin'
-        )
-    )
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM public.profiles
-            WHERE id = auth.uid() AND role = 'admin'
+            WHERE profiles.id = auth.uid()
+            AND profiles.role = 'admin'
         )
     );
 
--- Policy: Les admins peuvent supprimer
-CREATE POLICY "Admins can delete surveys"
+-- Policy 4: Admins peuvent supprimer
+CREATE POLICY "surveys_delete_admin_policy"
     ON public.surveys
     FOR DELETE
     USING (
         EXISTS (
             SELECT 1 FROM public.profiles
-            WHERE id = auth.uid() AND role = 'admin'
+            WHERE profiles.id = auth.uid()
+            AND profiles.role = 'admin'
         )
     );
 
--- Trigger pour mettre à jour updated_at automatiquement
+-- Trigger auto-update
 CREATE OR REPLACE FUNCTION public.update_surveys_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -103,54 +86,8 @@ CREATE TRIGGER update_surveys_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION public.update_surveys_updated_at();
 
--- Commentaires pour documentation
-COMMENT ON TABLE public.surveys IS 'Formulaires de sondages et demandes clients (création entreprise, RH, domiciliation, etc.)';
-COMMENT ON COLUMN public.surveys.survey_type IS 'Type de formulaire: creation, service, rh, domiciliation, coworking';
-COMMENT ON COLUMN public.surveys.form_data IS 'Données du formulaire en JSON';
-COMMENT ON COLUMN public.surveys.status IS 'Statut du traitement: pending, in_progress, completed, cancelled';
-COMMENT ON COLUMN public.surveys.assigned_to IS 'ID de l''admin assigné au traitement';
-
--- ===============================================
--- VÉRIFICATION FINALE
--- ===============================================
-
-DO $$
-BEGIN
-    RAISE NOTICE '';
-    RAISE NOTICE '═══════════════════════════════════════════════════════';
-    RAISE NOTICE '✅ TABLE SURVEYS CRÉÉE AVEC SUCCÈS';
-    RAISE NOTICE '═══════════════════════════════════════════════════════';
-    RAISE NOTICE '';
-    RAISE NOTICE 'Table: public.surveys';
-    RAISE NOTICE 'RLS: ENABLED';
-    RAISE NOTICE 'Policies: 5 (insert, select user, select admin, update admin, delete admin)';
-    RAISE NOTICE 'Indexes: 5 (survey_type, email, status, created_at, assigned_to)';
-    RAISE NOTICE 'Trigger: update_surveys_updated_at';
-    RAISE NOTICE '';
-    RAISE NOTICE '📋 PROCHAINES ÉTAPES:';
-    RAISE NOTICE '1. Tester le formulaire sur http://localhost:3000/sondages';
-    RAISE NOTICE '2. Vérifier les données dans Table Editor > surveys';
-    RAISE NOTICE '3. Vérifier la réception des emails';
-    RAISE NOTICE '';
-    RAISE NOTICE '═══════════════════════════════════════════════════════';
-END $$;
-
--- ===============================================
--- DONNÉES DE TEST (optionnel, à supprimer en production)
--- ===============================================
-
--- Décommenter pour créer un survey de test
--- INSERT INTO public.surveys (survey_type, form_data, email, name, phone, status)
--- VALUES (
---     'creation',
---     '{
---         "companyName": "Test SARL",
---         "structure": "SARL",
---         "sector": "Commerce",
---         "description": "Test de création d''entreprise"
---     }'::jsonb,
---     'test@example.com',
---     'Test User',
---     '+225 07 00 00 00 00',
---     'pending'
--- );
+-- Commentaires
+COMMENT ON TABLE public.surveys IS 'Formulaires de sondages (création entreprise, RH, etc.)';
+COMMENT ON COLUMN public.surveys.survey_type IS 'Type: creation, service, rh, domiciliation, coworking';
+COMMENT ON COLUMN public.surveys.form_data IS 'Données formulaire en JSONB';
+COMMENT ON COLUMN public.surveys.status IS 'Statut: pending, in_progress, completed, cancelled';
