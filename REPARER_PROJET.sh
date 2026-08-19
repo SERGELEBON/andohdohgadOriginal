@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Script de réparation automatique du projet Andoh & Dohgad

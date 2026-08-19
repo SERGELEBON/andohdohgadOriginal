@@ -87,16 +87,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, metadata: any) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: metadata,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        // Pas de emailRedirectTo pour éviter l'erreur 500
+        // La route /auth/callback sera ajoutée plus tard si nécessaire
       },
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error('❌ Signup error:', error);
+      throw error;
+    }
+
+    console.log('✅ Signup successful:', data);
   };
 
   const signIn = async (email: string, password: string) => {
