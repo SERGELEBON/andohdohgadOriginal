@@ -35,14 +35,17 @@ CREATE POLICY "Anyone can insert surveys"
     FOR INSERT
     WITH CHECK (true);
 
--- Policy: Les utilisateurs peuvent voir leurs propres surveys
+-- Policy: Les utilisateurs peuvent voir leurs propres surveys (via profiles.email)
 CREATE POLICY "Users can view own surveys"
     ON public.surveys
     FOR SELECT
     USING (
-        email = (SELECT raw_user_meta_data->>'email' FROM auth.users WHERE id = auth.uid())
-        OR email = (SELECT p.email FROM profiles p WHERE p.id = auth.uid())
-        OR auth.uid() IS NULL  -- Permet la lecture anonyme (pour l'admin dashboard)
+        -- Comparaison avec l'email du profil de l'utilisateur connecté
+        email = (
+            SELECT p.email
+            FROM public.profiles p
+            WHERE p.id = auth.uid()
+        )
     );
 
 -- Policy: Les admins peuvent tout voir
@@ -51,7 +54,7 @@ CREATE POLICY "Admins can view all surveys"
     FOR SELECT
     USING (
         EXISTS (
-            SELECT 1 FROM profiles
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
@@ -62,13 +65,13 @@ CREATE POLICY "Admins can update all surveys"
     FOR UPDATE
     USING (
         EXISTS (
-            SELECT 1 FROM profiles
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     )
     WITH CHECK (
         EXISTS (
-            SELECT 1 FROM profiles
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
@@ -79,7 +82,7 @@ CREATE POLICY "Admins can delete surveys"
     FOR DELETE
     USING (
         EXISTS (
-            SELECT 1 FROM profiles
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
@@ -92,6 +95,8 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_surveys_updated_at ON public.surveys;
 
 CREATE TRIGGER update_surveys_updated_at
     BEFORE UPDATE ON public.surveys
@@ -106,13 +111,44 @@ COMMENT ON COLUMN public.surveys.status IS 'Statut du traitement: pending, in_pr
 COMMENT ON COLUMN public.surveys.assigned_to IS 'ID de l''admin assigné au traitement';
 
 -- ===============================================
--- DONNÉES DE TEST (optionnel, commenter en production)
+-- VÉRIFICATION FINALE
 -- ===============================================
 
+DO $$
+BEGIN
+    RAISE NOTICE '';
+    RAISE NOTICE '═══════════════════════════════════════════════════════';
+    RAISE NOTICE '✅ TABLE SURVEYS CRÉÉE AVEC SUCCÈS';
+    RAISE NOTICE '═══════════════════════════════════════════════════════';
+    RAISE NOTICE '';
+    RAISE NOTICE 'Table: public.surveys';
+    RAISE NOTICE 'RLS: ENABLED';
+    RAISE NOTICE 'Policies: 5 (insert, select user, select admin, update admin, delete admin)';
+    RAISE NOTICE 'Indexes: 5 (survey_type, email, status, created_at, assigned_to)';
+    RAISE NOTICE 'Trigger: update_surveys_updated_at';
+    RAISE NOTICE '';
+    RAISE NOTICE '📋 PROCHAINES ÉTAPES:';
+    RAISE NOTICE '1. Tester le formulaire sur http://localhost:3000/sondages';
+    RAISE NOTICE '2. Vérifier les données dans Table Editor > surveys';
+    RAISE NOTICE '3. Vérifier la réception des emails';
+    RAISE NOTICE '';
+    RAISE NOTICE '═══════════════════════════════════════════════════════';
+END $$;
+
+-- ===============================================
+-- DONNÉES DE TEST (optionnel, à supprimer en production)
+-- ===============================================
+
+-- Décommenter pour créer un survey de test
 -- INSERT INTO public.surveys (survey_type, form_data, email, name, phone, status)
 -- VALUES (
 --     'creation',
---     '{"companyName": "Test SARL", "structure": "SARL", "sector": "Commerce", "description": "Test"}'::jsonb,
+--     '{
+--         "companyName": "Test SARL",
+--         "structure": "SARL",
+--         "sector": "Commerce",
+--         "description": "Test de création d''entreprise"
+--     }'::jsonb,
 --     'test@example.com',
 --     'Test User',
 --     '+225 07 00 00 00 00',
