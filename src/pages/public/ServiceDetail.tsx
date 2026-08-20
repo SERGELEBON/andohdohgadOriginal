@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { Check, Phone } from "lucide-react";
+import { Check, Phone, Send } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import { services } from "@/data/services";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -87,11 +87,18 @@ export default function ServiceDetail() {
               {/* CTA Card */}
               <div className="bg-primary rounded-xl p-8 text-white">
                 <h4 className="font-body text-lg font-semibold mb-2">Besoin de ce service ?</h4>
-                <p className="text-white/75 text-sm mb-6">Contactez-nous pour discuter de votre projet.</p>
-                <Link to="/rendez-vous" className="btn-secondary w-full text-center block mb-3 text-sm">
+                <p className="text-white/75 text-sm mb-6">Remplissez le formulaire adapté à vos besoins.</p>
+                <Link
+                  to="/demande-service"
+                  className="btn-secondary w-full text-center flex items-center justify-center gap-2 mb-3 text-sm bg-accent hover:bg-accent/90 text-dark font-semibold shadow-lg"
+                >
+                  <Send className="w-4 h-4" />
+                  Demander ce service
+                </Link>
+                <Link to="/rendez-vous" className="btn-outline w-full text-center block mb-3 text-sm border-white/30 hover:bg-white/10">
                   Prendre rendez-vous
                 </Link>
-                <Link to="/contact" className="btn-outline w-full text-center block text-sm">
+                <Link to="/contact" className="btn-outline w-full text-center block text-sm border-white/30 hover:bg-white/10">
                   Demander une information
                 </Link>
               </div>

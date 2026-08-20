@@ -6,6 +6,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export default function ServicesGrid() {
   const { ref, isInView } = useScrollAnimation();
+  const navigate = useNavigate();
 
   return (
     <section className="section-padding bg-white relative overflow-hidden" ref={ref}>
@@ -18,10 +19,19 @@ export default function ServicesGrid() {
       </div>
 
       <div className="container-lg relative z-10">
-        <SectionTitle
-          label="NOS SERVICES"
-          title="Un accompagnement complet pour votre entreprise"
-        />
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
+          <SectionTitle
+            label="NOS SERVICES"
+            title="Un accompagnement complet pour votre entreprise"
+          />
+          <button
+            onClick={() => navigate('/demande-service')}
+            className="btn-primary inline-flex items-center gap-2 self-start lg:self-auto bg-accent hover:bg-accent/90 text-dark font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+          >
+            <Send className="w-5 h-5" />
+            Demander un service
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, i) => {

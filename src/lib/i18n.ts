@@ -86,6 +86,7 @@ const resources = {
         about: "About",
         services: "Our Services",
         solutions: "Our Solutions",
+        request: "Service Request",
         documentation: "Our Documents",
         blog: "Blog",
         contact: "Contact",
