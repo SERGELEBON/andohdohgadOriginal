@@ -10,6 +10,7 @@ const resources = {
         about: "À propos",
         services: "Nos Services",
         solutions: "Nos Solutions",
+        request: "Demande de service",
         documentation: "Nos Documents",
         blog: "Blog",
         contact: "Contact",
