@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { services } from "@/data/services";
 import SectionTitle from "@/components/ui/SectionTitle";
