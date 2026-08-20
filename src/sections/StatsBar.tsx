@@ -1,14 +1,16 @@
 import { useRef, useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { useInView } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
-const stats = [
-  { value: 200, suffix: "+", label: "Clients accompagnés" },
-  { value: 7, suffix: "", label: "Expertises métiers" },
-  { value: 10, suffix: "", label: "Années d'expérience" },
+const statsData = [
+  { value: 200, suffix: "+", key: "clients" },
+  { value: 7, suffix: "", key: "expertises" },
+  { value: 10, suffix: "", key: "experience" },
 ];
 
 export default function StatsBar() {
+  const { t } = useTranslation();
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -21,7 +23,7 @@ export default function StatsBar() {
     <section ref={ref} className="bg-primary-dark py-16 lg:py-20">
       <div className="container-lg">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12">
-          {stats.map((stat, i) => (
+          {statsData.map((stat, i) => (
             <div key={i} className="text-center">
               <div className="font-display text-5xl lg:text-6xl font-bold text-accent leading-tight">
                 {hasAnimated ? (
@@ -36,7 +38,7 @@ export default function StatsBar() {
                 )}
               </div>
               <p className="text-white/70 text-sm lg:text-base mt-2">
-                {stat.label}
+                {t(`stats.${stat.key}`)}
               </p>
             </div>
           ))}

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Send } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { services } from "@/data/services";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -7,6 +8,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 export default function ServicesGrid() {
   const { ref, isInView } = useScrollAnimation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <section className="section-padding bg-white relative overflow-hidden" ref={ref}>
@@ -21,15 +23,15 @@ export default function ServicesGrid() {
       <div className="container-lg relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
           <SectionTitle
-            label="NOS SERVICES"
-            title="Un accompagnement complet pour votre entreprise"
+            label={t("servicesGrid.label")}
+            title={t("servicesGrid.title")}
           />
           <button
             onClick={() => navigate('/demande-service')}
             className="btn-primary inline-flex items-center gap-2 self-start lg:self-auto bg-accent hover:bg-accent/90 text-dark font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
             <Send className="w-5 h-5" />
-            Demander un service
+            {t("servicesGrid.cta")}
           </button>
         </div>
 
@@ -57,7 +59,7 @@ export default function ServicesGrid() {
                   to={`/services/${service.slug}`}
                   className="text-link group/link"
                 >
-                  En savoir plus
+                  {t("buttons.learnMore")}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
