@@ -402,25 +402,32 @@ export default function Surveys() {
       setStatus("submitting");
       setErrorMessage("");
 
-      // 1. Sauvegarder dans Supabase
-      const { error: dbError } = await supabase
-        .from('surveys')
-        .insert([
-          {
-            survey_type: activeSurvey,
-            form_data: data,
-            email: data.email,
-            name: data.name,
-            phone: data.phone,
-          },
-        ]);
+      // 1. Essayer de sauvegarder dans Supabase (avec timeout)
+      try {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase timeout')), 5000)
+        );
 
-      if (dbError) {
-        console.error("Erreur Supabase:", dbError);
-        // Ne pas bloquer si erreur DB, continuer avec EmailJS
+        const insertPromise = supabase
+          .from('surveys')
+          .insert([
+            {
+              survey_type: activeSurvey,
+              form_data: data,
+              email: data.email,
+              name: data.name,
+              phone: data.phone,
+            },
+          ]);
+
+        await Promise.race([insertPromise, timeoutPromise]);
+        console.log("✅ Sauvegarde Supabase réussie");
+      } catch (dbError) {
+        console.warn("⚠️ Supabase indisponible, passage à EmailJS uniquement:", dbError);
+        // Continuer avec EmailJS même si Supabase timeout
       }
 
-      // 2. Envoyer email via EmailJS
+      // 2. Envoyer email via EmailJS (prioritaire)
       const emailParams = {
         survey_type: surveys.find(s => s.id === activeSurvey)?.title,
         from_name: data.name,
@@ -430,12 +437,18 @@ export default function Surveys() {
         to_email: 'andoh.dohgad@gmail.com',
       };
 
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
-        emailParams,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY || ''
-      );
+      try {
+        await emailjs.send(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
+          emailParams,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY || ''
+        );
+        console.log("✅ Email envoyé avec succès");
+      } catch (emailError) {
+        console.error("❌ Erreur EmailJS:", emailError);
+        throw new Error("Impossible d'envoyer l'email. Vérifiez votre connexion internet.");
+      }
 
       setStatus("success");
       setTimeout(() => {
@@ -444,9 +457,12 @@ export default function Surveys() {
       }, 5000);
 
     } catch (error: any) {
-      console.error("Erreur soumission:", error);
+      console.error("❌ Erreur soumission:", error);
       setStatus("error");
-      setErrorMessage(error.message || "Une erreur est survenue. Veuillez réessayer.");
+      setErrorMessage(
+        error.message ||
+        "Erreur de connexion. Vérifiez votre internet et réessayez."
+      );
     }
   };
 
