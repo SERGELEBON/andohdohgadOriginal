@@ -73,10 +73,20 @@ export const translations = {
         readTime: "min de lecture",
       },
 
-      // CTA Banner
-      ctaBanner: {
-        title: "Prêt à structurer votre entreprise et accélérer votre croissance ?",
-        button: "Nous contacter",
+      // Home CTA Banner
+      home: {
+        ctaTitle: "Prêt à structurer votre entreprise et accélérer votre croissance ?",
+        ctaButton: "Nous contacter",
+      },
+
+      // Service Detail Page
+      serviceDetail: {
+        needService: "Besoin de ce service ?",
+        formDescription: "Remplissez le formulaire adapté à vos besoins.",
+        requestService: "Demander {serviceName}",
+        otherServices: "Autres services",
+        quickContact: "Contact rapide",
+        availability: "Disponible du lundi au vendredi, 8h-17h",
       },
 
       // Buttons génériques
@@ -91,6 +101,7 @@ export const translations = {
         seeAll: "Voir tous les articles",
         backHome: "Retour à l'accueil",
         requestService: "Demander ce service",
+        requestInfo: "Demander une information",
       },
 
       // Footer
@@ -205,10 +216,20 @@ export const translations = {
         readTime: "min read",
       },
 
-      // CTA Banner
-      ctaBanner: {
-        title: "Ready to structure your business and accelerate your growth?",
-        button: "Contact us",
+      // Home CTA Banner
+      home: {
+        ctaTitle: "Ready to structure your business and accelerate your growth?",
+        ctaButton: "Contact us",
+      },
+
+      // Service Detail Page
+      serviceDetail: {
+        needService: "Need this service?",
+        formDescription: "Fill out the form tailored to your needs.",
+        requestService: "Request {serviceName}",
+        otherServices: "Other services",
+        quickContact: "Quick contact",
+        availability: "Available Monday to Friday, 8am-5pm",
       },
 
       // Buttons génériques
@@ -223,6 +244,7 @@ export const translations = {
         seeAll: "See all articles",
         backHome: "Back to home",
         requestService: "Request this service",
+        requestInfo: "Request information",
       },
 
       // Footer
@@ -337,10 +359,20 @@ export const translations = {
         readTime: "min de lectura",
       },
 
-      // CTA Banner
-      ctaBanner: {
-        title: "¿Listo para estructurar su empresa y acelerar su crecimiento?",
-        button: "Contactarnos",
+      // Home CTA Banner
+      home: {
+        ctaTitle: "¿Listo para estructurar su empresa y acelerar su crecimiento?",
+        ctaButton: "Contactarnos",
+      },
+
+      // Service Detail Page
+      serviceDetail: {
+        needService: "¿Necesita este servicio?",
+        formDescription: "Complete el formulario adaptado a sus necesidades.",
+        requestService: "Solicitar {serviceName}",
+        otherServices: "Otros servicios",
+        quickContact: "Contacto rápido",
+        availability: "Disponible de lunes a viernes, 8am-5pm",
       },
 
       // Buttons génériques
@@ -355,6 +387,7 @@ export const translations = {
         seeAll: "Ver todos los artículos",
         backHome: "Volver al inicio",
         requestService: "Solicitar este servicio",
+        requestInfo: "Solicitar información",
       },
 
       // Footer

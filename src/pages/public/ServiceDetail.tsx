@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Check, Phone, Send } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import PageHeader from "@/components/layout/PageHeader";
 import { services } from "@/data/services";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -8,6 +9,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const service = services.find((s) => s.slug === slug);
   const { ref, isInView } = useScrollAnimation();
 
@@ -26,8 +28,8 @@ export default function ServiceDetail() {
         title={service.title}
         subtitle={service.shortDescription}
         breadcrumbs={[
-          { label: "Accueil", href: "/" },
-          { label: "Services", href: "/services" },
+          { label: t("nav.home"), href: "/" },
+          { label: t("nav.services"), href: "/services" },
           { label: service.title, href: `#` },
         ]}
       />
@@ -46,7 +48,7 @@ export default function ServiceDetail() {
               </p>
 
               <h3 className="font-display text-xl font-semibold text-dark mb-4">
-                Problematiques que nous adressons
+                Problématiques que nous adressons
               </h3>
               <ul className="space-y-3 mb-8">
                 {service.problematics.map((p, i) => (
@@ -58,7 +60,7 @@ export default function ServiceDetail() {
               </ul>
 
               <h3 className="font-display text-xl font-semibold text-dark mb-4">
-                Notre valeur ajoutee
+                Notre valeur ajoutée
               </h3>
               <p className="text-body leading-relaxed mb-8">
                 {service.valueProposition}
@@ -86,32 +88,47 @@ export default function ServiceDetail() {
             <div className={`space-y-6 transition-all duration-700 delay-200 ${isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}>
               {/* CTA Card */}
               <div className="bg-primary rounded-xl p-8 text-white">
-                <h4 className="font-body text-lg font-semibold mb-2">Besoin de ce service ?</h4>
-                <p className="text-white/75 text-sm mb-6">Remplissez le formulaire adapté à vos besoins.</p>
+                <h4 className="font-body text-lg font-semibold mb-2">
+                  {t("serviceDetail.needService")}
+                </h4>
+                <p className="text-white/75 text-sm mb-6">
+                  {t("serviceDetail.formDescription")}
+                </p>
                 <Link
                   to="/demande-service"
                   className="btn-secondary w-full text-center flex items-center justify-center gap-2 mb-3 text-sm bg-accent hover:bg-accent/90 text-dark font-semibold shadow-lg"
                 >
                   <Send className="w-4 h-4" />
-                  Demander ce service
+                  {t("serviceDetail.requestService", { serviceName: service.title })}
                 </Link>
-                <Link to="/rendez-vous" className="btn-outline w-full text-center block mb-3 text-sm border-white/30 hover:bg-white/10">
-                  Prendre rendez-vous
+                <Link 
+                  to="/rendez-vous" 
+                  className="btn-outline w-full text-center block mb-3 text-sm border-white/30 hover:bg-white/10"
+                >
+                  {t("buttons.appointment")}
                 </Link>
-                <Link to="/contact" className="btn-outline w-full text-center block text-sm border-white/30 hover:bg-white/10">
-                  Demander une information
+                <Link 
+                  to="/contact" 
+                  className="btn-outline w-full text-center block text-sm border-white/30 hover:bg-white/10"
+                >
+                  {t("buttons.requestInfo")}
                 </Link>
               </div>
 
               {/* Related services */}
               <div className="bg-offwhite rounded-xl p-6">
-                <h4 className="font-body font-semibold text-dark mb-4">Autres services</h4>
+                <h4 className="font-body font-semibold text-dark mb-4">
+                  {t("serviceDetail.otherServices")}
+                </h4>
                 <ul className="space-y-2.5">
                   {otherServices.map((s) => {
                     const SIcon = s.icon;
                     return (
                       <li key={s.slug}>
-                        <Link to={`/services/${s.slug}`} className="flex items-center gap-3 text-sm text-body hover:text-primary transition-colors py-1">
+                        <Link 
+                          to={`/services/${s.slug}`} 
+                          className="flex items-center gap-3 text-sm text-body hover:text-primary transition-colors py-1"
+                        >
                           <SIcon className="w-4 h-4 shrink-0" />
                           <span>{s.title}</span>
                         </Link>
@@ -123,12 +140,16 @@ export default function ServiceDetail() {
 
               {/* Quick contact */}
               <div className="bg-offwhite rounded-xl p-6">
-                <h4 className="font-body font-semibold text-dark mb-3">Contact rapide</h4>
+                <h4 className="font-body font-semibold text-dark mb-3">
+                  {t("serviceDetail.quickContact")}
+                </h4>
                 <div className="flex items-center gap-2 text-sm text-body mb-2">
                   <Phone className="w-4 h-4 text-primary" />
                   <span>+225 07 09 57 75 30</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-3">Disponible du lundi au vendredi, 8h-17h</p>
+                <p className="text-xs text-muted-foreground mt-3">
+                  {t("serviceDetail.availability")}
+                </p>
               </div>
             </div>
           </div>
