@@ -472,11 +472,11 @@ export default function Surveys() {
   return (
     <>
       <PageHeader
-        title="Sondages & Formulaires"
+        title="Demande de service"
         subtitle="Remplissez le formulaire adapté à votre besoin. Nos experts analyseront votre demande et vous recontacteront sous 24h."
         breadcrumbs={[
           { label: "Accueil", href: "/" },
-          { label: "Sondages", href: "/sondages" },
+          { label: "Demande de service", href: "/demande-service" },
         ]}
       />
 

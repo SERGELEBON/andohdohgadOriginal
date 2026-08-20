@@ -57,7 +57,8 @@ function App() {
         <Route path="/blog/:slug" element={<Layout><BlogPost /></Layout>} />
         <Route path="/rendez-vous" element={<Layout><Appointment /></Layout>} />
         <Route path="/co-working" element={<Layout><Coworking /></Layout>} />
-        <Route path="/sondages" element={<Layout><Surveys /></Layout>} />
+        <Route path="/demande-service" element={<Layout><Surveys /></Layout>} />
+        <Route path="/sondages" element={<Layout><Surveys /></Layout>} /> {/* Redirect ancien lien */}
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
 
         {/* Auth routes without Layout */}
