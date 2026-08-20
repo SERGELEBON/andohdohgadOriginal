@@ -83,7 +83,7 @@ export const translations = {
       serviceDetail: {
         needService: "Besoin de ce service ?",
         formDescription: "Remplissez le formulaire adapté à vos besoins.",
-        requestService: "Demander {serviceName}",
+        requestService: "Demander {{serviceName}}",
         otherServices: "Autres services",
         quickContact: "Contact rapide",
         availability: "Disponible du lundi au vendredi, 8h-17h",
@@ -226,7 +226,7 @@ export const translations = {
       serviceDetail: {
         needService: "Need this service?",
         formDescription: "Fill out the form tailored to your needs.",
-        requestService: "Request {serviceName}",
+        requestService: "Request {{serviceName}}",
         otherServices: "Other services",
         quickContact: "Quick contact",
         availability: "Available Monday to Friday, 8am-5pm",
@@ -369,7 +369,7 @@ export const translations = {
       serviceDetail: {
         needService: "¿Necesita este servicio?",
         formDescription: "Complete el formulario adaptado a sus necesidades.",
-        requestService: "Solicitar {serviceName}",
+        requestService: "Solicitar {{serviceName}}",
         otherServices: "Otros servicios",
         quickContact: "Contacto rápido",
         availability: "Disponible de lunes a viernes, 8am-5pm",
