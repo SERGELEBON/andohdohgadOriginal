@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Save, Eye, Image as ImageIcon, Type, Settings } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Save, Eye, Image as ImageIcon, Type, Settings, Upload } from "lucide-react";
 import AdminLayout from "@/components/layout/AdminLayout";
 import { supabase } from "@/lib/supabase/supabaseClient";
 
@@ -27,7 +27,9 @@ export default function CMSEditor() {
   const [editData, setEditData] = useState<any>({});
   const [images, setImages] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   useEffect(() => {
     fetchSections();
@@ -48,6 +50,31 @@ export default function CMSEditor() {
       .order("section_key");
     
     if (data) setSections(data);
+  };
+
+  const handleImageUpload = async (imageKey: string, file: File) => {
+    setUploading(imageKey);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${activeSection}-${imageKey}-${Date.now()}.${fileExt}`;
+      const filePath = `images/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('public')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('public').getPublicUrl(filePath);
+      
+      setImages(prev => ({ ...prev, [imageKey]: data.publicUrl }));
+      setMessage(`✅ Image "${imageKey}" uploadée !`);
+      setTimeout(() => setMessage(""), 3000);
+    } catch (error: any) {
+      setMessage(`❌ Erreur upload: ${error.message}`);
+    } finally {
+      setUploading(null);
+    }
   };
 
   const handleSave = async () => {
@@ -173,113 +200,145 @@ export default function CMSEditor() {
 
   return (
     <AdminLayout>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Éditeur de Contenu</h1>
-          <p className="text-sm text-gray-500 mt-1">Gérez le contenu dynamique du site</p>
-        </div>
-        <a
-          href="/"
-          target="_blank"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
-        >
-          <Eye className="w-4 h-4" />
-          Prévisualiser
-        </a>
-      </div>
-
-      {message && (
-        <div className={`mb-4 p-4 rounded-lg ${message.startsWith("✅") ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
-          {message}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar - Liste sections */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              Sections
-            </h3>
-            <div className="space-y-1">
-              {sections.map((section) => (
-                <button
-                  key={section.section_key}
-                  onClick={() => setActiveSection(section.section_key)}
-                  className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                    activeSection === section.section_key
-                      ? "bg-primary text-white"
-                      : "hover:bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {sectionLabels[section.section_key] || section.section_key}
-                </button>
-              ))}
-            </div>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Éditeur de Contenu</h1>
+            <p className="text-sm text-gray-500 mt-1">Gérez le contenu dynamique du site</p>
           </div>
+          <a
+            href="/"
+            target="_blank"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+          >
+            <Eye className="w-4 h-4" />
+            Prévisualiser
+          </a>
         </div>
 
-        {/* Main Editor */}
-        <div className="lg:col-span-3">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <Type className="w-5 h-5" />
-                {sectionLabels[activeSection] || activeSection}
-              </h2>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
-              >
-                <Save className="w-4 h-4" />
-                {saving ? "Sauvegarde..." : "Sauvegarder"}
-              </button>
-            </div>
+        {message && (
+          <div className={`mb-4 p-4 rounded-lg ${message.startsWith("✅") ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
+            {message}
+          </div>
+        )}
 
-            {/* Textes */}
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <Type className="w-4 h-4" />
-                Textes
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow p-4">
+              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                Sections
               </h3>
-              {Object.entries(editData).map(([key, value]) => renderField(key, value))}
-            </div>
-
-            {/* Images */}
-            {Object.keys(images).length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4" />
-                  Images
-                </h3>
-                {Object.entries(images).map(([key, value]) => (
-                  <div key={key} className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {key}
-                    </label>
-                    <input
-                      type="text"
-                      value={value}
-                      onChange={(e) => setImages({ ...images, [key]: e.target.value })}
-                      placeholder="/images/example.jpg"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                    {value && (
-                      <img
-                        src={value}
-                        alt={key}
-                        className="mt-2 h-32 rounded object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                        }}
-                      />
-                    )}
-                  </div>
+              <div className="space-y-1">
+                {sections.map((section) => (
+                  <button
+                    key={section.section_key}
+                    onClick={() => setActiveSection(section.section_key)}
+                    className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                      activeSection === section.section_key
+                        ? "bg-primary text-white"
+                        : "hover:bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {sectionLabels[section.section_key] || section.section_key}
+                  </button>
                 ))}
               </div>
-            )}
+            </div>
+          </div>
+
+          {/* Editor */}
+          <div className="lg:col-span-3">
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <Type className="w-5 h-5" />
+                  {sectionLabels[activeSection] || activeSection}
+                </h2>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                >
+                  <Save className="w-4 h-4" />
+                  {saving ? "Sauvegarde..." : "Sauvegarder"}
+                </button>
+              </div>
+
+              {/* Textes */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                  <Type className="w-4 h-4" />
+                  Textes
+                </h3>
+                {Object.entries(editData).map(([key, value]) => renderField(key, value))}
+              </div>
+
+              {/* Images avec UPLOAD */}
+              {Object.keys(images).length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4" />
+                    Images
+                  </h3>
+                  {Object.entries(images).map(([key, value]) => (
+                    <div key={key} className="mb-6 p-4 border rounded-lg">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {key}
+                      </label>
+                      
+                      {/* Preview */}
+                      {value && (
+                        <div className="mb-3">
+                          <img
+                            src={value}
+                            alt={key}
+                            className="h-40 rounded object-cover border"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {/* Upload button */}
+                      <div className="flex gap-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          ref={(el) => fileInputRefs.current[key] = el}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleImageUpload(key, file);
+                          }}
+                          className="hidden"
+                        />
+                        <button
+                          onClick={() => fileInputRefs.current[key]?.click()}
+                          disabled={uploading === key}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                        >
+                          <Upload className="w-4 h-4" />
+                          {uploading === key ? "Upload..." : "Uploader une image"}
+                        </button>
+                      </div>
+
+                      {/* URL manuelle */}
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => setImages({ ...images, [key]: e.target.value })}
+                          placeholder="/images/example.jpg ou URL"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
