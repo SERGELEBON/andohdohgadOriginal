@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Linkedin } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { services } from "@/data/services";
 
 const navLinks = [
@@ -16,7 +15,6 @@ const navLinks = [
 ];
 
 export default function Footer() {
-  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -42,7 +40,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-white/70 text-sm italic mb-6 font-display">
-              &ldquo;{t("footer.tagline")}&rdquo;
+              &ldquo;{"Grandir sans visibilité est un risque."}&rdquo;
             </p>
             <div className="flex items-center gap-4">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-accent hover:border-accent transition-all duration-300 group">
@@ -62,7 +60,7 @@ export default function Footer() {
           {/* Services Column */}
           <div>
             <h4 className="text-white font-semibold text-base mb-5 font-body">
-              {t("footer.services")}
+              {"Nos Services"}
             </h4>
             <ul className="space-y-2.5">
               {services.map((s) => (
@@ -81,7 +79,7 @@ export default function Footer() {
           {/* Navigation Column */}
           <div>
             <h4 className="text-white font-semibold text-base mb-5 font-body">
-              {t("footer.navigation")}
+              {"Navigation"}
             </h4>
             <ul className="space-y-2.5">
               {navLinks.map((link) => (
@@ -100,7 +98,7 @@ export default function Footer() {
           {/* Contact Column */}
           <div>
             <h4 className="text-white font-semibold text-base mb-5 font-body">
-              {t("footer.contact")}
+              {"Contact"}
             </h4>
             <ul className="space-y-3.5">
               <li className="flex items-start gap-3">
@@ -132,14 +130,14 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/50 text-xs">
-            &copy; {currentYear} Andoh & Dohgad Consulting. {t("footer.rights")}.
+            &copy; {currentYear} Andoh & Dohgad Consulting. {"Tous droits réservés"}.
           </p>
           <div className="flex items-center gap-4">
             <span className="text-white/50 text-xs hover:text-white/70 cursor-pointer transition-colors">
-              {t("footer.legal")}
+              {"Mentions légales"}
             </span>
             <span className="text-white/50 text-xs hover:text-white/70 cursor-pointer transition-colors">
-              {t("footer.privacy")}
+              {"Politique de confidentialité"}
             </span>
           </div>
         </div>

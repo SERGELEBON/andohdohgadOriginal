@@ -1,7 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Check, Phone, Send } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import PageHeader from "@/components/layout/PageHeader";
 import { services } from "@/data/services";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -9,7 +8,6 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const service = services.find((s) => s.slug === slug);
   const { ref, isInView } = useScrollAnimation();
 
@@ -28,8 +26,8 @@ export default function ServiceDetail() {
         title={service.title}
         subtitle={service.shortDescription}
         breadcrumbs={[
-          { label: t("nav.home"), href: "/" },
-          { label: t("nav.services"), href: "/services" },
+          { label: "Accueil", href: "/" },
+          { label: "Nos Services", href: "/services" },
           { label: service.title, href: `#` },
         ]}
       />
@@ -89,36 +87,36 @@ export default function ServiceDetail() {
               {/* CTA Card */}
               <div className="bg-primary rounded-xl p-8 text-white">
                 <h4 className="font-body text-lg font-semibold mb-2">
-                  {t("serviceDetail.needService")}
+                  {"Besoin de ce service ?"}
                 </h4>
                 <p className="text-white/75 text-sm mb-6">
-                  {t("serviceDetail.formDescription")}
+                  {"Remplissez le formulaire adapté à vos besoins."}
                 </p>
                 <Link
                   to={`/demande-service?service=${slug}`}
                   className="btn-secondary w-full text-center flex items-center justify-center gap-2 mb-3 text-sm bg-accent hover:bg-accent/90 text-dark font-semibold shadow-lg"
                 >
                   <Send className="w-4 h-4" />
-                  {t("serviceDetail.requestService", { serviceName: service.title })}
+                  {"Demander " + service.title}
                 </Link>
                 <Link 
                   to="/rendez-vous" 
                   className="btn-outline w-full text-center block mb-3 text-sm border-white/30 hover:bg-white/10"
                 >
-                  {t("buttons.appointment")}
+                  {"Prendre rendez-vous"}
                 </Link>
                 <Link 
                   to="/contact" 
                   className="btn-outline w-full text-center block text-sm border-white/30 hover:bg-white/10"
                 >
-                  {t("buttons.requestInfo")}
+                  {"Demander une information"}
                 </Link>
               </div>
 
               {/* Related services */}
               <div className="bg-offwhite rounded-xl p-6">
                 <h4 className="font-body font-semibold text-dark mb-4">
-                  {t("serviceDetail.otherServices")}
+                  {"Autres services"}
                 </h4>
                 <ul className="space-y-2.5">
                   {otherServices.map((s) => {
@@ -141,14 +139,14 @@ export default function ServiceDetail() {
               {/* Quick contact */}
               <div className="bg-offwhite rounded-xl p-6">
                 <h4 className="font-body font-semibold text-dark mb-3">
-                  {t("serviceDetail.quickContact")}
+                  {"Contact rapide"}
                 </h4>
                 <div className="flex items-center gap-2 text-sm text-body mb-2">
                   <Phone className="w-4 h-4 text-primary" />
                   <span>+225 07 09 57 75 30</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-3">
-                  {t("serviceDetail.availability")}
+                  {"Disponible du lundi au vendredi, 8h-17h"}
                 </p>
               </div>
             </div>

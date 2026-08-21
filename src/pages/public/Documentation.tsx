@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FileText, X, CheckCircle, CreditCard, Smartphone } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useDocuments, type Document } from "@/hooks/useDocuments";
@@ -22,7 +21,6 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function Documentation() {
-  const { i18n } = useTranslation();
   const currentLanguage = i18n.language || 'fr';
 
   const { documents, loading } = useDocuments(currentLanguage);

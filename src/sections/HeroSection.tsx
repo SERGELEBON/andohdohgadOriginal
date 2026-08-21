@@ -1,12 +1,10 @@
 import { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import gsap from "gsap";
 import ParticleCanvas from "@/components/ui/ParticleCanvas";
 
 export default function HeroSection() {
-  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -75,21 +73,21 @@ export default function HeroSection() {
           ref={labelRef}
           className="inline-block text-xs font-semibold uppercase tracking-[3px] text-accent mb-6 opacity-0"
         >
-          {t('hero.label')}
+          {"Cabinet de Conseil Multidisciplinaire"}
         </span>
 
         <h1
           ref={titleRef}
           className="font-display text-3xl sm:text-4xl lg:text-[52px] font-bold text-white leading-[1.15] opacity-0"
         >
-          {t('hero.title')}
+          {"Passer de la survie à la croissance"}
         </h1>
 
         <p
           ref={subtitleRef}
           className="text-white/85 text-base lg:text-lg mt-6 max-w-xl mx-auto leading-relaxed opacity-0"
         >
-          {t('hero.subtitle')}
+          {"Andoh & Dohgad Consulting accompagne les entrepreneurs ivoiriens dans la structuration, la gestion et la croissance de leurs entreprises."}
         </p>
 
         <div
@@ -97,13 +95,13 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10"
         >
           <Link to="/services" className="btn-primary opacity-0">
-            {t('hero.cta1')}
+            {"Découvrir nos services"}
           </Link>
           <Link
             to="/rendez-vous"
             className="btn-secondary opacity-0 inline-flex items-center gap-2"
           >
-            {t('hero.cta2')}
+            {"Prendre rendez-vous"}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

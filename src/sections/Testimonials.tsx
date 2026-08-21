@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { testimonials } from "@/data/testimonials";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -8,8 +7,6 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 export default function Testimonials() {
   const [active, setActive] = useState(0);
   const { ref, isInView } = useScrollAnimation();
-  const { t } = useTranslation();
-
   const prev = () => setActive((a) => (a === 0 ? testimonials.length - 1 : a - 1));
   const next = () => setActive((a) => (a === testimonials.length - 1 ? 0 : a + 1));
 
@@ -17,8 +14,8 @@ export default function Testimonials() {
     <section className="section-padding bg-offwhite" ref={ref}>
       <div className="container-lg">
         <SectionTitle 
-          label={t("testimonials.label")} 
-          title={t("testimonials.title")} 
+          label={"ILS NOUS FONT CONFIANCE"} 
+          title={"Ce que nos clients disent de nous"} 
         />
 
         <div className="relative">

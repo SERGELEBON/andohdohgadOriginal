@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, ArrowRight, User, LogOut } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { services } from "@/data/services";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -27,7 +25,6 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const location = useLocation();
-  const { t } = useTranslation();
   const { user, profile, signOut } = useAuth();
 
   useEffect(() => {
@@ -118,7 +115,7 @@ export default function Header() {
 
           {/* Right section */}
           <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitcher />
+            
 
             {user ? (
               <div className="flex items-center gap-3">
@@ -221,7 +218,7 @@ export default function Header() {
             ))}
 
             <div className="mt-4">
-              <LanguageSwitcher />
+              
             </div>
 
             {/* Auth buttons for mobile */}
@@ -281,7 +278,7 @@ export default function Header() {
               className="mt-4 inline-flex items-center gap-2 px-8 py-3.5 bg-accent text-dark text-base font-semibold rounded-lg"
               onClick={() => setIsMobileOpen(false)}
             >
-              {t("header.cta")}
+              {"Prendre rendez-vous"}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

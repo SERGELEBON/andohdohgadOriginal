@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { articles } from "@/data/blog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export default function BlogPreview() {
   const { ref, isInView } = useScrollAnimation();
-  const { t } = useTranslation();
   const recent = articles.slice(0, 3);
 
   return (
@@ -15,15 +13,15 @@ export default function BlogPreview() {
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12 lg:mb-16">
           <div>
             <span className="text-xs font-semibold uppercase tracking-[2px] text-secondary mb-3 block">
-              {t("blogPreview.label")}
+              {"NOTRE BLOG"}
             </span>
             <h2 className="font-display text-2xl lg:text-4xl font-semibold text-dark">
-              {t("blogPreview.title")}
+              {"Dernières actualités et conseils"}
             </h2>
             <span className="gold-underline" />
           </div>
           <Link to="/blog" className="text-link shrink-0">
-            {t("blogPreview.seeAll")}
+            {"Voir tous les articles"}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -59,7 +57,7 @@ export default function BlogPreview() {
                   <time>{article.date}</time>
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    <span>{article.readTime} {t("blogPreview.readTime")}</span>
+                    <span>{article.readTime} {"min de lecture"}</span>
                   </div>
                 </div>
               </div>

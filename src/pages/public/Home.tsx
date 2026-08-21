@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import HeroSection from "@/sections/HeroSection";
 import StatsBar from "@/sections/StatsBar";
 import ServicesGrid from "@/sections/ServicesGrid";
@@ -8,8 +7,6 @@ import BlogPreview from "@/sections/BlogPreview";
 import CTABanner from "@/sections/CTABanner";
 
 export default function Home() {
-  const { t } = useTranslation();
-
   return (
     <>
       <HeroSection />
@@ -19,8 +16,8 @@ export default function Home() {
       <Testimonials />
       <BlogPreview />
       <CTABanner
-        title={t('home.ctaTitle')}
-        buttonText={t('home.ctaButton')}
+        title={"Prêt à structurer votre entreprise et accélérer votre croissance ?"}
+        buttonText={"Nous contacter"}
         buttonLink="/contact"
       />
     </>

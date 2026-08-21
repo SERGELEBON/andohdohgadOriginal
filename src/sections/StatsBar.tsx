@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { useInView } from "framer-motion";
-import { useTranslation } from "react-i18next";
 
 const statsData = [
   { value: 200, suffix: "+", key: "clients" },
@@ -10,7 +9,6 @@ const statsData = [
 ];
 
 export default function StatsBar() {
-  const { t } = useTranslation();
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [hasAnimated, setHasAnimated] = useState(false);
