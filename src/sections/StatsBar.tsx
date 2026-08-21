@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { useInView } from "framer-motion";
 
+const statsLabels: Record<string, string> = {"clients": "Clients accompagnés", "expertises": "Expertises métiers", "experience": "Années d'expérience"};
+
 const statsData = [
   { value: 200, suffix: "+", key: "clients" },
   { value: 7, suffix: "", key: "expertises" },
@@ -36,7 +38,7 @@ export default function StatsBar() {
                 )}
               </div>
               <p className="text-white/70 text-sm lg:text-base mt-2">
-                {t(`stats.${stat.key}`)}
+                {statsLabels[stat.key]}
               </p>
             </div>
           ))}

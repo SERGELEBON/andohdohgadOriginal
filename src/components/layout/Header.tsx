@@ -4,6 +4,8 @@ import { Menu, X, ChevronDown, ArrowRight, User, LogOut } from "lucide-react";
 import { services } from "@/data/services";
 import { useAuth } from "@/contexts/AuthContext";
 
+const navLabels: Record<string, string> = {"home": "Accueil", "about": "À propos", "services": "Nos Services", "solutions": "Nos Solutions", "request": "Demande de service", "documentation": "Nos Documents", "blog": "Blog", "contact": "Contact", "appointment": "Prendre rendez-vous", "coworking": "Co-working"};
+
 const navLinks = [
   { label: "home", href: "/" },
   { label: "about", href: "/a-propos" },
@@ -87,7 +89,7 @@ export default function Header() {
                       : ""
                   }`}
                 >
-                  {t(`nav.${link.label}`)}
+                  {navLabels[link.label]}
                   {link.children && <ChevronDown className="w-4 h-4" />}
                   {(location.pathname === link.href ||
                     (link.href !== "/" && location.pathname.startsWith(link.href))) && (
@@ -186,7 +188,7 @@ export default function Header() {
                       onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
                       className="flex items-center justify-center gap-2 text-xl font-medium text-white/90 hover:text-white transition-colors py-2 mx-auto"
                     >
-                      {t(`nav.${link.label}`)}
+                      {navLabels[link.label]}
                       <ChevronDown className={`w-5 h-5 transition-transform ${mobileServicesOpen ? 'rotate-180' : ''}`} />
                     </button>
                     {mobileServicesOpen && (
@@ -211,7 +213,7 @@ export default function Header() {
                     className="text-xl font-medium text-white/90 hover:text-white transition-colors block py-2"
                     onClick={() => setIsMobileOpen(false)}
                   >
-                    {t(`nav.${link.label}`)}
+                    {navLabels[link.label]}
                   </Link>
                 )}
               </div>

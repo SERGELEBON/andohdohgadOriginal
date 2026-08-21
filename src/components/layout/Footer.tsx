@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Linkedin } from "lucide-react";
 import { services } from "@/data/services";
 
+const navLabels: Record<string, string> = {"home": "Accueil", "about": "À propos", "services": "Nos Services", "solutions": "Nos Solutions", "request": "Demande de service", "documentation": "Nos Documents", "blog": "Blog", "contact": "Contact", "appointment": "Prendre rendez-vous", "coworking": "Co-working"};
+
 const navLinks = [
   { label: "home", href: "/" },
   { label: "about", href: "/a-propos" },
@@ -88,7 +90,7 @@ export default function Footer() {
                     to={link.href}
                     className="text-white/70 text-sm hover:text-accent hover:translate-x-1 inline-block transition-all duration-300"
                   >
-                    {t(`nav.${link.label}`)}
+                    {navLabels[link.label]}
                   </Link>
                 </li>
               ))}
