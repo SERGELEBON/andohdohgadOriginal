@@ -1,11 +1,24 @@
 -- =====================================================
--- DROP ET RECRÉATION COMPLÈTE
+-- NETTOYAGE COMPLET - Supprime TOUT ce qui existe
 -- =====================================================
 
--- Supprimer tout ce qui existe
+-- Supprimer les triggers
+DROP TRIGGER IF EXISTS cms_content_updated_at ON public.cms_content;
+
+-- Supprimer les fonctions
+DROP FUNCTION IF EXISTS update_cms_updated_at();
+
+-- Supprimer les index (explicitement)
+DROP INDEX IF EXISTS public.idx_cms_section_key;
+DROP INDEX IF EXISTS public.idx_cms_active;
+
+-- Supprimer la table (CASCADE supprime les policies)
 DROP TABLE IF EXISTS public.cms_content CASCADE;
 
--- Créer la table
+-- =====================================================
+-- CRÉATION PROPRE
+-- =====================================================
+
 CREATE TABLE public.cms_content (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   section_key TEXT NOT NULL UNIQUE,
@@ -37,7 +50,10 @@ CREATE POLICY "Admins can manage content"
     )
   );
 
--- Données initiales
+-- =====================================================
+-- DONNÉES INITIALES
+-- =====================================================
+
 INSERT INTO public.cms_content (section_key, content, images) VALUES
 ('hero', 
   '{"label": "Cabinet de Conseil Multidisciplinaire", "title": "Passer de la survie à la croissance", "subtitle": "Andoh & Dohgad Consulting accompagne les entrepreneurs ivoiriens dans la structuration, la gestion et la croissance de leurs entreprises.", "cta1": "Découvrir nos services", "cta2": "Prendre rendez-vous"}'::jsonb,
@@ -68,7 +84,10 @@ INSERT INTO public.cms_content (section_key, content, images) VALUES
   '{}'::jsonb
 );
 
--- Trigger auto-update
+-- =====================================================
+-- TRIGGER AUTO-UPDATE
+-- =====================================================
+
 CREATE OR REPLACE FUNCTION update_cms_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -82,5 +101,14 @@ CREATE TRIGGER cms_content_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_cms_updated_at();
 
--- Vérification
-SELECT section_key, content->>'title' as title, active FROM public.cms_content ORDER BY section_key;
+-- =====================================================
+-- VÉRIFICATION
+-- =====================================================
+
+SELECT 
+  section_key, 
+  content->>'title' as title, 
+  active,
+  created_at
+FROM public.cms_content 
+ORDER BY section_key;
