@@ -184,20 +184,27 @@ export default function Surveys() {
 
       try {
         await Promise.race([insertPromise, timeoutPromise]);
+        console.log("✅ Données enregistrées dans Supabase");
       } catch (supabaseError) {
         console.warn("Supabase submission failed/timeout, continuing with EmailJS:", supabaseError);
       }
 
-      await emailjs.send(
-        "service_fqsdqil",
-        "template_rq4a5uc",
-        {
-          survey_type: activeSurvey,
-          to_email: "andoh.dohgad@gmail.com",
-          ...data,
-        },
-        "sFZh4sYFqQ3rh0nDd"
-      );
+      // Tentative d'envoi EmailJS (non-bloquant, optionnel)
+      try {
+        await emailjs.send(
+          "service_fqsdqil",
+          "template_rq4a5uc",
+          {
+            survey_type: activeSurvey,
+            to_email: "andoh.dohgad@gmail.com",
+            ...data,
+          },
+          "sFZh4sYFqQ3rh0nDd"
+        );
+        console.log("✅ Email de notification envoyé");
+      } catch (emailError) {
+        console.warn("⚠️ EmailJS failed (non-critical):", emailError);
+      }
 
       setStatus("success");
       reset();
