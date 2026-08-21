@@ -95,7 +95,7 @@ export default function ServiceDetail() {
                   {t("serviceDetail.formDescription")}
                 </p>
                 <Link
-                  to="/demande-service"
+                  to={`/demande-service?service=${slug}`}
                   className="btn-secondary w-full text-center flex items-center justify-center gap-2 mb-3 text-sm bg-accent hover:bg-accent/90 text-dark font-semibold shadow-lg"
                 >
                   <Send className="w-4 h-4" />

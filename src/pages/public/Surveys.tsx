@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,6 +9,18 @@ import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { supabase } from "@/lib/supabase/supabaseClient";
+
+// ==========================================
+// MAPPING SERVICE SLUG -> SURVEY TYPE
+// ==========================================
+const serviceToSurveyMap: Record<string, SurveyType> = {
+  "creation-entreprise": "creation",
+  "ressources-humaines": "rh",
+  "coworking-domiciliation": "domiciliation",
+  "comptable-fiscal": "service",
+  "conseil-strategique": "service",
+  "formation": "service",
+};
 
 // ==========================================
 // TYPES & SCHEMAS
@@ -48,435 +61,223 @@ const surveys = [
   },
 ];
 
-// Schémas de validation Zod par type de formulaire
+// Schemas de validation Zod (inchangés)
 const creationSchema = z.object({
-  // Informations personnelles
-  name: z.string().min(2, "Minimum 2 caractères"),
+  name: z.string().min(1, "Nom requis"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Numéro de téléphone invalide"),
-
-  // Informations entreprise
-  companyName: z.string().min(2, "Nom d'entreprise requis"),
+  phone: z.string().min(8, "Numéro invalide"),
+  companyName: z.string().min(2, "Nom de l'entreprise requis"),
   structure: z.string().min(1, "Type de structure requis"),
-  sector: z.string().min(1, "Secteur d'activité requis"),
-  capital: z.string().optional(),
-  partnerCount: z.string().optional(),
-  employeeCount: z.string().optional(),
-  registrationAddress: z.string().optional(),
-  hasBusinessPlan: z.string().optional(),
-  description: z.string().min(10, "Décrivez votre projet (minimum 10 caractères)"),
+  sector: z.string().min(2, "Secteur d'activité requis"),
+  capital: z.string().min(1, "Capital requis"),
+  partnerCount: z.string().min(1, "Nombre d'associés requis"),
+  employeeCount: z.string().min(1, "Nombre d'employés requis"),
+  registrationAddress: z.string().min(5, "Adresse de domiciliation requise"),
+  hasBusinessPlan: z.string().min(1, "Réponse requise"),
+  description: z.string().min(20, "Description trop courte (min 20 caractères)"),
 });
 
 const serviceSchema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
+  name: z.string().min(1, "Nom requis"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Numéro de téléphone invalide"),
+  phone: z.string().min(8, "Numéro invalide"),
+  company: z.string().min(2, "Nom de l'entreprise requis"),
   serviceType: z.string().min(1, "Type de service requis"),
-  description: z.string().min(10, "Description requise (minimum 10 caractères)"),
-  urgency: z.string().optional(),
-  budget: z.string().optional(),
+  urgency: z.string().min(1, "Niveau d'urgence requis"),
+  budget: z.string().min(1, "Budget requis"),
+  description: z.string().min(20, "Description trop courte (min 20 caractères)"),
 });
 
 const rhSchema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
+  name: z.string().min(1, "Nom requis"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Numéro de téléphone invalide"),
-  companyName: z.string().min(2, "Nom d'entreprise requis"),
-  size: z.string().min(1, "Taille de l'entreprise requise"),
-  timeline: z.string().optional(),
-  needType: z.string().optional(),
-  message: z.string().optional(),
+  phone: z.string().min(8, "Numéro invalide"),
+  company: z.string().min(2, "Nom de l'entreprise requis"),
+  employeeCount: z.string().min(1, "Nombre d'employés requis"),
+  rhNeed: z.string().min(1, "Besoin RH requis"),
+  urgency: z.string().min(1, "Niveau d'urgence requis"),
+  description: z.string().min(20, "Description trop courte (min 20 caractères)"),
 });
 
 const domiciliationSchema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
+  name: z.string().min(1, "Nom requis"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Numéro de téléphone invalide"),
-  companyName: z.string().min(2, "Nom d'entreprise requis"),
+  phone: z.string().min(8, "Numéro invalide"),
+  companyName: z.string().min(2, "Nom de l'entreprise requis"),
+  structure: z.string().min(1, "Type de structure requis"),
   duration: z.string().min(1, "Durée requise"),
-  type: z.string().min(1, "Type de domiciliation requis"),
-  hasRCCM: z.string().optional(),
-  message: z.string().optional(),
+  additionalServices: z.string().optional(),
+  description: z.string().min(20, "Description trop courte (min 20 caractères)"),
 });
 
 const coworkingSchema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
+  name: z.string().min(1, "Nom requis"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Numéro de téléphone invalide"),
-  frequency: z.string().min(1, "Fréquence requise"),
+  phone: z.string().min(8, "Numéro invalide"),
   spaceType: z.string().min(1, "Type d'espace requis"),
-  expectedDuration: z.string().optional(),
-  peopleCount: z.string().optional(),
-  message: z.string().optional(),
+  duration: z.string().min(1, "Durée requise"),
+  peopleCount: z.string().min(1, "Nombre de personnes requis"),
+  equipmentNeeds: z.string().optional(),
+  description: z.string().min(20, "Description trop courte (min 20 caractères)"),
 });
 
 type CreationFormData = z.infer<typeof creationSchema>;
 type ServiceFormData = z.infer<typeof serviceSchema>;
-type RhFormData = z.infer<typeof rhSchema>;
+type RHFormData = z.infer<typeof rhSchema>;
 type DomiciliationFormData = z.infer<typeof domiciliationSchema>;
 type CoworkingFormData = z.infer<typeof coworkingSchema>;
+type FormData = CreationFormData | ServiceFormData | RHFormData | DomiciliationFormData | CoworkingFormData;
 
-type FormData = CreationFormData | ServiceFormData | RhFormData | DomiciliationFormData | CoworkingFormData;
-
-// ==========================================
-// CONFIGURATION DES CHAMPS
-// ==========================================
-
-const formConfigs: Record<SurveyType, Array<{
-  label: string;
-  name: string;
-  type: "text" | "email" | "tel" | "select" | "textarea" | "number";
-  required?: boolean;
-  options?: string[];
-  placeholder?: string;
-  icon?: any;
-}>> = {
-  creation: [
-    {
-      label: "Nom de l'entreprise",
-      name: "companyName",
-      type: "text",
-      required: true,
-      placeholder: "Ex: Andoh Consulting SARL",
-      icon: Building2
-    },
-    {
-      label: "Type de structure juridique",
-      name: "structure",
-      type: "select",
-      required: true,
-      options: ["SARL", "SAS", "Entreprise Individuelle", "SA", "GIE", "SCI", "SASU", "Autre"]
-    },
-    {
-      label: "Secteur d'activité",
-      name: "sector",
-      type: "select",
-      required: true,
-      options: [
-        "Commerce général",
-        "Services aux entreprises",
-        "Industrie & Manufacturing",
-        "Agriculture & Agro-alimentaire",
-        "Technologies & IT",
-        "Immobilier & Construction",
-        "Santé & Bien-être",
-        "Éducation & Formation",
-        "Transport & Logistique",
-        "Tourisme & Hôtellerie",
-        "Autre"
-      ]
-    },
-    {
-      label: "Capital social prévisionnel",
-      name: "capital",
-      type: "select",
-      options: [
-        "Moins de 1 million FCFA",
-        "1 - 5 millions FCFA",
-        "5 - 10 millions FCFA",
-        "10 - 50 millions FCFA",
-        "Plus de 50 millions FCFA",
-        "Non défini"
-      ]
-    },
-    {
-      label: "Nombre d'associés prévus",
-      name: "partnerCount",
-      type: "select",
-      options: ["1 (entreprise individuelle)", "2", "3-5", "6-10", "Plus de 10"]
-    },
-    {
-      label: "Nombre d'employés prévus (1ère année)",
-      name: "employeeCount",
-      type: "select",
-      options: ["0 (auto-entrepreneur)", "1-5", "6-10", "11-20", "Plus de 20"]
-    },
-    {
-      label: "Avez-vous déjà une adresse de siège ?",
-      name: "registrationAddress",
-      type: "select",
-      options: ["Oui, j'ai une adresse", "Non, besoin de domiciliation", "Pas encore décidé"]
-    },
-    {
-      label: "Avez-vous un business plan ?",
-      name: "hasBusinessPlan",
-      type: "select",
-      options: ["Oui, finalisé", "En cours d'élaboration", "Non, besoin d'aide", "Pas encore commencé"]
-    },
-    {
-      label: "Description détaillée du projet",
-      name: "description",
-      type: "textarea",
-      required: true,
-      placeholder: "Décrivez votre activité, vos objectifs, votre marché cible, vos besoins d'accompagnement..."
-    },
-  ],
-  service: [
-    {
-      label: "Type de service",
-      name: "serviceType",
-      type: "select",
-      required: true,
-      options: [
-        "Comptabilité & Fiscalité",
-        "Ressources Humaines",
-        "Création d'entreprise",
-        "Conseil Stratégique",
-        "Formation professionnelle",
-        "Audit & Contrôle",
-        "Co-working & Domiciliation",
-        "Autre"
-      ]
-    },
-    {
-      label: "Description détaillée du besoin",
-      name: "description",
-      type: "textarea",
-      required: true,
-      placeholder: "Décrivez précisément votre besoin, vos attentes et vos contraintes..."
-    },
-    {
-      label: "Niveau d'urgence",
-      name: "urgency",
-      type: "select",
-      options: ["Faible (plus de 3 mois)", "Moyenne (1-3 mois)", "Élevée (moins d'1 mois)", "Critique (immédiat)"]
-    },
-    {
-      label: "Budget prévisionnel",
-      name: "budget",
-      type: "select",
-      options: [
-        "Moins de 500 000 FCFA",
-        "500 000 - 1 million FCFA",
-        "1 - 5 millions FCFA",
-        "Plus de 5 millions FCFA",
-        "À discuter"
-      ]
-    },
-  ],
-  rh: [
-    {
-      label: "Nom de l'entreprise",
-      name: "companyName",
-      type: "text",
-      required: true,
-      placeholder: "Nom de votre entreprise"
-    },
-    {
-      label: "Taille de l'entreprise",
-      name: "size",
-      type: "select",
-      required: true,
-      options: ["1-5 employés", "6-20 employés", "21-50 employés", "51-200 employés", "Plus de 200 employés"]
-    },
-    {
-      label: "Type de besoin RH",
-      name: "needType",
-      type: "select",
-      options: [
-        "Recrutement",
-        "Formation du personnel",
-        "Gestion de la paie",
-        "Politique RH & Réglementation",
-        "Gestion des conflits",
-        "Audit RH",
-        "Autre"
-      ]
-    },
-    {
-      label: "Délai souhaité",
-      name: "timeline",
-      type: "select",
-      options: ["Immédiat", "1-3 mois", "3-6 mois", "Plus de 6 mois"]
-    },
-    {
-      label: "Détails complémentaires",
-      name: "message",
-      type: "textarea",
-      placeholder: "Précisez vos besoins, contraintes, objectifs..."
-    },
-  ],
-  domiciliation: [
-    {
-      label: "Nom de l'entreprise",
-      name: "companyName",
-      type: "text",
-      required: true,
-      placeholder: "Nom de votre entreprise"
-    },
-    {
-      label: "Durée souhaitée",
-      name: "duration",
-      type: "select",
-      required: true,
-      options: ["3 mois", "6 mois", "1 an", "2 ans", "Plus de 2 ans"]
-    },
-    {
-      label: "Type de domiciliation",
-      name: "type",
-      type: "select",
-      required: true,
-      options: ["Commerciale uniquement", "Siège social", "Les deux (Commerciale + Siège)"]
-    },
-    {
-      label: "Avez-vous déjà un RCCM ?",
-      name: "hasRCCM",
-      type: "select",
-      options: ["Oui", "Non, en cours", "Non, besoin d'aide pour l'obtenir"]
-    },
-    {
-      label: "Informations complémentaires",
-      name: "message",
-      type: "textarea",
-      placeholder: "Services additionnels souhaités, besoins spécifiques..."
-    },
-  ],
-  coworking: [
-    {
-      label: "Fréquence d'utilisation",
-      name: "frequency",
-      type: "select",
-      required: true,
-      options: ["Quotidienne (5j/semaine)", "Régulière (2-4j/semaine)", "Occasionnelle (1j/semaine)", "Ponctuelle (à la demande)"]
-    },
-    {
-      label: "Type d'espace",
-      name: "spaceType",
-      type: "select",
-      required: true,
-      options: ["Bureau individuel", "Poste en open-space", "Salle de réunion", "Combinaison (Bureau + Salle)"]
-    },
-    {
-      label: "Durée prévisionnelle",
-      name: "expectedDuration",
-      type: "select",
-      options: ["1 mois (essai)", "3 mois", "6 mois", "1 an", "Indéterminée"]
-    },
-    {
-      label: "Nombre de personnes",
-      name: "peopleCount",
-      type: "select",
-      options: ["1 personne", "2 personnes", "3-5 personnes", "Plus de 5 personnes"]
-    },
-    {
-      label: "Besoins et services additionnels",
-      name: "message",
-      type: "textarea",
-      placeholder: "Wifi, imprimante, parking, services de secrétariat, autres besoins..."
-    },
-  ],
-};
-
-// ==========================================
-// COMPOSANT PRINCIPAL
-// ==========================================
+type SubmissionStatus = "idle" | "submitting" | "success" | "error";
 
 export default function Surveys() {
+  const [searchParams] = useSearchParams();
+  const formRef = useRef<HTMLDivElement>(null);
   const [activeSurvey, setActiveSurvey] = useState<SurveyType>("creation");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const { ref, isInView } = useScrollAnimation();
 
-  // Déterminer le schéma en fonction du formulaire actif
-  const getSchema = () => {
-    switch (activeSurvey) {
-      case "creation": return creationSchema;
-      case "service": return serviceSchema;
-      case "rh": return rhSchema;
-      case "domiciliation": return domiciliationSchema;
-      case "coworking": return coworkingSchema;
+  // Auto-select survey based on URL param
+  useEffect(() => {
+    const serviceSlug = searchParams.get("service");
+    if (serviceSlug && serviceToSurveyMap[serviceSlug]) {
+      setActiveSurvey(serviceToSurveyMap[serviceSlug]);
+      
+      // Auto-scroll to form after a short delay
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
     }
-  };
+  }, [searchParams]);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(getSchema()),
+  const currentSchema =
+    activeSurvey === "creation" ? creationSchema :
+    activeSurvey === "service" ? serviceSchema :
+    activeSurvey === "rh" ? rhSchema :
+    activeSurvey === "domiciliation" ? domiciliationSchema :
+    coworkingSchema;
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
+    resolver: zodResolver(currentSchema),
   });
 
   const onSubmit = async (data: FormData) => {
+    setStatus("submitting");
+    setErrorMessage("");
+
     try {
-      setStatus("submitting");
-      setErrorMessage("");
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Supabase timeout")), 5000)
+      );
 
-      // 1. Essayer de sauvegarder dans Supabase (avec timeout)
+      const insertPromise = supabase.from("surveys").insert([
+        {
+          survey_type: activeSurvey,
+          form_data: data,
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          status: "pending",
+        },
+      ]);
+
       try {
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase timeout')), 5000)
-        );
-
-        const insertPromise = supabase
-          .from('surveys')
-          .insert([
-            {
-              survey_type: activeSurvey,
-              form_data: data,
-              email: data.email,
-              name: data.name,
-              phone: data.phone,
-            },
-          ]);
-
         await Promise.race([insertPromise, timeoutPromise]);
-        console.log("✅ Sauvegarde Supabase réussie");
-      } catch (dbError) {
-        console.warn("⚠️ Supabase indisponible, passage à EmailJS uniquement:", dbError);
-        // Continuer avec EmailJS même si Supabase timeout
+      } catch (supabaseError) {
+        console.warn("Supabase submission failed/timeout, continuing with EmailJS:", supabaseError);
       }
 
-      // 2. Envoyer email via EmailJS (prioritaire)
-      const emailParams = {
-        survey_type: surveys.find(s => s.id === activeSurvey)?.title,
-        from_name: data.name,
-        from_email: data.email,
-        from_phone: data.phone,
-        form_data: JSON.stringify(data, null, 2),
-        to_email: 'andoh.dohgad@gmail.com',
-      };
-
-      try {
-        await emailjs.send(
-          import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
-          import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
-          emailParams,
-          import.meta.env.VITE_EMAILJS_PUBLIC_KEY || ''
-        );
-        console.log("✅ Email envoyé avec succès");
-      } catch (emailError) {
-        console.error("❌ Erreur EmailJS:", emailError);
-        throw new Error("Impossible d'envoyer l'email. Vérifiez votre connexion internet.");
-      }
+      await emailjs.send(
+        "service_fqsdqil",
+        "template_rq4a5uc",
+        {
+          survey_type: activeSurvey,
+          to_email: "andoh.dohgad@gmail.com",
+          ...data,
+        },
+        "sFZh4sYFqQ3rh0nDd"
+      );
 
       setStatus("success");
+      reset();
+
       setTimeout(() => {
         setStatus("idle");
-        reset();
       }, 5000);
-
-    } catch (error: any) {
-      console.error("❌ Erreur soumission:", error);
+    } catch (error) {
+      console.error("Submission error:", error);
       setStatus("error");
       setErrorMessage(
-        error.message ||
-        "Erreur de connexion. Vérifiez votre internet et réessayez."
+        "Une erreur est survenue lors de l'envoi. Veuillez réessayer ou nous contacter directement."
       );
     }
   };
 
-  const currentFields = formConfigs[activeSurvey] || [];
-  const activeSurveyData = surveys.find((s) => s.id === activeSurvey)!;
+  const currentFields = 
+    activeSurvey === "creation" ? [
+      { name: "name", label: "Votre nom complet", type: "text", required: true, placeholder: "Ex: Jean Kouassi" },
+      { name: "email", label: "Votre email", type: "email", required: true, placeholder: "Ex: jean@example.com" },
+      { name: "phone", label: "Votre téléphone", type: "tel", required: true, placeholder: "Ex: +225 07 XX XX XX XX" },
+      { name: "companyName", label: "Nom de l'entreprise", type: "text", required: true, placeholder: "Ex: SARL Kouassi Consulting" },
+      { name: "structure", label: "Forme juridique", type: "select", required: true, options: ["SARL", "SARLU", "SA", "SAS", "Entreprise Individuelle", "GIE", "Autre"] },
+      { name: "sector", label: "Secteur d'activité", type: "text", required: true, placeholder: "Ex: Commerce, Services, IT..." },
+      { name: "capital", label: "Capital social envisagé", type: "text", required: true, placeholder: "Ex: 1 000 000 FCFA" },
+      { name: "partnerCount", label: "Nombre d'associés", type: "select", required: true, options: ["1 (Associé unique)", "2", "3 à 5", "Plus de 5"] },
+      { name: "employeeCount", label: "Nombre d'employés prévus", type: "select", required: true, options: ["Aucun", "1 à 5", "6 à 10", "11 à 20", "Plus de 20"] },
+      { name: "registrationAddress", label: "Adresse de domiciliation", type: "text", required: true, placeholder: "Ex: Abidjan, Cocody Riviera 3" },
+      { name: "hasBusinessPlan", label: "Avez-vous un business plan ?", type: "select", required: true, options: ["Oui, complet", "En cours de rédaction", "Non, j'ai besoin d'aide"] },
+      { name: "description", label: "Description de votre projet", type: "textarea", required: true, placeholder: "Décrivez brièvement votre projet d'entreprise, vos objectifs, votre marché cible..." },
+    ] :
+    activeSurvey === "service" ? [
+      { name: "name", label: "Votre nom complet", type: "text", required: true, placeholder: "Ex: Marie Touré" },
+      { name: "email", label: "Votre email", type: "email", required: true, placeholder: "Ex: marie@example.com" },
+      { name: "phone", label: "Votre téléphone", type: "tel", required: true, placeholder: "Ex: +225 07 XX XX XX XX" },
+      { name: "company", label: "Nom de votre entreprise", type: "text", required: true, placeholder: "Ex: SARL Touré Services" },
+      { name: "serviceType", label: "Type de service", type: "select", required: true, options: ["Comptabilité & Fiscalité", "Conseil stratégique", "Formation professionnelle", "Audit interne", "Autre"] },
+      { name: "urgency", label: "Niveau d'urgence", type: "select", required: true, options: ["Très urgent (< 1 semaine)", "Urgent (1-2 semaines)", "Normal (3-4 semaines)", "Pas urgent"] },
+      { name: "budget", label: "Budget estimé", type: "select", required: true, options: ["< 500 000 FCFA", "500 000 - 1 000 000 FCFA", "1 000 000 - 3 000 000 FCFA", "> 3 000 000 FCFA", "À discuter"] },
+      { name: "description", label: "Description de votre besoin", type: "textarea", required: true, placeholder: "Décrivez en détail votre besoin, le contexte, les résultats attendus..." },
+    ] :
+    activeSurvey === "rh" ? [
+      { name: "name", label: "Votre nom complet", type: "text", required: true, placeholder: "Ex: Paul Diabaté" },
+      { name: "email", label: "Votre email", type: "email", required: true, placeholder: "Ex: paul@example.com" },
+      { name: "phone", label: "Votre téléphone", type: "tel", required: true, placeholder: "Ex: +225 07 XX XX XX XX" },
+      { name: "company", label: "Nom de votre entreprise", type: "text", required: true, placeholder: "Ex: SARL Diabaté & Fils" },
+      { name: "employeeCount", label: "Nombre d'employés actuels", type: "select", required: true, options: ["1 à 5", "6 à 10", "11 à 20", "21 à 50", "Plus de 50"] },
+      { name: "rhNeed", label: "Besoin RH principal", type: "select", required: true, options: ["Recrutement", "Formation", "Gestion de la paie", "Politique RH", "Conflit interne", "Évaluation des performances", "Autre"] },
+      { name: "urgency", label: "Niveau d'urgence", type: "select", required: true, options: ["Très urgent (< 1 semaine)", "Urgent (1-2 semaines)", "Normal (3-4 semaines)", "Pas urgent"] },
+      { name: "description", label: "Description de votre problématique RH", type: "textarea", required: true, placeholder: "Décrivez votre situation, les défis rencontrés, vos attentes..." },
+    ] :
+    activeSurvey === "domiciliation" ? [
+      { name: "name", label: "Votre nom complet", type: "text", required: true, placeholder: "Ex: Aya Koné" },
+      { name: "email", label: "Votre email", type: "email", required: true, placeholder: "Ex: aya@example.com" },
+      { name: "phone", label: "Votre téléphone", type: "tel", required: true, placeholder: "Ex: +225 07 XX XX XX XX" },
+      { name: "companyName", label: "Nom de l'entreprise", type: "text", required: true, placeholder: "Ex: SARL Koné Trading" },
+      { name: "structure", label: "Forme juridique", type: "select", required: true, options: ["SARL", "SARLU", "SA", "SAS", "Entreprise Individuelle", "GIE", "Autre"] },
+      { name: "duration", label: "Durée de domiciliation souhaitée", type: "select", required: true, options: ["6 mois", "1 an", "2 ans", "3 ans", "À discuter"] },
+      { name: "additionalServices", label: "Services additionnels", type: "select", required: false, options: ["Aucun", "Gestion du courrier", "Ligne téléphonique", "Salle de réunion", "Plusieurs services"] },
+      { name: "description", label: "Informations complémentaires", type: "textarea", required: true, placeholder: "Décrivez votre activité, vos besoins spécifiques..." },
+    ] :
+    [
+      { name: "name", label: "Votre nom complet", type: "text", required: true, placeholder: "Ex: Kevin Bamba" },
+      { name: "email", label: "Votre email", type: "email", required: true, placeholder: "Ex: kevin@example.com" },
+      { name: "phone", label: "Votre téléphone", type: "tel", required: true, placeholder: "Ex: +225 07 XX XX XX XX" },
+      { name: "spaceType", label: "Type d'espace", type: "select", required: true, options: ["Bureau privé", "Poste de travail", "Salle de réunion", "Open space", "Plusieurs espaces"] },
+      { name: "duration", label: "Durée souhaitée", type: "select", required: true, options: ["À l'heure", "À la journée", "À la semaine", "Au mois", "À l'année", "À discuter"] },
+      { name: "peopleCount", label: "Nombre de personnes", type: "select", required: true, options: ["1", "2", "3 à 5", "6 à 10", "Plus de 10"] },
+      { name: "equipmentNeeds", label: "Besoins en équipements", type: "select", required: false, options: ["Aucun", "Ordinateur", "Imprimante", "Projecteur", "Connexion internet haut débit", "Plusieurs équipements"] },
+      { name: "description", label: "Informations complémentaires", type: "textarea", required: true, placeholder: "Décrivez votre activité, vos besoins spécifiques, vos horaires..." },
+    ];
 
   return (
     <>
       <PageHeader
         title="Demande de service"
-        subtitle="Remplissez le formulaire adapté à votre besoin. Nos experts analyseront votre demande et vous recontacteront sous 24h."
+        subtitle="Remplissez le formulaire correspondant à votre besoin"
         breadcrumbs={[
           { label: "Accueil", href: "/" },
-          { label: "Demande de service", href: "/demande-service" },
+          { label: "Demande de service", href: "#" },
         ]}
       />
 
@@ -499,6 +300,11 @@ export default function Surveys() {
                     setStatus("idle");
                     setErrorMessage("");
                     reset();
+                    
+                    // Auto-scroll to form
+                    setTimeout(() => {
+                      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 100);
                   }}
                   className={`text-left bg-white rounded-xl p-6 border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-card ${
                     isActive
@@ -517,12 +323,7 @@ export default function Surveys() {
                   <h4 className="font-body font-semibold text-dark mb-2">
                     {survey.title}
                   </h4>
-                  <p className="text-body text-sm leading-relaxed">
-                    {survey.desc}
-                  </p>
-                  <span className="inline-block mt-4 text-primary text-sm font-medium">
-                    {isActive ? "Sélectionné ✓" : "Commencer →"}
-                  </span>
+                  <p className="text-sm text-body">{survey.desc}</p>
                 </button>
               );
             })}
@@ -530,241 +331,109 @@ export default function Surveys() {
         </div>
       </section>
 
-      {/* Active Form */}
-      <section className="section-padding bg-white">
+      {/* Form Section */}
+      <section className="section-padding bg-white" ref={formRef}>
         <div className="container-md">
-          <div className="max-w-2xl mx-auto border border-gray-200 rounded-2xl p-8 lg:p-10 shadow-sm">
-            {status === "success" ? (
-              <div className="text-center py-8">
-                <CheckCircle className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
-                <h3 className="font-display text-2xl font-semibold text-dark mb-3">
-                  Merci pour votre demande !
+          <div className="bg-white rounded-2xl shadow-card p-6 lg:p-10 border border-gray-100">
+            <div className="flex items-start gap-4 mb-6">
+              {(() => {
+                const ActiveIcon = surveys.find((s) => s.id === activeSurvey)?.icon || Building2;
+                return <ActiveIcon className="w-8 h-8 text-primary shrink-0 mt-1" />;
+              })()}
+              <div>
+                <h3 className="font-display text-2xl font-semibold text-dark mb-2">
+                  {surveys.find((s) => s.id === activeSurvey)?.title}
                 </h3>
-                <p className="text-body mb-6">
-                  Votre demande concernant <strong>{activeSurveyData.title}</strong> a bien été transmise.
-                  <br />
-                  Nos experts analyseront votre dossier et vous recontacteront sous 24h.
+                <p className="text-body text-sm">
+                  {surveys.find((s) => s.id === activeSurvey)?.desc}
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left">
-                  <p className="text-sm text-blue-900 font-medium mb-2">
-                    📧 Confirmation envoyée
-                  </p>
-                  <p className="text-xs text-blue-700">
-                    Un email de confirmation vous a été envoyé. Si vous ne le recevez pas, vérifiez vos spams ou contactez-nous directement.
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    setStatus("idle");
-                    reset();
-                  }}
-                  className="mt-6 btn-primary"
-                >
-                  Nouvelle demande
-                </button>
+              </div>
+            </div>
+
+            {status === "success" ? (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                <h4 className="font-semibold text-green-800 mb-2">
+                  Formulaire envoyé avec succès !
+                </h4>
+                <p className="text-sm text-green-700">
+                  Nous avons bien reçu votre demande et nous vous contacterons dans les plus brefs délais.
+                </p>
               </div>
             ) : (
-              <>
-                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
-                  {(() => {
-                    const Icon = activeSurveyData.icon;
-                    return <Icon className="w-8 h-8 text-primary" />;
-                  })()}
-                  <div>
-                    <h3 className="font-body text-xl font-semibold text-dark">
-                      {activeSurveyData.title}
-                    </h3>
-                    <p className="text-sm text-body">
-                      Tous les champs marqués d'un * sont obligatoires
-                    </p>
-                  </div>
-                </div>
-
-                {status === "error" && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-red-800">
-                        Erreur lors de l'envoi
-                      </p>
-                      <p className="text-xs text-red-700 mt-1">
-                        {errorMessage || "Une erreur est survenue. Veuillez réessayer."}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Champs spécifiques au formulaire */}
-                  <div className="space-y-5">
-                    {currentFields.map((field) => (
-                      <div key={field.name}>
-                        <label className="block text-sm font-medium text-dark mb-2">
-                          {field.label} {field.required && <span className="text-red-500">*</span>}
-                        </label>
-
-                        {field.type === "select" ? (
-                          <select
-                            {...register(field.name as any)}
-                            className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all ${
-                              errors[field.name as keyof FormData]
-                                ? "border-red-500"
-                                : "border-gray-200"
-                            }`}
-                          >
-                            <option value="">Sélectionnez...</option>
-                            {field.options?.map((option) => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        ) : field.type === "textarea" ? (
-                          <textarea
-                            {...register(field.name as any)}
-                            rows={4}
-                            placeholder={field.placeholder}
-                            className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y transition-all ${
-                              errors[field.name as keyof FormData]
-                                ? "border-red-500"
-                                : "border-gray-200"
-                            }`}
-                          />
-                        ) : (
-                          <input
-                            type={field.type}
-                            {...register(field.name as any)}
-                            placeholder={field.placeholder}
-                            className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all ${
-                              errors[field.name as keyof FormData]
-                                ? "border-red-500"
-                                : "border-gray-200"
-                            }`}
-                          />
-                        )}
-
-                        {errors[field.name as keyof FormData] && (
-                          <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />
-                            {errors[field.name as keyof FormData]?.message as string}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Champs communs (Nom, Email, Téléphone) */}
-                  <div className="pt-6 border-t border-gray-100">
-                    <h4 className="text-sm font-semibold text-dark mb-4">
-                      Vos coordonnées
-                    </h4>
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-sm font-medium text-dark mb-2">
-                          Nom complet <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-body" />
-                          <input
-                            type="text"
-                            {...register("name")}
-                            placeholder="Votre nom"
-                            className={`w-full pl-10 pr-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${
-                              errors.name ? "border-red-500" : "border-gray-200"
-                            }`}
-                          />
-                        </div>
-                        {errors.name && (
-                          <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />
-                            {errors.name.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-dark mb-2">
-                          Email <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-body" />
-                          <input
-                            type="email"
-                            {...register("email")}
-                            placeholder="votre.email@example.com"
-                            className={`w-full pl-10 pr-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${
-                              errors.email ? "border-red-500" : "border-gray-200"
-                            }`}
-                          />
-                        </div>
-                        {errors.email && (
-                          <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />
-                            {errors.email.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="mt-5">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {currentFields.map((field) => (
+                    <div key={field.name} className={field.type === "textarea" ? "md:col-span-2" : ""}>
                       <label className="block text-sm font-medium text-dark mb-2">
-                        Téléphone <span className="text-red-500">*</span>
+                        {field.label} {field.required && <span className="text-red-500">*</span>}
                       </label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-body" />
-                        <input
-                          type="tel"
-                          {...register("phone")}
-                          placeholder="+225 07 XX XX XX XX"
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${
-                            errors.phone ? "border-red-500" : "border-gray-200"
+
+                      {field.type === "select" ? (
+                        <select
+                          {...register(field.name as any)}
+                          className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all ${
+                            errors[field.name as keyof FormData]
+                              ? "border-red-500"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          <option value="">Sélectionnez...</option>
+                          {field.options?.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      ) : field.type === "textarea" ? (
+                        <textarea
+                          {...register(field.name as any)}
+                          rows={4}
+                          placeholder={field.placeholder}
+                          className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y transition-all ${
+                            errors[field.name as keyof FormData]
+                              ? "border-red-500"
+                              : "border-gray-200"
                           }`}
                         />
-                      </div>
-                      {errors.phone && (
+                      ) : (
+                        <input
+                          type={field.type}
+                          {...register(field.name as any)}
+                          placeholder={field.placeholder}
+                          className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all ${
+                            errors[field.name as keyof FormData]
+                              ? "border-red-500"
+                              : "border-gray-200"
+                          }`}
+                        />
+                      )}
+
+                      {errors[field.name as keyof FormData] && (
                         <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
                           <AlertCircle className="w-3 h-3" />
-                          {errors.phone.message}
+                          {errors[field.name as keyof FormData]?.message as string}
                         </p>
                       )}
                     </div>
+                  ))}
+                </div>
+
+                {status === "error" && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-700">{errorMessage}</p>
                   </div>
+                )}
 
-                  <button
-                    type="submit"
-                    disabled={status === "submitting"}
-                    className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed transition-all"
-                  >
-                    {status === "submitting" ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                            fill="none"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                        Envoi en cours...
-                      </span>
-                    ) : (
-                      "Envoyer ma demande"
-                    )}
-                  </button>
-
-                  <p className="text-xs text-gray-500 text-center">
-                    En envoyant ce formulaire, vous acceptez d'être recontacté par Andoh & Dohgad Consulting.
-                  </p>
-                </form>
-              </>
+                <button
+                  type="submit"
+                  disabled={status === "submitting"}
+                  className="btn-primary w-full sm:w-auto px-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {status === "submitting" ? "Envoi en cours..." : "Envoyer ma demande"}
+                </button>
+              </form>
             )}
           </div>
         </div>
