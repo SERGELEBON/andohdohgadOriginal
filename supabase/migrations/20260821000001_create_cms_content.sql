@@ -44,81 +44,45 @@ CREATE POLICY "Admins can manage content"
 -- Hero Section
 INSERT INTO public.cms_content (section_key, content, images) VALUES
 ('hero', 
-  '{
-    "label": "Cabinet de Conseil Multidisciplinaire",
-    "title": "Passer de la survie à la croissance",
-    "subtitle": "Andoh & Dohgad Consulting accompagne les entrepreneurs ivoiriens dans la structuration, la gestion et la croissance de leurs entreprises.",
-    "cta1": "Découvrir nos services",
-    "cta2": "Prendre rendez-vous"
-  }'::jsonb,
-  '{
-    "background": "/images/hero-bg.jpg"
-  }'::jsonb
+  '{"label": "Cabinet de Conseil Multidisciplinaire", "title": "Passer de la survie à la croissance", "subtitle": "Andoh & Dohgad Consulting accompagne les entrepreneurs ivoiriens dans la structuration, la gestion et la croissance de leurs entreprises.", "cta1": "Découvrir nos services", "cta2": "Prendre rendez-vous"}'::jsonb,
+  '{"background": "/images/hero-bg.jpg"}'::jsonb
 );
 
 -- Stats Bar
 INSERT INTO public.cms_content (section_key, content) VALUES
 ('stats',
-  '{
-    "stats": [
-      {"value": 200, "suffix": "+", "label": "Clients accompagnés"},
-      {"value": 7, "suffix": "", "label": "Expertises métiers"},
-      {"value": 10, "suffix": "", "label": "Années d'\''expérience"}
-    ]
-  }'::jsonb
+  '{"stats": [{"value": 200, "suffix": "+", "label": "Clients accompagnés"}, {"value": 7, "suffix": "", "label": "Expertises métiers"}, {"value": 10, "suffix": "", "label": "Années d''expérience"}]}'::jsonb
 );
 
 -- Value Proposition
 INSERT INTO public.cms_content (section_key, content, images) VALUES
 ('value_proposition',
-  '{
-    "label": "NOTRE PHILOSOPHIE",
-    "title": "La clarté financière permet de transformer les opportunités en décisions maîtrisées",
-    "quote": "Grandir sans visibilité est un risque.",
-    "description": "Chez Andoh & Dohgad Consulting, nous croyons que chaque entrepreneur mérite une vision claire de sa situation financière et stratégique. Notre mission est de vous offrir les outils et l'\''expertise nécessaires pour passer de la simple survie à une croissance maîtrisée et durable.",
-    "cta": "Découvrir notre approche"
-  }'::jsonb,
-  '{
-    "main": "/images/value-proposition.jpg"
-  }'::jsonb
+  '{"label": "NOTRE PHILOSOPHIE", "title": "La clarté financière permet de transformer les opportunités en décisions maîtrisées", "quote": "Grandir sans visibilité est un risque.", "description": "Chez Andoh & Dohgad Consulting, nous croyons que chaque entrepreneur mérite une vision claire de sa situation financière et stratégique. Notre mission est de vous offrir les outils et l''expertise nécessaires pour passer de la simple survie à une croissance maîtrisée et durable.", "cta": "Découvrir notre approche"}'::jsonb,
+  '{"main": "/images/value-proposition.jpg"}'::jsonb
 );
 
 -- Services Grid
 INSERT INTO public.cms_content (section_key, content) VALUES
 ('services_grid',
-  '{
-    "label": "NOS SERVICES",
-    "title": "Un accompagnement complet pour votre entreprise",
-    "cta": "Demander un service"
-  }'::jsonb
+  '{"label": "NOS SERVICES", "title": "Un accompagnement complet pour votre entreprise", "cta": "Demander un service"}'::jsonb
 );
 
 -- Testimonials
 INSERT INTO public.cms_content (section_key, content) VALUES
 ('testimonials',
-  '{
-    "label": "ILS NOUS FONT CONFIANCE",
-    "title": "Ce que nos clients disent de nous"
-  }'::jsonb
+  '{"label": "ILS NOUS FONT CONFIANCE", "title": "Ce que nos clients disent de nous"}'::jsonb
 );
 
 -- Blog Preview
 INSERT INTO public.cms_content (section_key, content) VALUES
 ('blog_preview',
-  '{
-    "label": "NOTRE BLOG",
-    "title": "Dernières actualités et conseils",
-    "seeAll": "Voir tous les articles"
-  }'::jsonb
+  '{"label": "NOTRE BLOG", "title": "Dernières actualités et conseils", "seeAll": "Voir tous les articles"}'::jsonb
 );
 
 -- CTA Banner
 INSERT INTO public.cms_content (section_key, content) VALUES
 ('cta_banner',
-  '{
-    "title": "Prêt à structurer votre entreprise et accélérer votre croissance ?",
-    "button": "Nous contacter"
-  }'::jsonb
+  '{"title": "Prêt à structurer votre entreprise et accélérer votre croissance ?", "button": "Nous contacter"}'::jsonb
 );
 
 -- =====================================================
