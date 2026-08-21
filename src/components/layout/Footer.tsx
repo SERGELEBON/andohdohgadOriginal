@@ -12,7 +12,7 @@ const navLinks = [
   { label: "contact", href: "/contact" },
   { label: "appointment", href: "/rendez-vous" },
   { label: "coworking", href: "/co-working" },
-  { label: "surveys", href: "/sondages" },
+  { label: "request", href: "/demande-service" },
 ];
 
 export default function Footer() {
