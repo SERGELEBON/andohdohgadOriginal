@@ -15,41 +15,44 @@ export default function HeroSection() {
   const { content, loading } = useCMSContent("hero");
 
   useEffect(() => {
-    if (loading) return;
+    // Attendre un peu pour laisser le temps au CMS de charger
+    const timer = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      tl.fromTo(
-        labelRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6 },
-        0.4
-      )
-        .fromTo(
-          titleRef.current,
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.9 },
-          0.6
-        )
-        .fromTo(
-          subtitleRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.7 },
-          1.0
-        )
-        .fromTo(
-          buttonsRef.current?.children || [],
+        tl.fromTo(
+          labelRef.current,
           { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 },
-          1.3
-        );
-    }, sectionRef);
+          { opacity: 1, y: 0, duration: 0.6 },
+          0.4
+        )
+          .fromTo(
+            titleRef.current,
+            { opacity: 0, y: 40 },
+            { opacity: 1, y: 0, duration: 0.9 },
+            0.6
+          )
+          .fromTo(
+            subtitleRef.current,
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.7 },
+            1.0
+          )
+          .fromTo(
+            buttonsRef.current?.children || [],
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 },
+            1.3
+          );
+      }, sectionRef);
 
-    return () => ctx.revert();
-  }, [loading]);
+      return () => ctx.revert();
+    }, 100);
 
-  // Valeurs par défaut si CMS pas chargé
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Valeurs par défaut (utilisées si CMS pas chargé)
   const data = content?.content || {
     label: "Cabinet de Conseil Multidisciplinaire",
     title: "Passer de la survie à la croissance",
@@ -65,10 +68,13 @@ export default function HeroSection() {
       ref={sectionRef}
       className="relative min-h-[100dvh] lg:min-h-screen flex items-center justify-center overflow-hidden -mt-[70px] lg:-mt-[80px]"
     >
-      {/* Background image */}
+      {/* Background image - TOUJOURS affichée */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgImage})` }}
+        style={{ 
+          backgroundImage: `url(${bgImage})`,
+          backgroundColor: '#3D0A5E' // Fallback couleur
+        }}
       />
 
       {/* Violet overlay */}
