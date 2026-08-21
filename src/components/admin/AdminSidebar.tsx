@@ -11,12 +11,14 @@ import {
   FolderOpen,
   LogOut,
   ChevronLeft,
-  Menu
+  Menu,
+  Edit2
 } from 'lucide-react';
 import { useState } from 'react';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+  { icon: Edit2, label: 'Contenu Site', path: '/admin/cms' },
   { icon: FileText, label: 'Blog', path: '/admin/blog' },
   { icon: Users, label: 'Utilisateurs', path: '/admin/users' },
   { icon: Calendar, label: 'Rendez-vous', path: '/admin/appointments' },

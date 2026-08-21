@@ -32,6 +32,7 @@ import Settings from "@/pages/admin/Settings";
 import CoworkingAdmin from "@/pages/admin/CoworkingAdmin";
 import DocumentationAdmin from "@/pages/admin/DocumentationAdmin";
 import DocumentsManagement from "@/pages/admin/DocumentsManagement";
+import CMSEditor from "@/pages/admin/CMSEditor";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -142,6 +143,13 @@ function App() {
         <Route path="/admin/documents" element={
           <ProtectedRoute allowedRoles="admin">
             <DocumentsManagement />
+          </ProtectedRoute>
+        } />
+
+
+        <Route path="/admin/cms" element={
+          <ProtectedRoute allowedRoles="admin">
+            <CMSEditor />
           </ProtectedRoute>
         } />
 
