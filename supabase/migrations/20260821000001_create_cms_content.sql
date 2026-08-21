@@ -45,7 +45,7 @@ CREATE POLICY "Admins can manage content"
 INSERT INTO public.cms_content (section_key, content, images) VALUES
 ('hero', 
   '{"label": "Cabinet de Conseil Multidisciplinaire", "title": "Passer de la survie à la croissance", "subtitle": "Andoh & Dohgad Consulting accompagne les entrepreneurs ivoiriens dans la structuration, la gestion et la croissance de leurs entreprises.", "cta1": "Découvrir nos services", "cta2": "Prendre rendez-vous"}'::jsonb,
-  '{"background": "/images/hero-bg.jpg"}'::jsonb
+  '{"background": "/images/hero-background.jpg"}'::jsonb
 );
 
 -- Stats Bar
