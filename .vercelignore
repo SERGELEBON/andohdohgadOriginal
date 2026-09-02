@@ -6,5 +6,5 @@ dist
 .vscode
 *.log
 .DS_Store
-supabase
+/supabase
 new_andoh-dohgad
