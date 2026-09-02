@@ -21,8 +21,8 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function Documentation() {
-  const currentLanguage = i18n.language || 'fr';
-
+  const currentLanguage = 'fr';
+  
   const { documents, loading } = useDocuments(currentLanguage);
   const [activeFilter, setActiveFilter] = useState("Tous");
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
