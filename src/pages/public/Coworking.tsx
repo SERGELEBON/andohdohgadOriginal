@@ -18,9 +18,9 @@ const features = [
 ];
 
 const plans = [
-  { name: "Nomade", price: "25 000", period: "/mois", features: ["Acces espace commun", "WiFi haut debit", "Cafeteria", "2 jours/semaine"], featured: false },
-  { name: "Resident", price: "75 000", period: "/mois", features: ["Bureau dedie", "WiFi haut debit", "Cafeteria", "Acces illimite", "Reception courrier", "1h salle de reunion/mois"], featured: true },
-  { name: "Domiciliation", price: "15 000", period: "/mois", features: ["Adresse commerciale", "Reception courrier", "Notification arrivee", "Renouvellement annuel"], featured: false },
+  { name: "Nomade", price: "25 000 FCFA", period: "/mois", features: ["Acces espace commun", "WiFi haut debit", "Cafeteria", "2 jours/semaine"], featured: false },
+  { name: "Resident", price: "75 000 FCFA", period: "/mois", features: ["Bureau dedie", "WiFi haut debit", "Cafeteria", "Acces illimite", "Reception courrier", "1h salle de reunion/mois"], featured: true },
+  { name: "Domiciliation", price: "15 000 FCFA", period: "/mois", features: ["Adresse commerciale", "Reception courrier", "Notification arrivee", "Renouvellement annuel"], featured: false },
 ];
 
 const regSchema = z.object({

@@ -17,6 +17,7 @@ import Surveys from "@/pages/public/Surveys";
 import Contact from "@/pages/public/Contact";
 import LegalNotice from "@/pages/public/LegalNotice";
 import PrivacyPolicy from "@/pages/public/PrivacyPolicy";
+import NotFound from "@/pages/public/NotFound";
 import Login from "@/pages/admin/Login";
 import Signup from "@/pages/admin/Signup";
 import SuperAdminLogin from "@/pages/admin/SuperAdminLogin";
@@ -157,7 +158,8 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="*" element={<Layout><Home /></Layout>} />
+        {/* 404 - Page not found */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
   );

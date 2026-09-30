@@ -57,7 +57,7 @@ export default function BlogPreview() {
                   <time>{article.date}</time>
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    <span>{article.readTime} {"min de lecture"}</span>
+                    <span>{article.readTime} de lecture</span>
                   </div>
                 </div>
               </div>

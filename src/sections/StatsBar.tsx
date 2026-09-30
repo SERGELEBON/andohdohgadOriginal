@@ -28,13 +28,14 @@ export default function StatsBar() {
               <div className="font-display text-5xl lg:text-6xl font-bold text-accent leading-tight">
                 {hasAnimated ? (
                   <CountUp
+                    start={stat.value}
                     end={stat.value}
                     duration={2}
                     suffix={stat.suffix}
                     delay={i * 0.2}
                   />
                 ) : (
-                  <span>0{stat.suffix}</span>
+                  <span>{stat.value}{stat.suffix}</span>
                 )}
               </div>
               <p className="text-white/70 text-sm lg:text-base mt-2">

@@ -15,8 +15,7 @@ const navLinks = [
     children: services.map((s) => ({ label: s.title, href: `/services/${s.slug}` })),
   },
   { label: "solutions", href: "/solutions" },
-  { label: "request", href: "/demande-service" },
-  { label: "documentation", href: "/documentation" },
+  { label: "coworking", href: "/co-working" },
   { label: "blog", href: "/blog" },
   { label: "contact", href: "/contact" },
 ];
@@ -54,6 +53,10 @@ export default function Header() {
   const headerBg = isHome && !isScrolled
     ? "bg-transparent"
     : "bg-primary shadow-header";
+
+  // Texte blanc sur fond violet, texte foncé sur fond blanc
+  const textColor = isHome && !isScrolled ? "text-white" : "text-white";
+  const textColorHover = isHome && !isScrolled ? "hover:text-white" : "hover:text-white";
 
   return (
     <>
