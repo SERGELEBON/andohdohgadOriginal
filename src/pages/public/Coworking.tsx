@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -64,7 +64,7 @@ function SpacePresentation() {
   );
 }
 
-function PricingGrid() {
+function PricingGrid({ onSelectPlan }: { onSelectPlan: (planName: string) => void }) {
   const { ref, isInView } = useScrollAnimation();
   return (
     <section className="section-padding bg-offwhite" ref={ref}>
@@ -84,7 +84,10 @@ function PricingGrid() {
                   <li key={f} className="flex items-start gap-2 text-sm text-body"><Check className="w-4 h-4 text-accent shrink-0 mt-0.5" /><span>{f}</span></li>
                 ))}
               </ul>
-              <button className={`w-full py-3 rounded-lg text-sm font-semibold transition-all ${plan.featured ? "btn-primary" : "border-2 border-primary text-primary hover:bg-primary hover:text-white"}`}>
+              <button
+                onClick={() => onSelectPlan(plan.name)}
+                className={`w-full py-3 rounded-lg text-sm font-semibold transition-all ${plan.featured ? "btn-primary" : "border-2 border-primary text-primary hover:bg-primary hover:text-white"}`}
+              >
                 Choisir cette formule
               </button>
             </div>
@@ -95,10 +98,15 @@ function PricingGrid() {
   );
 }
 
-function RegistrationForm() {
+function RegistrationForm({ selectedPlan }: { selectedPlan: string }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
-  const { register, handleSubmit, formState: { errors } } = useForm<RegData>({ resolver: zodResolver(regSchema) });
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<RegData>({ resolver: zodResolver(regSchema) });
   const onSubmit = () => { setStatus("submitting"); setTimeout(() => setStatus("success"), 1500); };
+
+  // Set selected plan when component receives it
+  if (selectedPlan) {
+    setValue("plan", selectedPlan.toLowerCase());
+  }
 
   return (
     <section className="section-padding bg-primary">
@@ -145,11 +153,15 @@ function RegistrationForm() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-dark mb-1.5">Formule souhaitee *</label>
-                  <select {...register("plan")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.plan ? "border-red-500" : "border-gray-200"}`}>
+                  <select
+                    {...register("plan")}
+                    defaultValue={selectedPlan.toLowerCase()}
+                    className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary bg-accent/5 ${errors.plan ? "border-red-500" : "border-accent/30"}`}
+                  >
                     <option value="">Selectionnez...</option>
-                    <option value="nomade">Nomade</option>
-                    <option value="resident">Resident</option>
-                    <option value="domiciliation">Domiciliation</option>
+                    <option value="nomade">Nomade - 25 000 FCFA/mois</option>
+                    <option value="resident">Resident - 75 000 FCFA/mois</option>
+                    <option value="domiciliation">Domiciliation - 15 000 FCFA/mois</option>
                   </select>
                 </div>
                 <div>
@@ -167,12 +179,25 @@ function RegistrationForm() {
 }
 
 export default function Coworking() {
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const handleSelectPlan = (planName: string) => {
+    setSelectedPlan(planName);
+    // Smooth scroll to form
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  };
+
   return (
     <>
       <PageHeader title="Co-working & Domiciliation" subtitle="Un espace de travail moderne et professionnel au coeur du Plateau, Abidjan." breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Co-working", href: "/co-working" }]} />
       <SpacePresentation />
-      <PricingGrid />
-      <RegistrationForm />
+      <PricingGrid onSelectPlan={handleSelectPlan} />
+      <div ref={formRef}>
+        <RegistrationForm selectedPlan={selectedPlan} />
+      </div>
     </>
   );
 }
