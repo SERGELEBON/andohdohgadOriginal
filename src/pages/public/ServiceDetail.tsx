@@ -25,6 +25,7 @@ export default function ServiceDetail() {
       <PageHeader
         title={service.title}
         subtitle={service.shortDescription}
+        backgroundImage={service.image}
         breadcrumbs={[
           { label: "Accueil", href: "/" },
           { label: "Nos Services", href: "/services" },

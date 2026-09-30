@@ -4,13 +4,33 @@ interface PageHeaderProps {
   title: string;
   subtitle: string;
   breadcrumbs: { label: string; href: string }[];
+  backgroundImage?: string;
 }
 
-export default function PageHeader({ title, subtitle, breadcrumbs }: PageHeaderProps) {
+export default function PageHeader({ title, subtitle, breadcrumbs, backgroundImage }: PageHeaderProps) {
   return (
-    <section className="page-gradient relative overflow-hidden pt-[140px] lg:pt-[170px] pb-16 lg:pb-20">
+    <section className="relative overflow-hidden pt-[140px] lg:pt-[170px] pb-16 lg:pb-20">
+      {/* Background Image or Gradient */}
+      {backgroundImage ? (
+        <>
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src={backgroundImage}
+              alt={title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* Dark overlay for readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
+        </>
+      ) : (
+        /* Default gradient background */
+        <div className="absolute inset-0 z-0 page-gradient" />
+      )}
+
       {/* Decorative shape */}
-      <div className="absolute bottom-0 left-0 w-40 h-40 opacity-10 pointer-events-none">
+      <div className="absolute bottom-0 left-0 w-40 h-40 opacity-10 pointer-events-none z-[2]">
         <svg viewBox="0 0 300 260" fill="none">
           <path d="M150 260L300 0H0L150 260Z" fill="#7B3FA0" />
         </svg>
