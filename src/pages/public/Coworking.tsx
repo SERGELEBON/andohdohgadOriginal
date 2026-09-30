@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Check, CheckCircle } from "lucide-react";
+import { Check, CheckCircle, X, UserPlus } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -98,7 +98,7 @@ function PricingGrid({ onSelectPlan }: { onSelectPlan: (planName: string) => voi
   );
 }
 
-function RegistrationForm({ selectedPlan }: { selectedPlan: string }) {
+function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean; onClose: () => void; selectedPlan: string }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<RegData>({ resolver: zodResolver(regSchema) });
   const onSubmit = () => { setStatus("submitting"); setTimeout(() => setStatus("success"), 1500); };
@@ -108,21 +108,39 @@ function RegistrationForm({ selectedPlan }: { selectedPlan: string }) {
     setValue("plan", selectedPlan.toLowerCase());
   }
 
+  if (!isOpen) return null;
+
   return (
-    <section className="section-padding bg-primary">
-      <div className="container-sm">
-        <div className="bg-white rounded-2xl p-8 lg:p-12">
-          {status === "success" ? (
-            <div className="text-center py-6">
-              <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-              <h3 className="font-display text-2xl font-semibold text-dark mb-3">Merci !</h3>
-              <p className="text-body">Notre équipe vous contactera sous 24h pour finaliser votre inscription.</p>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl p-8 lg:p-12 max-w-2xl w-full my-8 relative animate-in fade-in zoom-in duration-300">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+          aria-label="Fermer"
+        >
+          <X className="w-5 h-5 text-gray-600" />
+        </button>
+
+        {status === "success" ? (
+          <div className="text-center py-6">
+            <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
+            <h3 className="font-display text-2xl font-semibold text-dark mb-3">Merci !</h3>
+            <p className="text-body mb-6">Notre équipe vous contactera sous 24h pour finaliser votre inscription.</p>
+            <button onClick={onClose} className="btn-primary">
+              Fermer
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+                <UserPlus className="w-8 h-8 text-accent" />
+              </div>
+              <h2 className="font-display text-2xl lg:text-3xl font-semibold text-dark mb-2">Créer votre compte co-working</h2>
+              <p className="text-body text-sm">Remplissez ce formulaire pour demander l'accès à notre espace.</p>
             </div>
-          ) : (
-            <>
-              <h2 className="font-display text-2xl font-semibold text-dark text-center mb-2">Creer votre compte co-working</h2>
-              <p className="text-body text-sm text-center mb-8">Remplissez ce formulaire pour demander l'acces a notre espace.</p>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-dark mb-1.5">Nom complet *</label>
@@ -168,10 +186,33 @@ function RegistrationForm({ selectedPlan }: { selectedPlan: string }) {
                   <label className="block text-sm font-medium text-dark mb-1.5">Message</label>
                   <textarea {...register("message")} rows={3} placeholder="Precisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
                 </div>
-                <button type="submit" disabled={status === "submitting"} className="btn-primary w-full">{status === "submitting" ? "Envoi en cours..." : "Envoyer ma demande"}</button>
-              </form>
-            </>
-          )}
+              <button type="submit" disabled={status === "submitting"} className="btn-primary w-full">{status === "submitting" ? "Envoi en cours..." : "Envoyer ma demande"}</button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CTASection({ onOpenModal }: { onOpenModal: () => void }) {
+  return (
+    <section className="section-padding bg-primary">
+      <div className="container-lg text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-display text-2xl lg:text-4xl font-semibold text-white mb-4">
+            Prêt à rejoindre notre espace de co-working ?
+          </h2>
+          <p className="text-white/80 text-lg mb-8">
+            Créez votre compte en quelques minutes et bénéficiez d'un espace de travail professionnel au cœur d'Abidjan.
+          </p>
+          <button
+            onClick={onOpenModal}
+            className="btn-primary inline-flex items-center gap-3 text-lg px-8 py-4 bg-accent hover:bg-accent-dark text-dark font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          >
+            <UserPlus className="w-6 h-6" />
+            Créer votre compte co-working
+          </button>
         </div>
       </div>
     </section>
@@ -180,14 +221,11 @@ function RegistrationForm({ selectedPlan }: { selectedPlan: string }) {
 
 export default function Coworking() {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
-  const formRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSelectPlan = (planName: string) => {
     setSelectedPlan(planName);
-    // Smooth scroll to form
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
+    setIsModalOpen(true);
   };
 
   return (
@@ -195,9 +233,12 @@ export default function Coworking() {
       <PageHeader title="Co-working & Domiciliation" subtitle="Un espace de travail moderne et professionnel au coeur du Plateau, Abidjan." breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Co-working", href: "/co-working" }]} />
       <SpacePresentation />
       <PricingGrid onSelectPlan={handleSelectPlan} />
-      <div ref={formRef}>
-        <RegistrationForm selectedPlan={selectedPlan} />
-      </div>
+      <CTASection onOpenModal={() => setIsModalOpen(true)} />
+      <RegistrationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedPlan={selectedPlan}
+      />
     </>
   );
 }
