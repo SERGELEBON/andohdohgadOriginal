@@ -15,6 +15,8 @@ import Appointment from "@/pages/public/Appointment";
 import Coworking from "@/pages/public/Coworking";
 import Surveys from "@/pages/public/Surveys";
 import Contact from "@/pages/public/Contact";
+import LegalNotice from "@/pages/public/LegalNotice";
+import PrivacyPolicy from "@/pages/public/PrivacyPolicy";
 import Login from "@/pages/admin/Login";
 import Signup from "@/pages/admin/Signup";
 import SuperAdminLogin from "@/pages/admin/SuperAdminLogin";
@@ -61,6 +63,8 @@ function App() {
         <Route path="/demande-service" element={<Layout><Surveys /></Layout>} />
         <Route path="/sondages" element={<Layout><Surveys /></Layout>} /> {/* Redirect ancien lien */}
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/mentions-legales" element={<Layout><LegalNotice /></Layout>} />
+        <Route path="/politique-confidentialite" element={<Layout><PrivacyPolicy /></Layout>} />
 
         {/* Auth routes without Layout */}
         <Route path="/connexion" element={<Login />} />

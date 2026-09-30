@@ -85,10 +85,11 @@ export default function Appointment() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-dark mb-1.5">Service concerne *</label>
+                      <label className="block text-sm font-medium text-dark mb-1.5">Service concerné *</label>
                       <select {...register("service")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.service ? "border-red-500" : "border-gray-200"}`}>
-                        <option value="">Selectionnez...</option>
+                        <option value="">Sélectionnez...</option>
                         {services.map((s) => <option key={s.slug} value={s.slug}>{s.title}</option>)}
+                        <option value="autre">Autre / Demande générale</option>
                       </select>
                       {errors.service && <p className="text-red-500 text-xs mt-1">{errors.service.message}</p>}
                     </div>

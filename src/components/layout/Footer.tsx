@@ -135,12 +135,18 @@ export default function Footer() {
             &copy; {currentYear} Andoh & Dohgad Consulting. {"Tous droits réservés"}.
           </p>
           <div className="flex items-center gap-4">
-            <span className="text-white/50 text-xs hover:text-white/70 cursor-pointer transition-colors">
+            <Link
+              to="/mentions-legales"
+              className="text-white/50 text-xs hover:text-white/70 transition-colors"
+            >
               {"Mentions légales"}
-            </span>
-            <span className="text-white/50 text-xs hover:text-white/70 cursor-pointer transition-colors">
+            </Link>
+            <Link
+              to="/politique-confidentialite"
+              className="text-white/50 text-xs hover:text-white/70 transition-colors"
+            >
               {"Politique de confidentialité"}
-            </span>
+            </Link>
           </div>
         </div>
       </div>
