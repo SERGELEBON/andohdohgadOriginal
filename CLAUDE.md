@@ -6,9 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the **Andoh & Dohgad Consulting** website - a professional consulting firm website built with React 19, TypeScript, Vite, and Tailwind CSS. The site features:
 - 14 pages with complex GSAP animations and scroll effects
-- Multilingual support (FR/EN/ES) via react-i18next
+- Supabase CMS integration for dynamic content management
 - Form management with react-hook-form, Zod validation, and EmailJS integration
 - shadcn/ui component library with custom extensions
+- Payment integration: Stripe, Orange Money, MTN Mobile Money
+
+**Key Dependencies**:
+- React 19.2 + React Router 7
+- TypeScript 5.9
+- Vite 7 (build tool)
+- Tailwind CSS 3.4
+- GSAP 3.15 (animations)
+- Framer Motion 12 (page transitions)
+- Supabase 2.109 (CMS + database)
+- Radix UI (headless components)
+- Zod 4.4 (schema validation)
+- React Hook Form 7.80
 
 ## Common Commands
 
@@ -17,15 +30,29 @@ This is the **Andoh & Dohgad Consulting** website - a professional consulting fi
 ### Development
 ```bash
 npm run dev        # Start dev server on port 3000
-npm run build      # TypeScript check + production build
+npm run build      # TypeScript check + production build (with increased memory: 2GB)
 npm run preview    # Preview production build
 npm run lint       # Run ESLint
 ```
 
+### Testing
+- **Playwright** installed for E2E testing
+- No test scripts configured yet - add to package.json as needed:
+  ```bash
+  npx playwright test              # Run all tests
+  npx playwright test --ui         # Run tests in UI mode
+  npx playwright codegen           # Generate test code
+  ```
+
+### Environment Setup
+- Copy `.env.example` to `.env.local` and configure required values
+- Required services: Supabase (database/auth), EmailJS (contact forms), Stripe (payments)
+- Optional: Orange Money, MTN Mobile Money, reCAPTCHA
+
 ### Important Notes
 - Dev server runs on port 3000 (configured in vite.config.ts)
 - Always run `npm run build` before deployment to catch TypeScript errors
-- The build command runs TypeScript check first, then Vite build
+- Build uses increased memory allocation (2GB) to handle large bundle
 - If dependencies are not installed, run `npm install` first
 
 ## Architecture
@@ -62,6 +89,12 @@ npm run lint       # Run ESLint
 
 ### Data Management
 
+**Supabase CMS Integration**
+- Dynamic content managed via Supabase database
+- `useCMSContent` hook fetches content by page/section identifier
+- Currently used for: Hero section, and other dynamic page content
+- Content includes text fields and image URLs
+
 **Static Data Files** (`src/data/`)
 - `services.ts` - 6 services with slug, title, description, features, etc.
 - `blog.ts` - 6 blog articles with slug, category, content
@@ -74,12 +107,15 @@ All data files export typed arrays. Use these for content rendering rather than 
 
 ### Internationalization (i18n)
 
-- **Library**: react-i18next with browser language detection
-- **Languages**: French (default), English, Spanish
-- **Configuration**: `src/lib/i18n.ts` contains all translations inline (not separate JSON files)
-- **Usage**: `const { t } = useTranslation()` then `t('nav.home')`
-- **Language switching**: Updates localStorage and re-renders content
-- **Default language**: French (fallbackLng: "fr")
+**IMPORTANT**: This project does NOT currently use react-i18next. Text content is managed through:
+1. **CMS Integration**: Supabase-based CMS for dynamic content (hero section, etc.)
+2. **Static data files**: `src/data/*.ts` files for services, blog, testimonials
+3. **Hardcoded text**: Direct text in components (no translation layer)
+
+If adding i18n in the future:
+- Install `react-i18next` and `i18next`
+- Create translation files or configure inline translations
+- Wrap all user-facing text with `t()` function
 
 ### Form Handling Pattern
 
@@ -91,6 +127,31 @@ All 5 forms follow the same pattern:
 5. **UI**: Form fields use custom Form* components from `src/components/ui/`
 
 Forms: Appointment, Contact, Co-working Registration, Surveys (5 types), Documentation Purchase Modal
+
+### Payment Integration
+
+**Stripe** (`src/lib/stripe/`)
+- Used for international card payments
+- Configuration via `VITE_STRIPE_PUBLIC_KEY` (client) and `STRIPE_SECRET_KEY` (server)
+- Webhook secret for payment verification: `STRIPE_WEBHOOK_SECRET`
+
+**Orange Money** (`src/lib/mobile-money/`)
+- West African mobile payment provider
+- API credentials: `ORANGE_MONEY_MERCHANT_KEY`, `ORANGE_MONEY_API_KEY`
+- Base URL: `https://api.orange.com/orange-money-webpay/`
+
+**MTN Mobile Money** (`src/lib/mobile-money/`)
+- Alternative mobile payment provider
+- API credentials: `MTN_MOMO_SUBSCRIPTION_KEY`, `MTN_MOMO_API_USER`, `MTN_MOMO_API_KEY`
+- Base URL: `https://sandbox.momodeveloper.mtn.com/` (use production URL for live)
+
+### Supabase Integration
+
+**Configuration** (`src/lib/supabase/`)
+- Real-time database and authentication
+- Environment variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- Service role key (server-side only): `SUPABASE_SERVICE_ROLE_KEY`
+- Used for: CMS content, user authentication, data persistence
 
 ### Animation Architecture
 
@@ -109,6 +170,7 @@ Forms: Appointment, Contact, Co-working Registration, Surveys (5 types), Documen
 - `useScrollHeader.ts` - Header background transition on scroll
 - `useMediaQuery.ts` - Responsive breakpoint detection
 - `useReducedMotion.ts` - Accessibility preference detection
+- `useCMSContent.ts` - Fetch and manage content from Supabase CMS
 
 ### Styling
 
@@ -164,8 +226,11 @@ npx shadcn add <component-name>
 ```
 This adds the component to `src/components/ui/` and updates `components.json`
 
-### Updating Translations
-Edit the `resources` object in `src/lib/i18n.ts` for all three languages (fr, en, es)
+### Working with CMS Content
+- Content is fetched from Supabase using `useCMSContent(identifier)` hook
+- Hook returns `{ content, images, loading, error }`
+- Provide fallback content for when CMS data is loading or unavailable
+- Show loading state during initial fetch
 
 ## Important Patterns
 
@@ -220,10 +285,20 @@ src/
 
 ## Deployment Notes
 
-- Base path is relative (`base: './'` in vite.config.ts)
+- Base path is root (`base: '/'` in vite.config.ts)
 - Build outputs to `dist/` directory
 - Static assets in `public/` are copied as-is
-- Environment variables for EmailJS should be configured in deployment platform
+- Environment variables required:
+  - `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (Supabase)
+  - `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY` (EmailJS)
+  - `VITE_STRIPE_PUBLIC_KEY` (Stripe payments)
+  - Optional: Orange Money, MTN MoMo, reCAPTCHA keys
+- Manual chunk splitting configured for optimal bundle sizes:
+  - `react-vendor`: React core libraries
+  - `ui-vendor`: Radix UI components
+  - `form-vendor`: Form handling libraries
+  - `supabase`: Supabase client
+  - `animations`: GSAP and Framer Motion
 
 ## Troubleshooting
 
@@ -238,16 +313,15 @@ plugins: [react()],  // NOT: [inspectAttr(), react()]
 ### Port Already in Use
 If port 3000 is already in use, Vite will automatically try another port (usually 3001). Check the terminal output for the actual port.
 
-### Language Switching Not Working
-If text doesn't change when switching languages, it means the components are using hardcoded text instead of i18n translations. All user-facing text must use the translation system:
+### CMS Content Not Loading
+If dynamic content (hero section, etc.) is not displaying:
+1. Check Supabase connection in `.env.local` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
+2. Verify the CMS table exists in Supabase with the expected structure
+3. Check browser console for Supabase connection errors
+4. Ensure fallback content is provided for loading/error states
 
-```tsx
-import { useTranslation } from "react-i18next";
-
-function MyComponent() {
-  const { t } = useTranslation();
-  return <h1>{t('hero.title')}</h1>;  // NOT: <h1>Hardcoded text</h1>
-}
-```
-
-All translations are defined in `src/lib/i18n.ts` under the `resources` object for fr/en/es languages.
+### Build Memory Issues
+If you encounter "JavaScript heap out of memory" during build:
+- The build script already uses `NODE_OPTIONS='--max-old-space-size=2048'` (2GB)
+- If needed, increase further: `NODE_OPTIONS='--max-old-space-size=4096' npm run build`
+- Consider lazy loading more page components with `React.lazy()`
