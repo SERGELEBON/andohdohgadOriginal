@@ -52,11 +52,11 @@ export default function Header() {
   const isHome = location.pathname === "/";
   const headerBg = isHome && !isScrolled
     ? "bg-transparent"
-    : "bg-primary shadow-header";
+    : "bg-white shadow-header";
 
-  // Texte blanc sur fond violet, texte foncé sur fond blanc
-  const textColor = isHome && !isScrolled ? "text-white" : "text-white";
-  const textColorHover = isHome && !isScrolled ? "hover:text-white" : "hover:text-white";
+  // Texte adaptatif: blanc sur fond transparent/violet, foncé sur fond blanc
+  const textColor = isHome && !isScrolled ? "text-white" : "text-dark";
+  const textColorHover = isHome && !isScrolled ? "hover:text-white" : "hover:text-primary";
 
   return (
     <>
@@ -86,9 +86,13 @@ export default function Header() {
               >
                 <Link
                   to={link.href}
-                  className={`flex items-center gap-1 px-3 py-2 text-[15px] font-medium text-white/90 hover:text-white transition-colors rounded-md whitespace-nowrap ${
+                  className={`flex items-center gap-1 px-3 py-2 text-[15px] font-medium transition-colors rounded-md whitespace-nowrap ${
+                    isHome && !isScrolled
+                      ? "text-white/90 hover:text-white"
+                      : "text-gray-700 hover:text-primary"
+                  } ${
                     location.pathname === link.href || location.pathname.startsWith(link.href + "/")
-                      ? "text-white"
+                      ? isHome && !isScrolled ? "text-white" : "text-primary font-semibold"
                       : ""
                   }`}
                 >
@@ -96,7 +100,9 @@ export default function Header() {
                   {link.children && <ChevronDown className="w-4 h-4" />}
                   {(location.pathname === link.href ||
                     (link.href !== "/" && location.pathname.startsWith(link.href))) && (
-                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-accent rounded-full" />
+                    <span className={`absolute bottom-0 left-3 right-3 h-0.5 rounded-full ${
+                      isHome && !isScrolled ? "bg-accent" : "bg-primary"
+                    }`} />
                   )}
                 </Link>
 
@@ -151,7 +157,11 @@ export default function Header() {
               <>
                 <Link
                   to="/connexion"
-                  className="inline-flex items-center gap-2 px-4 py-2 text-white/90 hover:text-white text-sm font-medium transition-colors"
+                  className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors ${
+                    isHome && !isScrolled
+                      ? "text-white/90 hover:text-white"
+                      : "text-gray-700 hover:text-primary"
+                  }`}
                 >
                   <User className="w-4 h-4" />
                   Connexion
@@ -169,7 +179,9 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <button
-            className="lg:hidden z-50 text-white p-2"
+            className={`lg:hidden z-50 p-2 ${
+              isHome && !isScrolled ? "text-white" : "text-dark"
+            }`}
             onClick={() => setIsMobileOpen(!isMobileOpen)}
             aria-label={isMobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
