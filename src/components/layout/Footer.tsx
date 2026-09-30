@@ -22,7 +22,7 @@ export default function Footer() {
   return (
     <footer className="bg-primary text-white relative overflow-hidden">
       {/* Globe Background - Full footer */}
-      <div className="absolute inset-0 opacity-[0.08] pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.15] pointer-events-none overflow-hidden">
         <svg viewBox="0 0 600 600" className="absolute w-full h-full min-w-full" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
           {/* Globe circle */}
           <circle cx="300" cy="300" r="250" stroke="white" strokeWidth="2" fill="none" opacity="0.3"/>
