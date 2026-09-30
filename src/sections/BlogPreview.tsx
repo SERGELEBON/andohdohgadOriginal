@@ -1,11 +1,85 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
-import { articles } from "@/data/blog";
+import { supabase } from "@/lib/supabase/supabaseClient";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
+interface BlogArticle {
+  id: string;
+  slug: string;
+  category: string;
+  cover_image_url: string;
+  published_at: string;
+  reading_time: number;
+  title: string;
+  excerpt: string;
+}
 
 export default function BlogPreview() {
   const { ref, isInView } = useScrollAnimation();
-  const recent = articles.slice(0, 3);
+  const [articles, setArticles] = useState<BlogArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRecentArticles();
+  }, []);
+
+  const fetchRecentArticles = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select(`
+          id,
+          slug,
+          category,
+          cover_image_url,
+          published_at,
+          reading_time,
+          translations:blog_post_translations!inner(title, excerpt)
+        `)
+        .eq('status', 'active')
+        .eq('blog_post_translations.language', 'fr')
+        .not('published_at', 'is', null)
+        .lte('published_at', new Date().toISOString())
+        .order('published_at', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+
+      const mappedArticles = (data || []).map((post: any) => ({
+        id: post.id,
+        slug: post.slug,
+        category: post.category,
+        cover_image_url: post.cover_image_url || '/images/blog-default.jpg',
+        published_at: post.published_at,
+        reading_time: post.reading_time || 5,
+        title: post.translations?.[0]?.title || 'Sans titre',
+        excerpt: post.translations?.[0]?.excerpt || '',
+      }));
+
+      setArticles(mappedArticles);
+    } catch (error) {
+      console.error('Error fetching recent articles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const recent = articles;
+
+  if (loading) {
+    return (
+      <section className="section-padding bg-white">
+        <div className="container-lg flex justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (recent.length === 0) {
+    return null; // Ne rien afficher s'il n'y a pas d'articles
+  }
 
   return (
     <section className="section-padding bg-white" ref={ref}>
@@ -38,13 +112,13 @@ export default function BlogPreview() {
             >
               <div className="aspect-video overflow-hidden">
                 <img
-                  src={article.image}
+                  src={article.cover_image_url}
                   alt={article.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
               </div>
               <div className="p-6">
-                <span className="text-xs font-semibold text-secondary mb-2 block">
+                <span className="text-xs font-semibold text-secondary mb-2 block uppercase">
                   {article.category}
                 </span>
                 <h3 className="font-display text-lg font-semibold text-dark mb-3 group-hover:text-primary transition-colors line-clamp-2">
@@ -54,10 +128,10 @@ export default function BlogPreview() {
                   {article.excerpt}
                 </p>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <time>{article.date}</time>
+                  <time>{new Date(article.published_at).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    <span>{article.readTime} de lecture</span>
+                    <span>{article.reading_time} min de lecture</span>
                   </div>
                 </div>
               </div>
