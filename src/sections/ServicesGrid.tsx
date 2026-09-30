@@ -34,31 +34,43 @@ export default function ServicesGrid() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, i) => {
-            const Icon = service.icon;
             return (
               <div
                 key={service.slug}
-                className={`group bg-white border border-gray-200 rounded-xl p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-card-hover hover:border-primary/30 ${
+                className={`group bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-card-hover hover:border-primary/30 ${
                   isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                 }`}
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/15 transition-colors">
-                  <Icon className="w-7 h-7 text-primary" />
+                {/* Service Image */}
+                {service.image && (
+                  <div className="relative w-full h-48 sm:h-52 md:h-56 overflow-hidden bg-gray-100">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                )}
+
+                {/* Service Content */}
+                <div className="p-6">
+                  <h3 className="font-display text-xl font-semibold text-dark mb-3 line-clamp-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-body text-sm leading-relaxed mb-5 line-clamp-3">
+                    {service.shortDescription}
+                  </p>
+                  <Link
+                    to={`/services/${service.slug}`}
+                    className="text-link group/link"
+                  >
+                    {"En savoir plus"}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
-                <h3 className="font-display text-xl font-semibold text-dark mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-body text-sm leading-relaxed mb-5">
-                  {service.shortDescription}
-                </p>
-                <Link
-                  to={`/services/${service.slug}`}
-                  className="text-link group/link"
-                >
-                  {"En savoir plus"}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
               </div>
             );
           })}
