@@ -129,7 +129,7 @@ export default function Header() {
                   className="inline-flex items-center gap-2 px-4 py-2 text-white/90 hover:text-white text-sm font-medium transition-colors"
                 >
                   <User className="w-4 h-4" />
-                  {profile?.first_name || 'Mon compte'}
+                  {profile?.first_name || 'Compte'}
                 </Link>
                 {(profile?.role === 'admin' || user?.email === 'contact@andoh-dohgad.com') && (
                   <Link
@@ -158,7 +158,7 @@ export default function Header() {
                 </Link>
                 <Link
                   to="/inscription"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-dark text-sm font-semibold rounded-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-dark text-sm font-bold rounded-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5 shadow-lg hover:shadow-xl animate-pulse-slow"
                 >
                   Inscription
                   <ArrowRight className="w-4 h-4" />
@@ -235,7 +235,7 @@ export default function Header() {
                   onClick={() => setIsMobileOpen(false)}
                 >
                   <User className="w-5 h-5" />
-                  {profile?.first_name || 'Mon compte'}
+                  {profile?.first_name || 'Compte'}
                 </Link>
                 {(profile?.role === 'admin' || user?.email === 'contact@andoh-dohgad.com') && (
                   <Link

@@ -2,6 +2,7 @@ import HeroSection from "@/sections/HeroSection";
 import StatsBar from "@/sections/StatsBar";
 import ServicesGrid from "@/sections/ServicesGrid";
 import ValueProposition from "@/sections/ValueProposition";
+import WhyChooseUs from "@/sections/WhyChooseUs";
 import Testimonials from "@/sections/Testimonials";
 import BlogPreview from "@/sections/BlogPreview";
 import CTABanner from "@/sections/CTABanner";
@@ -13,6 +14,7 @@ export default function Home() {
       <StatsBar />
       <ServicesGrid />
       <ValueProposition />
+      <WhyChooseUs />
       <Testimonials />
       <BlogPreview />
       <CTABanner
