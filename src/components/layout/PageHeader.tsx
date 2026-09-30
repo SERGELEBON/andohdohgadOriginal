@@ -22,7 +22,7 @@ export default function PageHeader({ title, subtitle, breadcrumbs, backgroundIma
             />
           </div>
           {/* Dark overlay for readability */}
-          <div className="absolute inset-0 z-[1] bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-r from-primary/70 via-primary/60 to-primary/50" />
         </>
       ) : (
         /* Default gradient background */
