@@ -26,8 +26,8 @@
 - Bouton inscription amélioré
 - SEO optimisé (compteurs, méta)
 
-### ⚠️ Actions manuelles requises (2)
-1. **Nettoyer l'article de test en base Supabase** (5 min)
+### ⚠️ Actions manuelles requises (1)
+1. **Gérer les articles de blog (optionnel)** (5 min)
 2. **Modifier le nom de l'admin** (optionnel, 2 min)
 
 ---
