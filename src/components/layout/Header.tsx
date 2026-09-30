@@ -51,7 +51,7 @@ export default function Header() {
 
   const isHome = location.pathname === "/";
   const headerBg = isHome && !isScrolled
-    ? "bg-primary/30 backdrop-blur-md"
+    ? "bg-primary/90 backdrop-blur-sm"
     : "bg-primary shadow-header";
 
   // Texte toujours blanc
