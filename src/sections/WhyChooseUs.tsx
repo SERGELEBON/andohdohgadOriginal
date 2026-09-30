@@ -41,11 +41,11 @@ export default function WhyChooseUs() {
   return (
     <section className="section-padding bg-gradient-to-br from-primary-dark via-primary to-primary-dark relative overflow-hidden" ref={ref}>
       {/* Logo background */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none">
+      <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
         <img
           src="/images/logo.png"
           alt=""
-          className="w-full h-full max-w-4xl object-contain"
+          className="w-full h-full object-cover"
         />
       </div>
 
