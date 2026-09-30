@@ -35,31 +35,38 @@ export default function BlogPreview() {
           cover_image_url,
           published_at,
           reading_time,
-          translations:blog_post_translations!inner(title, excerpt)
+          translations:blog_post_translations(title, excerpt)
         `)
-        .eq('status', 'active')
-        .eq('blog_post_translations.language', 'fr')
-        .not('published_at', 'is', null)
-        .lte('published_at', new Date().toISOString())
-        .order('published_at', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(3);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erreur Supabase:', error);
+        throw error;
+      }
 
-      const mappedArticles = (data || []).map((post: any) => ({
-        id: post.id,
-        slug: post.slug,
-        category: post.category,
-        cover_image_url: post.cover_image_url || '/images/blog-default.jpg',
-        published_at: post.published_at,
-        reading_time: post.reading_time || 5,
-        title: post.translations?.[0]?.title || 'Sans titre',
-        excerpt: post.translations?.[0]?.excerpt || '',
-      }));
+      const mappedArticles = (data || []).map((post: any) => {
+        // Trouver la traduction FR, ou prendre la première disponible
+        const translation = post.translations?.find((t: any) => t.language === 'fr')
+                         || post.translations?.[0]
+                         || {};
+
+        return {
+          id: post.id,
+          slug: post.slug,
+          category: post.category,
+          cover_image_url: post.cover_image_url || '/images/blog-default.jpg',
+          published_at: post.published_at || post.created_at,
+          reading_time: post.reading_time || 5,
+          title: translation.title || 'Sans titre',
+          excerpt: translation.excerpt || 'Aucun extrait disponible.',
+        };
+      });
 
       setArticles(mappedArticles);
+      console.log('Articles chargés:', mappedArticles.length);
     } catch (error) {
-      console.error('Error fetching recent articles:', error);
+      console.error('Erreur lors du chargement des articles:', error);
     } finally {
       setLoading(false);
     }
@@ -77,9 +84,10 @@ export default function BlogPreview() {
     );
   }
 
-  if (recent.length === 0) {
-    return null; // Ne rien afficher s'il n'y a pas d'articles
-  }
+  // Toujours afficher la section, même sans articles
+  // if (recent.length === 0) {
+  //   return null;
+  // }
 
   return (
     <section className="section-padding bg-white" ref={ref}>
@@ -101,7 +109,13 @@ export default function BlogPreview() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {recent.map((article, i) => (
+          {recent.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-body text-lg mb-4">Aucun article disponible pour le moment.</p>
+              <p className="text-muted-foreground text-sm">Les nouveaux articles apparaîtront ici automatiquement.</p>
+            </div>
+          ) : (
+            recent.map((article, i) => (
             <Link
               key={article.slug}
               to={`/blog/${article.slug}`}
@@ -136,7 +150,8 @@ export default function BlogPreview() {
                 </div>
               </div>
             </Link>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </section>
