@@ -51,10 +51,10 @@ export default function Header() {
 
   const isHome = location.pathname === "/";
   const headerBg = isHome && !isScrolled
-    ? "bg-transparent"
+    ? "bg-primary/30 backdrop-blur-md"
     : "bg-primary shadow-header";
 
-  // Texte toujours blanc (transparent ou violet = fond foncé)
+  // Texte toujours blanc
   const textColor = "text-white";
   const textColorHover = "hover:text-white";
 
