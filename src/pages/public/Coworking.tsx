@@ -10,7 +10,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 const features = [
   "Bureaux individuels climatises",
   "Espace open-space collaboratif",
-  "Salle de reunion equipee",
+  "Salle de réunion équipée",
   "Connexion internet haut debit",
   "Cafeteria et espace detente",
   "Reception du courrier et des appels",
@@ -42,9 +42,9 @@ function SpacePresentation() {
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div className={`transition-all duration-700 ${isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-10"}`}>
             <span className="text-xs font-semibold uppercase tracking-[2px] text-secondary mb-3 block">ESPACE DE TRAVAIL</span>
-            <h2 className="font-display text-2xl lg:text-4xl font-semibold text-dark mb-6">Votre bureau au coeur d&apos;Abidjan</h2>
+            <h2 className="font-display text-2xl lg:text-4xl font-semibold text-dark mb-6">Votre bureau au coeur d'Abidjan</h2>
             <p className="text-body leading-relaxed mb-6">
-              Situe au Plateau, le quartier des affaires d&apos;Abidjan, notre espace de co-working offre un environnement professionnel, moderne et inspirant.
+              Situe au Plateau, le quartier des affaires d'Abidjan, notre espace de co-working offre un environnement professionnel, moderne et inspirant.
             </p>
             <ul className="space-y-3">
               {features.map((f) => (
@@ -108,12 +108,12 @@ function RegistrationForm() {
             <div className="text-center py-6">
               <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
               <h3 className="font-display text-2xl font-semibold text-dark mb-3">Merci !</h3>
-              <p className="text-body">Notre equipe vous contactera sous 24h pour finaliser votre inscription.</p>
+              <p className="text-body">Notre équipe vous contactera sous 24h pour finaliser votre inscription.</p>
             </div>
           ) : (
             <>
               <h2 className="font-display text-2xl font-semibold text-dark text-center mb-2">Creer votre compte co-working</h2>
-              <p className="text-body text-sm text-center mb-8">Remplissez ce formulaire pour demander l&apos;acces a notre espace.</p>
+              <p className="text-body text-sm text-center mb-8">Remplissez ce formulaire pour demander l'acces a notre espace.</p>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
@@ -134,7 +134,7 @@ function RegistrationForm() {
                     {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-dark mb-1.5">Type d&apos;espace *</label>
+                    <label className="block text-sm font-medium text-dark mb-1.5">Type d'espace *</label>
                     <select {...register("spaceType")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.spaceType ? "border-red-500" : "border-gray-200"}`}>
                       <option value="">Selectionnez...</option>
                       <option value="individual">Bureau individuel</option>

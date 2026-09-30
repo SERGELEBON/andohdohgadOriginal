@@ -49,7 +49,7 @@ function ContactForm() {
               <label className="block text-sm font-medium text-dark mb-1.5">Sujet *</label>
               <select {...register("subject")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.subject ? "border-red-500" : "border-gray-200"}`}>
                 <option value="">Selectionnez...</option>
-                <option value="info">Demande d&apos;information</option>
+                <option value="info">Demande d'information</option>
                 <option value="appointment">Demande de rendez-vous</option>
                 <option value="accounting">Service comptable</option>
                 <option value="hr">Service RH</option>
@@ -139,7 +139,7 @@ export default function Contact() {
   const { ref, isInView } = useScrollAnimation();
   return (
     <>
-      <PageHeader title="Contactez-nous" subtitle="Notre equipe est a votre disposition pour repondre a toutes vos questions." breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Contact", href: "/contact" }]} />
+      <PageHeader title="Contactez-nous" subtitle="Notre équipe est à votre disposition pour répondre à toutes vos questions." breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Contact", href: "/contact" }]} />
       <section className="section-padding bg-white" ref={ref}>
         <div className="container-lg">
           <div className={`grid lg:grid-cols-[55%_45%] gap-10 lg:gap-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>

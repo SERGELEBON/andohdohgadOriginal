@@ -17,7 +17,7 @@ function FirmPresentation() {
             <SectionTitle label="QUI SOMMES-NOUS" title="Un cabinet qui possède déjà la donnée de ses clients" align="left" />
             <div className="space-y-4 text-body leading-relaxed">
               <p>Cabinet de conseil en structuration organisationnelle et pilotage de la performance, basé à Abidjan (Plateau — AfricaWorks). Co-dirigé en co-direction, avec une équipe dédiée à chaque mission.</p>
-              <p>Nous rendons votre entreprise bancable, agile et prête à conquérir l&apos;avenir en réunissant 4 expertises dédiées — comptable, fiscale, RH et structuration — dans une seule méthode et, pour les clients qui le souhaitent, dans une offre intégrée : <strong>Synergia</strong>.</p>
+              <p>Nous rendons votre entreprise bancable, agile et prête à conquérir l'avenir en réunissant 4 expertises dédiées — comptable, fiscale, RH et structuration — dans une seule méthode et, pour les clients qui le souhaitent, dans une offre intégrée : <strong>Synergia</strong>.</p>
               <div className="bg-offwhite rounded-xl p-6 border-l-4 border-primary">
                 <p className="font-display text-lg font-semibold text-dark italic">&ldquo;Faire parler les chiffres pour éclairer chaque décision du dirigeant — et transformer une entreprise dépendante des personnes en une organisation pilotée par des processus.&rdquo;</p>
                 <p className="text-sm text-primary font-semibold mt-3 uppercase tracking-wider">Notre promesse</p>
@@ -25,7 +25,7 @@ function FirmPresentation() {
             </div>
           </div>
           <div className={`transition-all duration-700 delay-200 ${isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-16"}`}>
-            <img src="/images/about-team.jpg" alt="L'equipe Andoh & Dohgad Consulting" className="rounded-xl shadow-card-hover w-full object-cover aspect-[4/3]" />
+            <img src="/images/about-team.jpg" alt="L'équipe Andoh & Dohgad Consulting" className="rounded-xl shadow-card-hover w-full object-cover aspect-[4/3]" />
           </div>
         </div>
       </div>
@@ -45,14 +45,14 @@ function VisionSection() {
         <div className={`grid md:grid-cols-3 gap-8 mt-12 max-w-4xl mx-auto transition-all duration-700 delay-300 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
           <div className="text-left">
             <p className="text-accent font-bold text-sm mb-2">Le dirigeant au centre</p>
-            <p className="text-white/75 text-sm">Le système sert sa vision, jamais l&apos;inverse.</p>
+            <p className="text-white/75 text-sm">Le système sert sa vision, jamais l'inverse.</p>
           </div>
           <div className="text-left">
             <p className="text-accent font-bold text-sm mb-2">Les processus priment</p>
             <p className="text-white/75 text-sm">Sur les habitudes individuelles.</p>
           </div>
           <div className="text-left">
-            <p className="text-accent font-bold text-sm mb-2">L&apos;amélioration continue</p>
+            <p className="text-accent font-bold text-sm mb-2">L'amélioration continue</p>
             <p className="text-white/75 text-sm">Est permanente, jamais ponctuelle.</p>
           </div>
         </div>

@@ -88,7 +88,7 @@ export default function BlogPost() {
               </div>
               <div>
                 <h4 className="font-semibold text-dark">{article.author}</h4>
-                <p className="text-sm text-body mt-1">Expert chez Andoh & Dohgad Consulting, passionne par l&apos;accompagnement des entreprises africaines.</p>
+                <p className="text-sm text-body mt-1">Expert chez Andoh & Dohgad Consulting, passionne par l'accompagnement des entreprises africaines.</p>
               </div>
             </div>
 

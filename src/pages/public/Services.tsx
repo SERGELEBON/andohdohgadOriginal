@@ -38,7 +38,7 @@ function ServicesList() {
     <section className="section-padding bg-white relative overflow-hidden" ref={ref}>
       <div className="absolute top-10 left-0 w-48 h-48 opacity-[0.04] pointer-events-none"><svg viewBox="0 0 300 260" fill="none"><path d="M150 0L300 260H0L150 0Z" fill="#5C0F8B" /></svg></div>
       <div className="container-lg relative z-10">
-        <SectionTitle label="CE QUE NOUS FAISONS" title="Nos domaines d&apos;expertise" />
+        <SectionTitle label="CE QUE NOUS FAISONS" title="Nos domaines d'expertise" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((s, i) => <ServiceCard key={s.slug} service={s} index={i} isInView={isInView} />)}
         </div>
@@ -52,7 +52,7 @@ export default function Services() {
     <>
       <PageHeader
         title="Nos services"
-        subtitle="Des solutions completes et personnalisees pour repondre a tous vos besoins en matiere de conseil et d&apos;accompagnement."
+        subtitle="Des solutions complètes et personnalisées pour répondre à tous vos besoins en matière de conseil et d'accompagnement."
         breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Services", href: "/services" }]}
       />
       <ServicesList />

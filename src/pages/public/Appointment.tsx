@@ -46,8 +46,8 @@ export default function Appointment() {
                 <div className="text-center py-12">
                   <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
                   <h3 className="font-display text-2xl font-semibold text-dark mb-3">Demande envoyee !</h3>
-                  <p className="text-body max-w-md mx-auto mb-6">Nous avons bien recu votre demande de rendez-vous. Notre equipe vous contactera dans les 24 heures ouvrees pour confirmer votre rendez-vous.</p>
-                  <a href="/" className="btn-primary">Retour a l&apos;accueil</a>
+                  <p className="text-body max-w-md mx-auto mb-6">Nous avons bien reçu votre demande de rendez-vous. Notre équipe vous contactera dans les 24 heures ouvrées pour confirmer votre rendez-vous.</p>
+                  <a href="/" className="btn-primary">Retour a l'accueil</a>
                 </div>
               ) : (
                 <>
@@ -126,7 +126,7 @@ export default function Appointment() {
             {/* Info sidebar */}
             <div className="space-y-6">
               {[
-                { icon: Clock, title: "Delai de confirmation", text: "Nous vous contacterons sous 24h ouvrees." },
+                { icon: Clock, title: "Delai de confirmation", text: "Nous vous contacterons sous 24h ouvrées." },
                 { icon: FileText, title: "Preparez votre rendez-vous", text: "Ayez a portee de main vos documents comptables recents et vos questions." },
                 { icon: Phone, title: "Besoin d'urgence ?", text: "+225 07 09 57 75 30", isLink: true },
               ].map((item) => (
