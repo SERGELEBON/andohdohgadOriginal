@@ -63,7 +63,7 @@ export default function Blog() {
         id: post.id,
         slug: post.slug,
         category: post.category,
-        cover_image_url: post.cover_image_url || '/images/blog-default.jpg',
+        cover_image_url: post.cover_image_url || `/images/blog-${post.category}.jpg`,
         published_at: post.published_at,
         reading_time: post.reading_time || 5,
         title: post.translations?.[0]?.title || 'Sans titre',
@@ -82,22 +82,8 @@ export default function Blog() {
     ? articles
     : articles.filter((a) => a.category === activeCat);
 
-  if (loading) {
-    return (
-      <>
-        <PageHeader
-          title="Blog & Actualités"
-          subtitle="Conseils, analyses et actualités pour les entrepreneurs et dirigeants d'entreprise."
-          breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Blog", href: "/blog" }]}
-        />
-        <section className="section-padding bg-offwhite">
-          <div className="container-lg flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        </section>
-      </>
-    );
-  }
+  // La <section ref={ref}> doit rester montée pendant le chargement,
+  // sinon useInView ne s'attache jamais et les cartes restent invisibles (opacity-0).
 
   return (
     <>
@@ -130,7 +116,11 @@ export default function Blog() {
               </div>
 
               {/* Articles grid */}
-              {filtered.length === 0 ? (
+              {loading ? (
+                <div className="flex justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+              ) : filtered.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-500">Aucun article disponible pour le moment.</p>
                 </div>
@@ -151,7 +141,7 @@ export default function Blog() {
                           alt={article.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/images/blog-default.jpg';
+                            (e.target as HTMLImageElement).src = '/images/blog-fiscalite.jpg';
                           }}
                         />
                       </div>
@@ -208,7 +198,7 @@ export default function Blog() {
                         alt={a.title}
                         className="w-14 h-14 rounded-lg object-cover shrink-0"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/images/blog-default.jpg';
+                          (e.target as HTMLImageElement).src = '/images/blog-fiscalite.jpg';
                         }}
                       />
                       <div>
