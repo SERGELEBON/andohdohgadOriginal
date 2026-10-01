@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string, metadata: any) => {
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: email.trim().toLowerCase(),
       password,
       options: {
         data: metadata,
@@ -109,16 +109,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
 
+    // Email déjà inscrit : avec la confirmation email activée, Supabase ne renvoie
+    // pas d'erreur (protection anti-énumération) mais un user SANS identité.
+    // Aucun compte n'est créé et le mot de passe n'est pas changé : on le signale.
+    if (data.user && data.user.identities?.length === 0) {
+      throw new Error(
+        "Un compte existe déjà avec cet email. Connectez-vous ou utilisez « Mot de passe oublié »."
+      );
+    }
+
     console.log('✅ Signup successful:', data);
   };
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim().toLowerCase(),
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      if (error.message === 'Invalid login credentials') {
+        throw new Error('Email ou mot de passe incorrect.');
+      }
+      if (error.message === 'Email not confirmed') {
+        throw new Error(
+          "Confirmez d'abord votre email (vérifiez votre boîte de réception et les spams)."
+        );
+      }
+      throw error;
+    }
   };
 
   const signOut = async () => {
