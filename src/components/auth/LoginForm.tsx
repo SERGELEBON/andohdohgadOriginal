@@ -29,6 +29,25 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  const getLoginErrorMessage = (error: any): string => {
+    const message = error?.message?.toLowerCase() || '';
+
+    if (message.includes('invalid login') || message.includes('invalid credentials') || message.includes('incorrect')) {
+      return 'Email ou mot de passe incorrect. Veuillez vérifier vos identifiants.';
+    }
+    if (message.includes('email not confirmed') || message.includes('not verified')) {
+      return 'Veuillez confirmer votre email avant de vous connecter. Vérifiez votre boîte de réception.';
+    }
+    if (message.includes('too many requests') || message.includes('rate limit')) {
+      return 'Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.';
+    }
+    if (message.includes('network') || message.includes('fetch')) {
+      return 'Erreur de connexion. Vérifiez votre connexion internet.';
+    }
+
+    return error?.message || 'Échec de la connexion. Veuillez réessayer.';
+  };
+
   const onSubmit = async (data: LoginData) => {
     try {
       setError('');
@@ -65,7 +84,7 @@ export default function LoginForm() {
         navigate('/mon-compte', { replace: true });
       }
     } catch (err: any) {
-      setError(err.message || 'Échec de la connexion');
+      setError(getLoginErrorMessage(err));
     } finally {
       setLoading(false);
     }
