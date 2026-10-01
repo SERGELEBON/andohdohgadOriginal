@@ -1,8 +1,10 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Layout from "@/components/layout/Layout";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { useAutoLogout } from "@/hooks/useAutoLogout";
+import SessionWarning from "@/components/auth/SessionWarning";
 import Home from "@/pages/public/Home";
 import About from "@/pages/public/About";
 import Services from "@/pages/public/Services";
@@ -45,9 +47,43 @@ function ScrollToTop() {
   return null;
 }
 
+function AutoLogoutManager() {
+  const [showWarning, setShowWarning] = useState(false);
+
+  const { resetTimer } = useAutoLogout({
+    enabled: true,
+    onWarning: () => {
+      setShowWarning(true);
+    },
+    onLogout: () => {
+      setShowWarning(false);
+      // Redirect to home with message
+      window.location.href = '/?session_expired=true';
+    },
+  });
+
+  const handleExtendSession = () => {
+    setShowWarning(false);
+    resetTimer();
+  };
+
+  const handleDismissWarning = () => {
+    setShowWarning(false);
+  };
+
+  return (
+    <SessionWarning
+      show={showWarning}
+      onDismiss={handleDismissWarning}
+      onExtend={handleExtendSession}
+    />
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
+      <AutoLogoutManager />
       <ScrollToTop />
       <Routes>
         {/* Public routes with Layout (Header + Footer) */}
