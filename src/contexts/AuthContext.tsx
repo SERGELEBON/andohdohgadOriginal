@@ -1,7 +1,28 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
+
 import { supabase } from '../lib/supabase/supabaseClient';
+
+// Horodatages utilisés par useAutoLogout (déconnexion après 30 min d'inactivité)
+const AUTO_LOGOUT_KEYS = { lastActivity: 'ad_last_activity', sessionStart: 'ad_session_start' };
+const startAutoLogoutSession = () => {
+  try {
+    const now = String(Date.now());
+    localStorage.setItem(AUTO_LOGOUT_KEYS.lastActivity, now);
+    localStorage.setItem(AUTO_LOGOUT_KEYS.sessionStart, now);
+  } catch {
+    /* ignore */
+  }
+};
+const clearAutoLogoutSession = () => {
+  try {
+    localStorage.removeItem(AUTO_LOGOUT_KEYS.lastActivity);
+    localStorage.removeItem(AUTO_LOGOUT_KEYS.sessionStart);
+  } catch {
+    /* ignore */
+  }
+};
 
 interface Profile {
   id: string;
@@ -138,9 +159,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       throw error;
     }
+
+    // Nouvelle session : remet à zéro les compteurs de déconnexion automatique
+    startAutoLogoutSession();
   };
 
   const signOut = async () => {
+    clearAutoLogoutSession();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setUser(null);
