@@ -42,6 +42,8 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  /** true pendant le chargement du profil (rôle) de l'utilisateur connecté */
+  profileLoading: boolean;
   signUp: (email: string, password: string, metadata: any) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -64,8 +66,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const fetchProfile = async (userId: string) => {
+    setProfileLoading(true);
     try {
       // Timeout après 5 secondes pour éviter le blocage
       const timeoutPromise = new Promise((_, reject) =>
@@ -85,6 +89,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.warn('Error fetching profile (continuing anyway):', error);
       setProfile(null);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -192,6 +198,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     profile,
     session,
     loading,
+    profileLoading,
     signUp,
     signIn,
     signOut,
