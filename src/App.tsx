@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Layout from "@/components/layout/Layout";
@@ -21,8 +21,6 @@ import LegalNotice from "@/pages/public/LegalNotice";
 import PrivacyPolicy from "@/pages/public/PrivacyPolicy";
 import NotFound from "@/pages/public/NotFound";
 import Login from "@/pages/admin/Login";
-import Signup from "@/pages/admin/Signup";
-import SuperAdminLogin from "@/pages/admin/SuperAdminLogin";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import AuthCallback from "@/pages/auth/AuthCallback";
@@ -104,9 +102,10 @@ function App() {
         <Route path="/politique-confidentialite" element={<Layout><PrivacyPolicy /></Layout>} />
 
         {/* Auth routes without Layout */}
+        {/* /connexion : entrée de l'espace admin, aucun lien public n'y mène */}
         <Route path="/connexion" element={<Login />} />
-        <Route path="/inscription" element={<Signup />} />
-        <Route path="/super-admin" element={<SuperAdminLogin />} />
+        {/* Inscription publique désactivée : les comptes sont créés par un administrateur */}
+        <Route path="/inscription" element={<Navigate to="/" replace />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
