@@ -38,6 +38,25 @@ export default function SignupForm() {
     resolver: zodResolver(signupSchema),
   });
 
+  const getSignupErrorMessage = (error: any): string => {
+    const message = error?.message?.toLowerCase() || '';
+
+    if (message.includes('duplicate') || message.includes('already') || message.includes('exists')) {
+      return 'Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.';
+    }
+    if (message.includes('invalid email')) {
+      return 'Adresse email invalide.';
+    }
+    if (message.includes('password') && message.includes('weak')) {
+      return 'Le mot de passe est trop faible. Utilisez au moins 8 caractères.';
+    }
+    if (message.includes('network') || message.includes('fetch')) {
+      return 'Erreur de connexion. Vérifiez votre connexion internet.';
+    }
+
+    return error?.message || "Une erreur est survenue lors de l'inscription. Veuillez réessayer.";
+  };
+
   const onSubmit = async (data: SignupData) => {
     try {
       setError('');
@@ -51,7 +70,7 @@ export default function SignupForm() {
       setSuccess(true);
       setTimeout(() => navigate('/connexion'), 3000);
     } catch (err: any) {
-      setError(err.message || "Erreur lors de l'inscription");
+      setError(getSignupErrorMessage(err));
     } finally {
       setLoading(false);
     }

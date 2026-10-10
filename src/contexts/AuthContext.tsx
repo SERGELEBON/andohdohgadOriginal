@@ -1,7 +1,28 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
+
 import { supabase } from '../lib/supabase/supabaseClient';
+
+// Horodatages utilisés par useAutoLogout (déconnexion après 30 min d'inactivité)
+const AUTO_LOGOUT_KEYS = { lastActivity: 'ad_last_activity', sessionStart: 'ad_session_start' };
+const startAutoLogoutSession = () => {
+  try {
+    const now = String(Date.now());
+    localStorage.setItem(AUTO_LOGOUT_KEYS.lastActivity, now);
+    localStorage.setItem(AUTO_LOGOUT_KEYS.sessionStart, now);
+  } catch {
+    /* ignore */
+  }
+};
+const clearAutoLogoutSession = () => {
+  try {
+    localStorage.removeItem(AUTO_LOGOUT_KEYS.lastActivity);
+    localStorage.removeItem(AUTO_LOGOUT_KEYS.sessionStart);
+  } catch {
+    /* ignore */
+  }
+};
 
 interface Profile {
   id: string;
@@ -21,6 +42,8 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  /** true pendant le chargement du profil (rôle) de l'utilisateur connecté */
+  profileLoading: boolean;
   signUp: (email: string, password: string, metadata: any) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -43,8 +66,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const fetchProfile = async (userId: string) => {
+    setProfileLoading(true);
     try {
       // Timeout après 5 secondes pour éviter le blocage
       const timeoutPromise = new Promise((_, reject) =>
@@ -64,6 +89,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.warn('Error fetching profile (continuing anyway):', error);
       setProfile(null);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -95,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string, metadata: any) => {
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: email.trim().toLowerCase(),
       password,
       options: {
         data: metadata,
@@ -109,19 +136,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
 
+    // Email déjà inscrit : avec la confirmation email activée, Supabase ne renvoie
+    // pas d'erreur (protection anti-énumération) mais un user SANS identité.
+    // Aucun compte n'est créé et le mot de passe n'est pas changé : on le signale.
+    if (data.user && data.user.identities?.length === 0) {
+      throw new Error(
+        "Un compte existe déjà avec cet email. Connectez-vous ou utilisez « Mot de passe oublié »."
+      );
+    }
+
     console.log('✅ Signup successful:', data);
   };
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim().toLowerCase(),
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      if (error.message === 'Invalid login credentials') {
+        throw new Error('Email ou mot de passe incorrect.');
+      }
+      if (error.message === 'Email not confirmed') {
+        throw new Error(
+          "Confirmez d'abord votre email (vérifiez votre boîte de réception et les spams)."
+        );
+      }
+      throw error;
+    }
+
+    // Nouvelle session : remet à zéro les compteurs de déconnexion automatique
+    startAutoLogoutSession();
   };
 
   const signOut = async () => {
+    clearAutoLogoutSession();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setUser(null);
@@ -148,6 +198,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     profile,
     session,
     loading,
+    profileLoading,
     signUp,
     signIn,
     signOut,

@@ -4,6 +4,15 @@ import { ArrowRight, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase/supabaseClient";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
+const categoryLabels: Record<string, string> = {
+  fiscalite: "Fiscalité",
+  rh: "RH",
+  strategie: "Stratégie",
+  comptabilite: "Comptabilité",
+  entrepreneuriat: "Entrepreneuriat",
+  reglementation: "Réglementation",
+};
+
 interface BlogArticle {
   id: string;
   slug: string;
@@ -35,9 +44,14 @@ export default function BlogPreview() {
           cover_image_url,
           published_at,
           reading_time,
-          translations:blog_post_translations(title, excerpt)
+          created_at,
+          translations:blog_post_translations(language, title, excerpt)
         `)
-        .order('created_at', { ascending: false })
+        // Uniquement les articles publiés (pas les brouillons)
+        .eq('status', 'active')
+        .not('published_at', 'is', null)
+        .lte('published_at', new Date().toISOString())
+        .order('published_at', { ascending: false })
         .limit(3);
 
       if (error) {
@@ -55,7 +69,7 @@ export default function BlogPreview() {
           id: post.id,
           slug: post.slug,
           category: post.category,
-          cover_image_url: post.cover_image_url || '/images/blog-default.jpg',
+          cover_image_url: post.cover_image_url || `/images/blog-${post.category}.jpg`,
           published_at: post.published_at || post.created_at,
           reading_time: post.reading_time || 5,
           title: translation.title || 'Sans titre',
@@ -74,15 +88,9 @@ export default function BlogPreview() {
 
   const recent = articles;
 
-  if (loading) {
-    return (
-      <section className="section-padding bg-white">
-        <div className="container-lg flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </section>
-    );
-  }
+  // IMPORTANT : la <section ref={ref}> doit toujours être montée.
+  // Avant, un return anticipé pendant le chargement rendait une section SANS ref :
+  // useInView ne s'attachait jamais, isInView restait false et les cartes restaient en opacity-0.
 
   // Toujours afficher la section, même sans articles
   // if (recent.length === 0) {
@@ -109,7 +117,11 @@ export default function BlogPreview() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {recent.length === 0 ? (
+          {loading ? (
+            <div className="col-span-full flex justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : recent.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <p className="text-body text-lg mb-4">Aucun article disponible pour le moment.</p>
               <p className="text-muted-foreground text-sm">Les nouveaux articles apparaîtront ici automatiquement.</p>
@@ -133,7 +145,7 @@ export default function BlogPreview() {
               </div>
               <div className="p-6">
                 <span className="text-xs font-semibold text-secondary mb-2 block uppercase">
-                  {article.category}
+                  {categoryLabels[article.category] || article.category}
                 </span>
                 <h3 className="font-display text-lg font-semibold text-dark mb-3 group-hover:text-primary transition-colors line-clamp-2">
                   {article.title}

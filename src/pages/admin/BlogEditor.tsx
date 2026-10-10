@@ -131,6 +131,10 @@ export default function BlogEditor() {
     return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
   };
 
+  // Nettoie les tags uniquement à l'enregistrement (la saisie garde virgules et espaces)
+  const cleanTags = (tags: string[]): string[] =>
+    tags.map((t) => t.trim()).filter(Boolean);
+
   const handleSave = async (publish: boolean = false) => {
     if (!form.title_fr || !form.content_fr) {
       alert('Le titre et le contenu français sont obligatoires');
@@ -182,7 +186,7 @@ export default function BlogEditor() {
           title: form.title_fr,
           excerpt: form.excerpt_fr,
           content: form.content_fr,
-          tags: form.tags_fr,
+          tags: cleanTags(form.tags_fr),
         },
         {
           post_id: postId,
@@ -190,7 +194,7 @@ export default function BlogEditor() {
           title: form.title_en || form.title_fr,
           excerpt: form.excerpt_en || form.excerpt_fr,
           content: form.content_en || form.content_fr,
-          tags: form.tags_en,
+          tags: cleanTags(form.tags_en),
         },
         {
           post_id: postId,
@@ -198,7 +202,7 @@ export default function BlogEditor() {
           title: form.title_es || form.title_fr,
           excerpt: form.excerpt_es || form.excerpt_fr,
           content: form.content_es || form.content_fr,
-          tags: form.tags_es,
+          tags: cleanTags(form.tags_es),
         },
       ];
 
@@ -320,8 +324,8 @@ export default function BlogEditor() {
                   </label>
                   <input
                     type="text"
-                    value={form.tags_fr.join(', ')}
-                    onChange={(e) => setForm({ ...form, tags_fr: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
+                    value={form.tags_fr.join(',')}
+                    onChange={(e) => setForm({ ...form, tags_fr: e.target.value.split(',') })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     placeholder="fiscalité, PME, Côte d'Ivoire"
                   />
@@ -357,8 +361,8 @@ export default function BlogEditor() {
                 />
                 <input
                   type="text"
-                  value={form.tags_en.join(', ')}
-                  onChange={(e) => setForm({ ...form, tags_en: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
+                  value={form.tags_en.join(',')}
+                  onChange={(e) => setForm({ ...form, tags_en: e.target.value.split(',') })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Tags (comma separated)"
                 />
@@ -393,8 +397,8 @@ export default function BlogEditor() {
                 />
                 <input
                   type="text"
-                  value={form.tags_es.join(', ')}
-                  onChange={(e) => setForm({ ...form, tags_es: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean) })}
+                  value={form.tags_es.join(',')}
+                  onChange={(e) => setForm({ ...form, tags_es: e.target.value.split(',') })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Etiquetas (separadas por comas)"
                 />

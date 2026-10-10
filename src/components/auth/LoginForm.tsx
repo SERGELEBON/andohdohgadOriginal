@@ -18,7 +18,7 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, signOut } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -29,43 +29,53 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  const getLoginErrorMessage = (error: any): string => {
+    const message = error?.message?.toLowerCase() || '';
+
+    if (message.includes('invalid login') || message.includes('invalid credentials') || message.includes('incorrect')) {
+      return 'Email ou mot de passe incorrect. Veuillez vérifier vos identifiants.';
+    }
+    if (message.includes('email not confirmed') || message.includes('not verified')) {
+      return 'Veuillez confirmer votre email avant de vous connecter. Vérifiez votre boîte de réception.';
+    }
+    if (message.includes('too many requests') || message.includes('rate limit')) {
+      return 'Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.';
+    }
+    if (message.includes('network') || message.includes('fetch')) {
+      return 'Erreur de connexion. Vérifiez votre connexion internet.';
+    }
+
+    return error?.message || 'Échec de la connexion. Veuillez réessayer.';
+  };
+
   const onSubmit = async (data: LoginData) => {
     try {
       setError('');
       setLoading(true);
       await signIn(data.email, data.password);
 
-      // Wait a bit for the auth state to update
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Get fresh session to check user role
       const { data: { session } } = await supabase.auth.getSession();
-
-      if (session?.user) {
-        // EXCEPTION : Redirection directe pour le super admin
-        if (session.user.email === 'contact@andoh-dohgad.com') {
-          navigate('/admin', { replace: true });
-          return;
-        }
-
-        // Pour les autres utilisateurs : vérifier le rôle dans profiles
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-
-        // Redirect based on role
-        if (profile?.role === 'admin') {
-          navigate('/admin', { replace: true });
-        } else {
-          navigate('/mon-compte', { replace: true });
-        }
-      } else {
-        navigate('/mon-compte', { replace: true });
+      if (!session?.user) {
+        throw new Error('Échec de la connexion. Veuillez réessayer.');
       }
+
+      // Seuls les administrateurs peuvent se connecter.
+      // Le rôle est lu en base (table profiles, protégée par RLS) — jamais déduit de l'email.
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile?.role !== 'admin') {
+        await signOut();
+        setError('Accès réservé aux administrateurs.');
+        return;
+      }
+
+      navigate('/admin', { replace: true });
     } catch (err: any) {
-      setError(err.message || 'Échec de la connexion');
+      setError(getLoginErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -75,10 +85,10 @@ export default function LoginForm() {
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white rounded-2xl shadow-card p-8">
         <h2 className="font-display text-2xl font-semibold text-dark text-center mb-2">
-          Connexion
+          Espace administrateur
         </h2>
         <p className="text-body text-sm text-center mb-8">
-          Connectez-vous à votre compte
+          Accès réservé à l'équipe Andoh &amp; Dohgad
         </p>
 
         {error && (
@@ -97,6 +107,7 @@ export default function LoginForm() {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-body" />
               <input
                 type="email"
+                autoComplete="username"
                 {...register('email')}
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${
                   errors.email ? 'border-red-500' : 'border-gray-200'
@@ -117,6 +128,7 @@ export default function LoginForm() {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-body" />
               <input
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
                 {...register('password')}
                 className={`w-full pl-10 pr-12 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${
                   errors.password ? 'border-red-500' : 'border-gray-200'
@@ -153,13 +165,6 @@ export default function LoginForm() {
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
-
-        <div className="mt-6 text-center text-sm text-body">
-          Pas encore de compte ?{' '}
-          <Link to="/inscription" className="text-primary font-medium hover:underline">
-            S'inscrire
-          </Link>
-        </div>
       </div>
     </div>
   );

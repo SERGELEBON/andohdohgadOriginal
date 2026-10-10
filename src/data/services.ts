@@ -8,6 +8,7 @@ export const services: Service[] = [
     slug: "comptable-fiscal",
     icon: Calculator,
     image: "/images/services/comptalink.jpg",
+    heroImage: "/images/blog-fiscalite.jpg",
     title: "Accompagnement comptable et fiscal",
     shortDescription:
       "Tenue comptable, declarations fiscales, optimisation fiscale et conseil personnalise pour maitriser votre environnement financier.",
@@ -38,6 +39,7 @@ export const services: Service[] = [
     slug: "ressources-humaines",
     icon: Users,
     image: "/images/services/peopleflow.jpg",
+    heroImage: "/images/about-team.jpg",
     title: "Gestion des ressources humaines",
     shortDescription:
       "Recrutement, paie, formation, gestion des talents et conformite sociale pour batir des equipes performantes.",
@@ -68,6 +70,7 @@ export const services: Service[] = [
     slug: "creation-entreprise",
     icon: Building2,
     image: "/images/services/boostart.jpg",
+    heroImage: "/images/value-proposition.jpg",
     title: "Creation et structuration d'entreprise",
     shortDescription:
       "Du choix du statut juridique aux formalites d'immatriculation, nous vous guidons dans chaque etape de votre creation.",
@@ -98,6 +101,7 @@ export const services: Service[] = [
     slug: "conseil-strategique",
     icon: TrendingUp,
     image: "/images/services/synergia.jpg",
+    heroImage: "/images/blog-strategie.jpg",
     title: "Conseil et accompagnement strategique",
     shortDescription:
       "Analyse de marche, planification strategique, tableaux de bord et conseil en gestion pour des decisions eclairees.",
@@ -128,6 +132,7 @@ export const services: Service[] = [
     slug: "formation",
     icon: GraduationCap,
     image: "/images/services/taxoptima.jpg",
+    heroImage: "/images/blog-entrepreneuriat.jpg",
     title: "Formation et renforcement de capacites",
     shortDescription:
       "Programmes de formation sur mesure en comptabilite, gestion, fiscalite et entrepreneuriat pour vos equipes.",
@@ -157,6 +162,7 @@ export const services: Service[] = [
     slug: "coworking-domiciliation",
     icon: MapPin,
     image: "/images/services/synergia.jpg",
+    heroImage: "/images/coworking-main.jpg",
     title: "Co-working & Domiciliation d'entreprise",
     shortDescription:
       "Espaces de travail modernes, domiciliation commerciale et accompagnement entrepreneurial au coeur d'Abidjan.",

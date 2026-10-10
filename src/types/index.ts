@@ -4,6 +4,8 @@ export interface Service {
   slug: string;
   icon: LucideIcon;
   image?: string;
+  /** Photo de fond (sans texte) pour l'en-tête de la page du service */
+  heroImage?: string;
   title: string;
   shortDescription: string;
   fullDescription: string;
