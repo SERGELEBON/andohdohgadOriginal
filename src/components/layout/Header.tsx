@@ -131,7 +131,7 @@ export default function Header() {
                   <User className="w-4 h-4" />
                   {profile?.first_name || 'Compte'}
                 </Link>
-                {(profile?.role === 'admin' || user?.email === 'contact@andoh-dohgad.com') && (
+                {profile?.role === 'admin' && (
                   <Link
                     to="/admin"
                     className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-all shadow-md"
@@ -147,24 +147,7 @@ export default function Header() {
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
-            ) : (
-              <>
-                <Link
-                  to="/connexion"
-                  className="inline-flex items-center gap-2 px-4 py-2 text-white/90 hover:text-white text-sm font-medium transition-colors"
-                >
-                  <User className="w-4 h-4" />
-                  Connexion
-                </Link>
-                <Link
-                  to="/inscription"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-dark text-sm font-bold rounded-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5 shadow-lg hover:shadow-xl animate-pulse-slow"
-                >
-                  Inscription
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
 
           {/* Mobile menu button */}
@@ -226,7 +209,7 @@ export default function Header() {
               
             </div>
 
-            {/* Auth buttons for mobile */}
+            {/* Compte connecté (mobile) — la connexion admin se fait via /connexion, non exposée aux visiteurs */}
             {user ? (
               <div className="w-full flex flex-col items-center gap-3 mt-4">
                 <Link
@@ -237,7 +220,7 @@ export default function Header() {
                   <User className="w-5 h-5" />
                   {profile?.first_name || 'Compte'}
                 </Link>
-                {(profile?.role === 'admin' || user?.email === 'contact@andoh-dohgad.com') && (
+                {profile?.role === 'admin' && (
                   <Link
                     to="/admin"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white text-base font-semibold rounded-lg hover:bg-purple-700 transition-all shadow-md"
@@ -257,26 +240,7 @@ export default function Header() {
                   Déconnexion
                 </button>
               </div>
-            ) : (
-              <div className="w-full flex flex-col items-center gap-3 mt-4">
-                <Link
-                  to="/connexion"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-white/90 hover:text-white text-base font-medium transition-colors"
-                  onClick={() => setIsMobileOpen(false)}
-                >
-                  <User className="w-5 h-5" />
-                  Connexion
-                </Link>
-                <Link
-                  to="/inscription"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-accent text-dark text-base font-semibold rounded-lg hover:bg-accent/90 transition-all"
-                  onClick={() => setIsMobileOpen(false)}
-                >
-                  Inscription
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
+            ) : null}
 
             <Link
               to="/rendez-vous"
