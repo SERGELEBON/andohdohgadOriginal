@@ -3,10 +3,13 @@ import { ArrowRight, Send } from "lucide-react";
 import { services } from "@/data/services";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useServiceImages, cardImageFor } from "@/hooks/useServiceImages";
 
 export default function ServicesGrid() {
   const { ref, isInView } = useScrollAnimation();
   const navigate = useNavigate();
+  // Images modifiables depuis le dashboard admin (repli : image par défaut)
+  const { images, loading: imagesLoading } = useServiceImages();
   return (
     <section className="section-padding bg-white relative overflow-hidden" ref={ref}>
       {/* Decorative shapes */}
@@ -34,6 +37,8 @@ export default function ServicesGrid() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, i) => {
+            // Pendant le chargement, on n'affiche pas l'ancienne image pour éviter un changement visible
+            const imageSrc = imagesLoading ? undefined : cardImageFor(service.slug, service.image, images);
             return (
               <div
                 key={service.slug}
@@ -43,14 +48,16 @@ export default function ServicesGrid() {
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
                 {/* Service Image */}
-                {service.image && (
+                {(service.image || images[service.slug]?.card_image_url) && (
                   <div className="relative w-full h-48 sm:h-52 md:h-56 overflow-hidden bg-gray-100">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
+                    {imageSrc && (
+                      <img
+                        src={imageSrc}
+                        alt={service.title}
+                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 )}
