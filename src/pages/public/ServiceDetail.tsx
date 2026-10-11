@@ -4,12 +4,15 @@ import { Check, Phone, Send } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import { services } from "@/data/services";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useServiceImages, heroImageFor } from "@/hooks/useServiceImages";
 
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const service = services.find((s) => s.slug === slug);
   const { ref, isInView } = useScrollAnimation();
+  // Image d'en-tête modifiable depuis le dashboard admin (repli : image par défaut)
+  const { images, loading: imagesLoading } = useServiceImages();
 
   useEffect(() => {
     if (!service) navigate("/services");
@@ -25,7 +28,7 @@ export default function ServiceDetail() {
       <PageHeader
         title={service.title}
         subtitle={service.shortDescription}
-        backgroundImage={service.heroImage ?? service.image}
+        backgroundImage={imagesLoading ? undefined : heroImageFor(service.slug, service.heroImage ?? service.image, images)}
         breadcrumbs={[
           { label: "Accueil", href: "/" },
           { label: "Nos Services", href: "/services" },

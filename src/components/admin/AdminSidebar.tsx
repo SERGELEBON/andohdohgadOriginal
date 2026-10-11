@@ -12,13 +12,15 @@ import {
   LogOut,
   ChevronLeft,
   Menu,
-  Edit2
+  Edit2,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useState } from 'react';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
   { icon: Edit2, label: 'Contenu Site', path: '/admin/cms' },
+  { icon: ImageIcon, label: 'Images services', path: '/admin/services' },
   { icon: FileText, label: 'Blog', path: '/admin/blog' },
   { icon: Users, label: 'Utilisateurs', path: '/admin/users' },
   { icon: Calendar, label: 'Rendez-vous', path: '/admin/appointments' },
