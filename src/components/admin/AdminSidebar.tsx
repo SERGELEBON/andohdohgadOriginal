@@ -13,7 +13,8 @@ import {
   ChevronLeft,
   Menu,
   Edit2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  ClipboardList
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -25,6 +26,7 @@ const menuItems = [
   { icon: Users, label: 'Utilisateurs', path: '/admin/users' },
   { icon: Calendar, label: 'Rendez-vous', path: '/admin/appointments' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
+  { icon: ClipboardList, label: 'Demandes de service', path: '/admin/surveys' },
   { icon: Building2, label: 'Co-working', path: '/admin/coworking' },
   { icon: FolderOpen, label: 'Documents', path: '/admin/documents' },
   { icon: FileText, label: 'Achats docs', path: '/admin/docs' },

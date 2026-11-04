@@ -8,7 +8,8 @@ import { Building2, Briefcase, Users, MapPin, Coffee, CheckCircle, AlertCircle, 
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { supabase } from "@/lib/supabase/supabaseClient";
+import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
+import { submitServiceRequest, whatsappFallbackUrl, SERVICE_REQUEST_LABELS } from "@/lib/supabase/submissions";
 
 // ==========================================
 // MAPPING SERVICE SLUG -> SURVEY TYPE
@@ -136,6 +137,7 @@ export default function Surveys() {
   const [activeSurvey, setActiveSurvey] = useState<SurveyType>("creation");
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [whatsappUrl, setWhatsappUrl] = useState("");
   const { ref, isInView } = useScrollAnimation();
 
   // Auto-select survey based on URL param
@@ -166,59 +168,37 @@ export default function Surveys() {
     setStatus("submitting");
     setErrorMessage("");
 
-    try {
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Supabase timeout")), 5000)
-      );
+    // 1. Enregistrement en base : c'est LUI qui décide du succès.
+    const result = await submitServiceRequest(activeSurvey, data as FormData & { name: string; email: string; phone: string });
 
-      const insertPromise = supabase.from("surveys").insert([
-        {
-          survey_type: activeSurvey,
-          form_data: data,
-          email: data.email,
-          name: data.name,
-          phone: data.phone,
-          status: "pending",
-        },
-      ]);
-
-      try {
-        await Promise.race([insertPromise, timeoutPromise]);
-        console.log("✅ Données enregistrées dans Supabase");
-      } catch (supabaseError) {
-        console.warn("Supabase submission failed/timeout, continuing with EmailJS:", supabaseError);
-      }
-
-      // Tentative d'envoi EmailJS (non-bloquant, optionnel)
-      try {
-        await emailjs.send(
-          "service_fqsdqil",
-          "template_rq4a5uc",
-          {
-            survey_type: activeSurvey,
-            to_email: "andoh.dohgad@gmail.com",
-            ...data,
-          },
-          "sFZh4sYFqQ3rh0nDd"
-        );
-        console.log("✅ Email de notification envoyé");
-      } catch (emailError) {
-        console.warn("⚠️ EmailJS failed (non-critical):", emailError);
-      }
-
-      setStatus("success");
-      reset();
-
-      setTimeout(() => {
-        setStatus("idle");
-      }, 5000);
-    } catch (error) {
-      console.error("Submission error:", error);
+    if (!result.ok) {
+      const lines = Object.entries(data as Record<string, unknown>)
+        .filter(([, v]) => v !== undefined && v !== "")
+        .map(([k, v]) => `${k} : ${String(v)}`);
+      setWhatsappUrl(whatsappFallbackUrl([
+        `Bonjour Andoh & Dohgad, voici ma demande « ${SERVICE_REQUEST_LABELS[activeSurvey]} » (le formulaire du site n'a pas fonctionné) :`,
+        ...lines,
+      ]));
+      setErrorMessage("Votre demande n'a pas pu être enregistrée.");
       setStatus("error");
-      setErrorMessage(
-        "Une erreur est survenue lors de l'envoi. Veuillez réessayer ou nous contacter directement."
-      );
+      return;
     }
+
+    // 2. Notification email (optionnelle, n'affecte pas le résultat)
+    try {
+      await emailjs.send(
+        "service_fqsdqil",
+        "template_rq4a5uc",
+        { survey_type: activeSurvey, to_email: "andoh.dohgad@gmail.com", ...data },
+        "sFZh4sYFqQ3rh0nDd"
+      );
+    } catch (emailError) {
+      console.warn("EmailJS failed (non-critical):", emailError);
+    }
+
+    setStatus("success");
+    reset();
+    setTimeout(() => setStatus("idle"), 5000);
   };
 
   const currentFields = 
@@ -426,19 +406,14 @@ export default function Surveys() {
                   ))}
                 </div>
 
-                {status === "error" && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-700">{errorMessage}</p>
-                  </div>
-                )}
+                {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
 
                 <button
                   type="submit"
                   disabled={status === "submitting"}
                   className="btn-primary w-full sm:w-auto px-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {status === "submitting" ? "Envoi en cours..." : "Envoyer ma demande"}
+                  {status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer ma demande"}
                 </button>
               </form>
             )}

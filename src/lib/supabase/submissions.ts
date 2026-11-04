@@ -24,7 +24,7 @@ async function currentUserId(): Promise<string | null> {
   }
 }
 
-async function insertRow(table: 'contact_messages' | 'appointments', row: Record<string, unknown>): Promise<SubmitResult> {
+async function insertRow(table: 'contact_messages' | 'appointments' | 'surveys', row: Record<string, unknown>): Promise<SubmitResult> {
   if (!isConfigured()) {
     return { ok: false, error: 'Configuration Supabase manquante' };
   }
@@ -89,6 +89,31 @@ export async function submitAppointment(p: AppointmentPayload): Promise<SubmitRe
     appointment_date: p.date,
     time_slot: p.timeSlot,
     message: p.message?.trim() || null,
+    status: 'pending',
+  });
+}
+
+export type ServiceRequestType = 'creation' | 'service' | 'rh' | 'domiciliation' | 'coworking';
+
+export const SERVICE_REQUEST_LABELS: Record<ServiceRequestType, string> = {
+  creation: "Création d'entreprise",
+  service: 'Service spécifique',
+  rh: 'Accompagnement RH',
+  domiciliation: 'Domiciliation',
+  coworking: 'Co-working',
+};
+
+/** Demandes de service (page /sondages et inscription co-working) → table surveys. */
+export async function submitServiceRequest(
+  type: ServiceRequestType,
+  data: { name: string; email: string; phone: string } & Record<string, unknown>,
+): Promise<SubmitResult> {
+  return insertRow('surveys', {
+    survey_type: type,
+    form_data: data,
+    name: String(data.name).trim(),
+    email: String(data.email).trim(),
+    phone: String(data.phone).trim(),
     status: 'pending',
   });
 }
