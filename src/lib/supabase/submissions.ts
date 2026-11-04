@@ -50,9 +50,13 @@ export interface ContactPayload {
 }
 
 export async function submitContactMessage(p: ContactPayload): Promise<SubmitResult> {
-  // NB : la table contact_messages en production n'a pas de colonne user_id.
+  // NB : en production, contact_messages n'a pas de user_id mais a first_name / last_name.
+  const fullName = p.name.trim().replace(/\s+/g, ' ');
+  const [firstName, ...rest] = fullName.split(' ');
   return insertRow('contact_messages', {
-    name: p.name.trim(),
+    name: fullName,
+    first_name: firstName,
+    last_name: rest.join(' '),
     email: p.email.trim(),
     phone: p.phone?.trim() || null,
     subject: p.subject,
