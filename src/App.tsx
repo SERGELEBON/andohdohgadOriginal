@@ -31,6 +31,7 @@ import BlogEditor from "@/pages/admin/BlogEditor";
 import UsersAdmin from "@/pages/admin/UsersAdmin";
 import AppointmentsAdmin from "@/pages/admin/AppointmentsAdmin";
 import MessagesAdmin from "@/pages/admin/MessagesAdmin";
+import SurveysAdmin from "@/pages/admin/SurveysAdmin";
 import Settings from "@/pages/admin/Settings";
 import CoworkingAdmin from "@/pages/admin/CoworkingAdmin";
 import DocumentationAdmin from "@/pages/admin/DocumentationAdmin";
@@ -160,6 +161,12 @@ function App() {
         <Route path="/admin/messages" element={
           <ProtectedRoute allowedRoles="admin">
             <MessagesAdmin />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/admin/surveys" element={
+          <ProtectedRoute allowedRoles="admin">
+            <SurveysAdmin />
           </ProtectedRoute>
         } />
 

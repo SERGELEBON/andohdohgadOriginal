@@ -6,6 +6,8 @@ import { Check, CheckCircle, X, UserPlus } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
+import { submitServiceRequest, whatsappFallbackUrl } from "@/lib/supabase/submissions";
 
 const features = [
   "Bureaux individuels climatises",
@@ -99,9 +101,27 @@ function PricingGrid({ onSelectPlan }: { onSelectPlan: (planName: string) => voi
 }
 
 function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean; onClose: () => void; selectedPlan: string }) {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [whatsappUrl, setWhatsappUrl] = useState("");
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<RegData>({ resolver: zodResolver(regSchema) });
-  const onSubmit = () => { setStatus("submitting"); setTimeout(() => setStatus("success"), 1500); };
+  const onSubmit = async (data: RegData) => {
+    setStatus("submitting");
+    const result = await submitServiceRequest("coworking", data);
+    if (result.ok) {
+      setStatus("success");
+      return;
+    }
+    setWhatsappUrl(whatsappFallbackUrl([
+      "Bonjour Andoh & Dohgad, je souhaite m'inscrire au co-working (le formulaire du site n'a pas fonctionné) :",
+      `Nom : ${data.name}`,
+      `Email : ${data.email}`,
+      `Téléphone : ${data.phone}`,
+      `Espace : ${data.spaceType}`,
+      `Formule : ${data.plan}`,
+      data.message ? `Message : ${data.message}` : "",
+    ]));
+    setStatus("error");
+  };
 
   // Set selected plan when component receives it
   if (selectedPlan) {
@@ -186,7 +206,8 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
                   <label className="block text-sm font-medium text-dark mb-1.5">Message</label>
                   <textarea {...register("message")} rows={3} placeholder="Precisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
                 </div>
-              <button type="submit" disabled={status === "submitting"} className="btn-primary w-full">{status === "submitting" ? "Envoi en cours..." : "Envoyer ma demande"}</button>
+              {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
+              <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">{status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer ma demande"}</button>
             </form>
           </>
         )}
