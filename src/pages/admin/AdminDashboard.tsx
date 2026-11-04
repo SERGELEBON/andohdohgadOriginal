@@ -23,6 +23,7 @@ interface Stats {
 interface RecentActivity {
   id: string;
   type: 'appointment' | 'message' | 'survey' | 'purchase';
+  at?: string; // created_at ISO, pour le tri
   title: string;
   description: string;
   time: string;
@@ -65,18 +66,20 @@ export default function AdminDashboard() {
         { data: lastMonthPurchases },
         { count: newUsersCount },
         { data: recentAppointments },
-        { data: recentMessages }
+        { data: recentMessages },
+        { data: recentSurveys }
       ] = await Promise.all([
         supabase.from('profiles').select('*', { count: 'exact', head: true }).neq('role', 'admin'),
         supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('surveys').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+        supabase.from('surveys').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('contact_messages').select('*', { count: 'exact', head: true }).eq('status', 'new'),
         supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfMonth.toISOString()),
         supabase.from('coworking_subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfLastMonth.toISOString()).lte('created_at', endOfLastMonth.toISOString()),
         supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', startOfMonth.toISOString()).neq('role', 'admin'),
         supabase.from('appointments').select('*').order('created_at', { ascending: false }).limit(3),
-        supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3)
+        supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3),
+        supabase.from('surveys').select('*').order('created_at', { ascending: false }).limit(3)
       ]);
 
       const revenue = purchases?.reduce((sum: number, p: any) => sum + parseFloat(p.amount_paid), 0) || 0;
@@ -100,6 +103,7 @@ export default function AdminDashboard() {
           type: 'appointment' as const,
           title: `Nouveau RDV - ${a.first_name} ${a.last_name}`,
           description: a.message || 'Rendez-vous en attente',
+          at: a.created_at,
           time: new Date(a.created_at).toLocaleString('fr-FR'),
           status: a.status
         }))),
@@ -108,10 +112,20 @@ export default function AdminDashboard() {
           type: 'message' as const,
           title: `Message de ${m.name}`,
           description: m.message?.substring(0, 60) + '...',
+          at: m.created_at,
           time: new Date(m.created_at).toLocaleString('fr-FR'),
           status: m.status
+        }))),
+        ...((recentSurveys || []).map((sv: any) => ({
+          id: sv.id,
+          type: 'survey' as const,
+          title: `Demande de service - ${sv.name}`,
+          description: sv.form_data?.description?.substring(0, 60) || sv.survey_type,
+          at: sv.created_at,
+          time: new Date(sv.created_at).toLocaleString('fr-FR'),
+          status: sv.status
         })))
-      ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 5);
+      ].sort((a, b) => (b.at ?? '').localeCompare(a.at ?? '')).slice(0, 5);
 
       setRecentActivity(activities);
     } catch (error) {
@@ -232,7 +246,7 @@ export default function AdminDashboard() {
                     <FileText className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm">Sondages Nouveaux</p>
+                    <p className="text-white/80 text-sm">Demandes de service</p>
                     <p className="text-3xl font-bold">{stats.newSurveys}</p>
                   </div>
                 </div>
