@@ -1,59 +1,41 @@
 -- ============================================================================
 -- Formulaires publics Contact & Rendez-vous → base de données
+-- Projet : andohdohgad (tszsvbzfufglvdcsjzpo) — script idempotent
 -- ----------------------------------------------------------------------------
--- Garantit qu'un visiteur (anonyme ou connecté) peut INSÉRER une demande
--- dans contact_messages et appointments, et que seuls les admins peuvent
--- les lire / modifier / supprimer depuis /admin.
--- Script idempotent : peut être exécuté plusieurs fois sans casser l'existant.
+-- État constaté le 2026-11-04 :
+--  * contact_messages.first_name / last_name étaient NOT NULL sans défaut
+--    → un formulaire Contact qui n'envoie que "name" était rejeté.
+--  * policy INSERT appointments "WITH CHECK (true)" : un visiteur pouvait
+--    rattacher une demande au user_id de quelqu'un d'autre.
 -- ============================================================================
 
--- 1. Privilèges de table (RLS filtre ensuite les lignes)
-GRANT INSERT ON public.contact_messages TO anon, authenticated;
-GRANT INSERT ON public.appointments     TO anon, authenticated;
-GRANT SELECT, UPDATE, DELETE ON public.contact_messages TO authenticated;
-GRANT SELECT, UPDATE, DELETE ON public.appointments     TO authenticated;
+-- 1. Contact : prénom / nom facultatifs (le formulaire envoie "name")
+ALTER TABLE public.contact_messages ALTER COLUMN first_name DROP NOT NULL;
+ALTER TABLE public.contact_messages ALTER COLUMN last_name  DROP NOT NULL;
 
-ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.appointments     ENABLE ROW LEVEL SECURITY;
-
--- 2. Valeurs par défaut du statut (affichage admin)
+-- 2. Statuts par défaut (lus par /admin)
 ALTER TABLE public.contact_messages ALTER COLUMN status SET DEFAULT 'new';
 ALTER TABLE public.appointments     ALTER COLUMN status SET DEFAULT 'pending';
 
--- 3. INSERT public
-DROP POLICY IF EXISTS "public_forms_insert_contact" ON public.contact_messages;
-CREATE POLICY "public_forms_insert_contact"
+-- 3. RLS active + droit d'INSERT pour les visiteurs
+ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.appointments     ENABLE ROW LEVEL SECURITY;
+GRANT INSERT ON public.contact_messages TO anon, authenticated;
+GRANT INSERT ON public.appointments     TO anon, authenticated;
+
+DROP POLICY IF EXISTS "Anyone can create messages" ON public.contact_messages;
+CREATE POLICY "Anyone can create messages"
   ON public.contact_messages FOR INSERT
   TO anon, authenticated
   WITH CHECK (true);
 
-DROP POLICY IF EXISTS "public_forms_insert_appointment" ON public.appointments;
-CREATE POLICY "public_forms_insert_appointment"
+DROP POLICY IF EXISTS "Anyone can create appointments" ON public.appointments;
+CREATE POLICY "Anyone can create appointments"
   ON public.appointments FOR INSERT
   TO anon, authenticated
-  -- un visiteur ne peut pas rattacher la demande au compte de quelqu'un d'autre
   WITH CHECK (user_id IS NULL OR user_id = auth.uid());
 
--- 4. Gestion complète par les admins (/admin/messages, /admin/rendez-vous)
-DROP POLICY IF EXISTS "public_forms_admin_contact" ON public.contact_messages;
-CREATE POLICY "public_forms_admin_contact"
-  ON public.contact_messages FOR ALL
-  TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin'))
-  WITH CHECK (EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin'));
+-- (Les policies admin existantes "Admins can manage all ..." via is_admin() sont conservées.)
 
-DROP POLICY IF EXISTS "public_forms_admin_appointment" ON public.appointments;
-CREATE POLICY "public_forms_admin_appointment"
-  ON public.appointments FOR ALL
-  TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin'))
-  WITH CHECK (EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin'));
-
--- 5. Recharger le cache PostgREST
+-- 4. Recharger le cache de l'API
 NOTIFY pgrst, 'reload schema';
-
--- Vérification (doit lister les 4 policies public_forms_*)
-SELECT tablename, policyname, cmd, roles
-FROM pg_policies
-WHERE schemaname = 'public' AND tablename IN ('contact_messages', 'appointments')
-ORDER BY tablename, policyname;
