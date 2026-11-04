@@ -109,9 +109,9 @@ export default function SurveysAdmin() {
     <AdminLayout>
       <div className="p-6 lg:p-8 mt-6">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-dark mb-2">Demandes de service</h1>
+          <h1 className="text-2xl font-bold text-dark mb-2">Sondages</h1>
           <p className="text-gray-600">
-            Création d'entreprise, service spécifique, RH, domiciliation et co-working — {stats.pending} en attente
+            Les 5 formulaires de demande de service du site — {stats.pending} en attente
           </p>
         </div>
 
@@ -133,6 +133,28 @@ export default function SurveysAdmin() {
               <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
             </div>
           ))}
+        </div>
+
+        {/* Les 5 formulaires : un onglet par formulaire, avec son nombre de demandes */}
+        <div className="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Formulaires">
+          {(['all', ...Object.keys(SERVICE_REQUEST_LABELS)] as Array<'all' | ServiceRequestType>).map((t) => {
+            const count = t === 'all' ? requests.length : requests.filter((r) => r.survey_type === t).length;
+            const label = t === 'all' ? 'Tous' : SERVICE_REQUEST_LABELS[t];
+            return (
+              <button
+                key={t}
+                type="button"
+                role="tab"
+                aria-selected={typeFilter === t}
+                onClick={() => setTypeFilter(t)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  typeFilter === t ? 'bg-primary text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                {label} <span className="ml-1 opacity-75">({count})</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex flex-wrap gap-3 mb-6">
