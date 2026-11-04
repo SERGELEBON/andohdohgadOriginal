@@ -6,20 +6,51 @@ import { Phone, Mail, MapPin, Clock, Facebook, Linkedin, CheckCircle } from "luc
 import PageHeader from "@/components/layout/PageHeader";
 import CTABanner from "@/sections/CTABanner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
+import { submitContactMessage, whatsappFallbackUrl } from "@/lib/supabase/submissions";
 
 const schema = z.object({
   name: z.string().min(2, "Minimum 2 caracteres"),
   email: z.string().email("Email invalide"),
+  phone: z.string().optional(),
   subject: z.string().min(1, "Selectionnez un sujet"),
   message: z.string().min(20, "Minimum 20 caracteres"),
 });
 
 type FormData = z.infer<typeof schema>;
 
+const SUBJECTS: Record<string, string> = {
+  info: "Demande d'information",
+  appointment: "Demande de rendez-vous",
+  accounting: "Service comptable",
+  hr: "Service RH",
+  coworking: "Co-working",
+  other: "Autre",
+};
+
 function ContactForm() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [whatsappUrl, setWhatsappUrl] = useState("");
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
-  const onSubmit = () => { setStatus("submitting"); setTimeout(() => setStatus("success"), 1500); };
+
+  const onSubmit = async (data: FormData) => {
+    setStatus("submitting");
+    const subjectLabel = SUBJECTS[data.subject] ?? data.subject;
+    const result = await submitContactMessage({ ...data, subject: subjectLabel });
+    if (result.ok) {
+      setStatus("success");
+      return;
+    }
+    setWhatsappUrl(whatsappFallbackUrl([
+      "Bonjour Andoh & Dohgad, voici ma demande (le formulaire du site n'a pas fonctionné) :",
+      `Nom : ${data.name}`,
+      `Email : ${data.email}`,
+      data.phone ? `Téléphone : ${data.phone}` : "",
+      `Sujet : ${subjectLabel}`,
+      `Message : ${data.message}`,
+    ]));
+    setStatus("error");
+  };
 
   return (
     <div>
@@ -32,6 +63,7 @@ function ContactForm() {
       ) : (
         <>
           <h3 className="font-body text-xl font-semibold text-dark mb-6">Envoyez-nous un message</h3>
+          {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
@@ -46,15 +78,14 @@ function ContactForm() {
               </div>
             </div>
             <div>
+              <label className="block text-sm font-medium text-dark mb-1.5">Telephone / WhatsApp</label>
+              <input type="tel" {...register("phone")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+            </div>
+            <div>
               <label className="block text-sm font-medium text-dark mb-1.5">Sujet *</label>
               <select {...register("subject")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.subject ? "border-red-500" : "border-gray-200"}`}>
                 <option value="">Selectionnez...</option>
-                <option value="info">Demande d'information</option>
-                <option value="appointment">Demande de rendez-vous</option>
-                <option value="accounting">Service comptable</option>
-                <option value="hr">Service RH</option>
-                <option value="coworking">Co-working</option>
-                <option value="other">Autre</option>
+                {Object.entries(SUBJECTS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
               {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
             </div>
@@ -63,7 +94,7 @@ function ContactForm() {
               <textarea {...register("message")} rows={6} placeholder="Decrivez votre demande en detail..." className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y ${errors.message ? "border-red-500" : "border-gray-200"}`} />
               {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
             </div>
-            <button type="submit" disabled={status === "submitting"} className="btn-primary w-full">{status === "submitting" ? "Envoi en cours..." : "Envoyer le message"}</button>
+            <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">{status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer le message"}</button>
           </form>
         </>
       )}

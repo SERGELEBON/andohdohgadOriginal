@@ -5,20 +5,24 @@ import { Calendar, Check, X, Clock } from 'lucide-react';
 
 interface Appointment {
   id: string;
-  service: string;
+  service: string | null;
   appointment_date: string;
-  time_slot: string;
+  time_slot: string | null;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
-  notes: string | null;
+  message: string | null;
   created_at: string;
-  user_id: string;
-  profiles: {
-    first_name: string | null;
-    last_name: string | null;
-    email: string;
-    phone: string | null;
-  };
+  user_id: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+  phone: string | null;
+  company: string | null;
 }
+
+const TIME_SLOT_LABELS: Record<string, string> = {
+  morning: 'Matin (8h-12h)',
+  afternoon: 'Après-midi (12h-17h)',
+};
 
 const statusConfig = {
   pending: { label: 'En attente', color: 'bg-amber-100 text-amber-700', icon: Clock },
@@ -40,15 +44,7 @@ export default function AppointmentsAdmin() {
     try {
       const { data, error } = await supabase
         .from('appointments')
-        .select(`
-          *,
-          profiles (
-            first_name,
-            last_name,
-            email,
-            phone
-          )
-        `)
+.select('*')
         .order('appointment_date', { ascending: false })
         .order('time_slot', { ascending: true });
 
@@ -161,7 +157,9 @@ export default function AppointmentsAdmin() {
             </div>
           ) : (
             filteredAppointments.map((apt) => {
-              const StatusIcon = statusConfig[apt.status].icon;
+              const cfg = statusConfig[apt.status] ?? statusConfig.pending;
+              const StatusIcon = cfg.icon;
+              const fullName = [apt.first_name, apt.last_name].filter(Boolean).join(' ');
               return (
                 <div key={apt.id} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between">
@@ -171,11 +169,10 @@ export default function AppointmentsAdmin() {
                           <Calendar className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-dark">{apt.service}</h3>
+                          <h3 className="font-semibold text-dark">{apt.service || 'Rendez-vous'}</h3>
                           <p className="text-sm text-gray-600">
-                            {apt.profiles.first_name && apt.profiles.last_name
-                              ? `${apt.profiles.first_name} ${apt.profiles.last_name}`
-                              : apt.profiles.email}
+                            {fullName || apt.email}
+                            {apt.company ? ` — ${apt.company}` : ''}
                           </p>
                         </div>
                       </div>
@@ -189,25 +186,29 @@ export default function AppointmentsAdmin() {
                         </div>
                         <div>
                           <span className="text-gray-500">Heure :</span>
-                          <span className="ml-2 font-medium">{apt.time_slot}</span>
+                          <span className="ml-2 font-medium">{apt.time_slot ? TIME_SLOT_LABELS[apt.time_slot] ?? apt.time_slot : '—'}</span>
                         </div>
                         <div>
                           <span className="text-gray-500">Contact :</span>
-                          <span className="ml-2 font-medium">{apt.profiles.phone || apt.profiles.email}</span>
+                          <span className="ml-2 font-medium">
+                            {apt.phone && <a href={`tel:${apt.phone}`} className="hover:text-primary">{apt.phone}</a>}
+                            {apt.phone && apt.email && ' · '}
+                            {apt.email && <a href={`mailto:${apt.email}`} className="hover:text-primary">{apt.email}</a>}
+                          </span>
                         </div>
                       </div>
 
-                      {apt.notes && (
+                      {apt.message && (
                         <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-700">
-                          <span className="font-medium">Notes :</span> {apt.notes}
+                          <span className="font-medium">Message :</span> {apt.message}
                         </div>
                       )}
                     </div>
 
                     <div className="flex flex-col items-end gap-3">
-                      <span className={`flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full ${statusConfig[apt.status].color}`}>
+                      <span className={`flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full ${cfg.color}`}>
                         <StatusIcon className="w-3 h-3" />
-                        {statusConfig[apt.status].label}
+                        {cfg.label}
                       </span>
 
                       {apt.status === 'pending' && (
