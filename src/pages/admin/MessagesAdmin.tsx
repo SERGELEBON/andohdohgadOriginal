@@ -5,9 +5,11 @@ import { Mail, MailOpen, Trash2 } from 'lucide-react';
 
 interface Message {
   id: string;
-  full_name: string;
+  name: string;
   email: string;
-  subject: string;
+  phone: string | null;
+  company?: string | null;
+  subject: string | null;
   message: string;
   status: 'new' | 'read' | 'replied';
   created_at: string;
@@ -143,7 +145,8 @@ export default function MessagesAdmin() {
               </div>
             ) : (
               messages.map((msg) => {
-                const StatusIcon = statusConfig[msg.status].icon;
+                const cfg = statusConfig[msg.status as keyof typeof statusConfig] ?? statusConfig.read;
+                const StatusIcon = cfg.icon;
                 const isSelected = selectedMessage?.id === msg.id;
 
                 return (
@@ -163,15 +166,15 @@ export default function MessagesAdmin() {
                         <div className="flex items-center gap-2 mb-1">
                           <StatusIcon className="w-4 h-4 text-gray-400" />
                           <h3 className={`font-medium ${msg.status === 'new' ? 'text-dark' : 'text-gray-600'}`}>
-                            {msg.full_name}
+                            {msg.name}
                           </h3>
                         </div>
                         <p className={`text-sm ${msg.status === 'new' ? 'font-medium text-dark' : 'text-gray-600'} truncate`}>
-                          {msg.subject}
+                          {msg.subject || '(sans sujet)'}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 text-xs rounded-full ${statusConfig[msg.status].color}`}>
-                        {statusConfig[msg.status].label}
+                      <span className={`px-2 py-1 text-xs rounded-full ${cfg.color}`}>
+                        {cfg.label}
                       </span>
                     </div>
                     <p className="text-xs text-gray-500">
@@ -194,9 +197,10 @@ export default function MessagesAdmin() {
                     <div>
                       <h2 className="text-xl font-bold text-dark mb-2">{selectedMessage.subject}</h2>
                       <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span>De : {selectedMessage.full_name}</span>
+                        <span>De : {selectedMessage.name}</span>
                         <span>•</span>
                         <span>{selectedMessage.email}</span>
+                        {selectedMessage.phone && (<><span>•</span><a href={`tel:${selectedMessage.phone}`} className="hover:text-primary">{selectedMessage.phone}</a></>)}
                       </div>
                     </div>
                     <button
@@ -229,7 +233,7 @@ export default function MessagesAdmin() {
                 {/* Actions */}
                 <div className="p-6 border-t border-gray-100 bg-gray-50">
                   <a
-                    href={`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject}`}
+                    href={`mailto:${selectedMessage.email}?subject=${encodeURIComponent(`Re: ${selectedMessage.subject ?? ''}`)}`}
                     className="btn-primary inline-flex items-center gap-2"
                   >
                     <MailOpen className="w-4 h-4" />

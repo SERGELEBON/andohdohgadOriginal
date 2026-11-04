@@ -5,6 +5,13 @@ import { z } from "zod";
 import { Clock, FileText, Phone, CheckCircle } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import { services } from "@/data/services";
+import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
+import { submitAppointment, whatsappFallbackUrl } from "@/lib/supabase/submissions";
+
+const TIME_SLOTS: Record<string, string> = {
+  morning: "Matin (8h-12h)",
+  afternoon: "Apres-midi (12h-17h)",
+};
 
 const schema = z.object({
   firstName: z.string().min(2, "Minimum 2 caracteres"),
@@ -22,11 +29,30 @@ type FormData = z.infer<typeof schema>;
 
 export default function Appointment() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [whatsappUrl, setWhatsappUrl] = useState("");
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: FormData) => {
     setStatus("submitting");
-    setTimeout(() => setStatus("success"), 1500);
+    const serviceLabel = data.service === "autre"
+      ? "Autre / Demande générale"
+      : services.find((s) => s.slug === data.service)?.title ?? data.service;
+    const result = await submitAppointment({ ...data, service: serviceLabel });
+    if (result.ok) {
+      setStatus("success");
+      return;
+    }
+    setWhatsappUrl(whatsappFallbackUrl([
+      "Bonjour Andoh & Dohgad, je souhaite prendre rendez-vous (le formulaire du site n'a pas fonctionné) :",
+      `Nom : ${data.firstName} ${data.lastName}`,
+      `Email : ${data.email}`,
+      `Téléphone : ${data.phone}`,
+      data.company ? `Entreprise : ${data.company}` : "",
+      `Service : ${serviceLabel}`,
+      `Date souhaitée : ${data.date} – ${TIME_SLOTS[data.timeSlot] ?? data.timeSlot}`,
+      data.message ? `Message : ${data.message}` : "",
+    ]));
+    setStatus("error");
   };
 
   return (
@@ -52,6 +78,7 @@ export default function Appointment() {
               ) : (
                 <>
                   <h3 className="font-body text-xl font-semibold text-dark mb-6">Formulaire de demande de rendez-vous</h3>
+                  {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>
@@ -104,8 +131,7 @@ export default function Appointment() {
                         <label className="block text-sm font-medium text-dark mb-1.5">Creaneau horaire *</label>
                         <select {...register("timeSlot")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.timeSlot ? "border-red-500" : "border-gray-200"}`}>
                           <option value="">Selectionnez...</option>
-                          <option value="morning">Matin (8h-12h)</option>
-                          <option value="afternoon">Apres-midi (12h-17h)</option>
+                          {Object.entries(TIME_SLOTS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                         </select>
                         {errors.timeSlot && <p className="text-red-500 text-xs mt-1">{errors.timeSlot.message}</p>}
                       </div>
@@ -117,7 +143,7 @@ export default function Appointment() {
                     </div>
 
                     <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">
-                      {status === "submitting" ? "Envoi en cours..." : "Confirmer la demande"}
+                      {status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Confirmer la demande"}
                     </button>
                   </form>
                 </>
