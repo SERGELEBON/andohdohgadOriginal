@@ -198,6 +198,8 @@ Merci de me communiquer les instructions de paiement.`;
               </p>
             </div>
 
+            <p className="text-sm font-semibold text-dark mb-3">Veuillez choisir votre mode de paiement :</p>
+
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => handleWhatsAppPayment("carte")}
