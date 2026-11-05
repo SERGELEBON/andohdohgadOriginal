@@ -4,36 +4,36 @@ export const articles: Article[] = [
   {
     slug: "reforme-fiscale-2025-pme-cote-ivoire",
     category: "Fiscalite",
-    title: "Reforme fiscale 2025 : Ce qui change pour les PME en Cote d'Ivoire",
+    title: "Réforme fiscale 2025 : Ce qui change pour les PME en Côte d'Ivoire",
     excerpt:
-      "Le gouvernement ivoirien a annonce plusieurs mesures concernant l'imposition des petites et moyennes entreprises. Voici ce que vous devez savoir pour vous preparer efficacement aux changements a venir.",
-    content: `Le gouvernement ivoirien a recomment annonce un ensemble de mesures fiscales qui impacteront directement les petites et moyennes entreprises (PME) en 2025. Ces reformes visent a simplifier le systeme fiscal tout en elargissant l'assiette contributive.
+      "Le gouvernement ivoirien a annonce plusieurs mesures concernant l'imposition des petites et moyennes entreprises. Voici ce que vous devez savoir pour vous préparer efficacement aux changements à venir.",
+    content: `Le gouvernement ivoirien a recomment annonce un ensemble de mesures fiscales qui impacteront directement les petites et moyennes entreprises (PME) en 2025. Ces réformes visent à simplifier le système fiscal tout en élargissant l'assiette contributive.
 
-## Principales mesures annoncees
+## Principales mesures annoncées
 
 ### Nouvelle grille d'imposition
 
-La reforme introduit une nouvelle grille progressive pour l'impot sur les benefices des societes (IBS). Les entreprises realisant un chiffre d'affaires inferieur a 100 millions FCFA beneficieront d'un taux reduit de 20%, contre 25% actuellement.
+La réforme introduit une nouvelle grille progressive pour l'impôt sur les bénéfices des sociétés (IBS). Les entreprises réalisant un chiffre d'affaires inférieur à 100 millions FCFA bénéficieront d'un taux réduit de 20%, contre 25% actuellement.
 
 ### TVA et e-facturation
 
-L'e-facturation devient obligatoire pour toutes les entreprises assujetties a la TVA des le 1er juillet 2025. Ce systeme vise a ameliorer le recouvrement et a lutter contre la fraude fiscale.
+L'e-facturation devient obligatoire pour toutes les entreprises assujetties à la TVA dès le 1er juillet 2025. Ce système vise à améliorer le recouvrement et à lutter contre la fraude fiscale.
 
-### Credits d'impot
+### Crédits d'impôt
 
-De nouveaux credits d'impot sont introduits pour encourager l'investissement dans les technologies numeriques et la formation des employes. Les entreprises pourront deduire jusqu'a 30% des depenses engagees dans ces domaines.
+De nouveaux crédits d'impôt sont introduits pour encourager l'investissement dans les technologies numériques et la formation des employés. Les entreprises pourront déduire jusqu'à 30% des dépenses engagées dans ces domaines.
 
 ## Impact sur votre entreprise
 
-Selon votre secteur d'activite et votre chiffre d'affaires, ces reformes pourront avoir un impact positif ou negatif sur votre situation fiscale. Il est recommande de :
+Selon votre secteur d'activité et votre chiffre d'affaires, ces réformes pourront avoir un impact positif ou négatif sur votre situation fiscale. Il est recommande de :
 
-- Realiser un diagnostic fiscal approfondi
-- Anticiper les ajustements necessaires
-- Former votre equipe comptable aux nouvelles procedures
+- Réaliser un diagnostic fiscal approfondi
+- Anticiper les ajustements nécessaires
+- Former votre équipe comptable aux nouvelles procédures
 
 ## Comment nous pouvons vous aider
 
-Notre equipe d'experts fiscaux est a votre disposition pour vous accompagner dans la transition vers ce nouveau regime fiscal. Contactez-nous pour une consultation personnalisee.`,
+Notre équipe d'experts fiscaux est à votre disposition pour vous accompagner dans la transition vers ce nouveau régime fiscal. Contactez-nous pour une consultation personnalisée.`,
     author: "Jean-Pierre D.",
     date: "15 juin 2025",
     readTime: "5 min",
@@ -42,41 +42,41 @@ Notre equipe d'experts fiscaux est a votre disposition pour vous accompagner dan
   {
     slug: "creer-entreprise-cote-ivoire-guide-2025",
     category: "Entrepreneuriat",
-    title: "Creer son entreprise en Cote d'Ivoire : Le guide complet 2025",
+    title: "Créer son entreprise en Côte d'Ivoire : Le guide complet 2025",
     excerpt:
-      "De la verification de la denomination sociale a l'immatriculation au RCCM, decouvrez toutes les etapes pour creer votre entreprise en Cote d'Ivoire en 2025.",
-    content: `La creation d'entreprise en Cote d'Ivoire a ete considerablement simplifiee ces dernieres annees grace aux reformes administratives. Ce guide vous presente toutes les etapes a suivre pour lancer votre activite en toute legalite.
+      "De la vérification de la dénomination sociale à l'immatriculation au RCCM, découvrez toutes les étapes pour créer votre entreprise en Côte d'Ivoire en 2025.",
+    content: `La création d'entreprise en Côte d'Ivoire a été considérablement simplifiée ces dernières années grâce aux réformes administratives. Ce guide vous présente toutes les étapes à suivre pour lancer votre activité en toute légalité.
 
-## Etape 1 : Verifier la disponibilite de votre nom
+## Étape 1 : Vérifier la disponibilité de votre nom
 
-Avant toute chose, vous devez verifier que le nom de votre entreprise n'est pas deja utilise. Cette demarche se fait en ligne sur le portail du Centre de Promotion des Investissements en Cote d'Ivoire (CEPICI).
+Avant toute chose, vous devez vérifier que le nom de votre entreprise n'est pas déjà utilise. Cette démarche se fait en ligne sur le portail du Centre de Promotion des Investissements en Côte d'Ivoire (CEPICI).
 
-## Etape 2 : Choisir votre statut juridique
+## Étape 2 : Choisir votre statut juridique
 
-Le choix du statut juridique est crucial car il determine vos obligations fiscales et sociales. Les formes les plus courantes en Cote d'Ivoire sont :
+Le choix du statut juridique est crucial car il détermine vos obligations fiscales et sociales. Les formes les plus courantes en Côte d'Ivoire sont :
 
-- La SARL (Societe a Responsabilite Limitee)
-- La SAS (Societe par Actions Simplifiee)
+- La SARL (Société a Responsabilité Limitée)
+- La SAS (Société par Actions Simplifiée)
 - L'EI (Entreprise Individuelle)
-- Le GIE (Groupement d'Interet Economique)
+- Le GIE (Groupement d'Intérêt Économique)
 
-## Etape 3 : Constituer votre dossier
+## Étape 3 : Constituer votre dossier
 
-Le dossier de creation comprend generalement :
+Le dossier de création comprend généralement :
 
-- Les statuts de la societe
-- Une copie de la piece d'identite du promoteur
+- Les statuts de la société
+- Une copie de la pièce d'identité du promoteur
 - Un justificatif de domicile
 - Une fiche de renseignements
-- Le plan de tresorerie previsionnel
+- Le plan de trésorerie prévisionnel
 
-## Etape 4 : Effectuer les formalites
+## Étape 4 : Effectuer les formalités
 
-Les formalites d'immatriculation se font aupres du Guichet Unique de Formalisation des Entreprises (GUFE) ou directement en ligne. Le delai moyen est de 48 heures pour une SARL.
+Les formalités d'immatriculation se font auprès du Guichet Unique de Formalisation des Entreprises (GUFE) ou directement en ligne. Le délai moyen est de 48 heures pour une SARL.
 
-## Delais et couts
+## Délais et couts
 
-Le cout total de creation varie entre 50 000 et 300 000 FCFA selon le statut choisi et les frais de notaire eventuels.`,
+Le cout total de création varie entre 50 000 et 300 000 FCFA selon le statut choisi et les frais de notaire éventuels.`,
     author: "Amoin A.",
     date: "8 juin 2025",
     readTime: "8 min",
@@ -87,33 +87,33 @@ Le cout total de creation varie entre 50 000 et 300 000 FCFA selon le statut cho
     category: "RH",
     title: "Gestion des talents : Les nouvelles tendances RH en Afrique",
     excerpt:
-      "Le marche du travail africain evolue rapidement. Quelles strategies adopter pour attirer, fideliser et developper les talents dans votre entreprise ?",
-    content: `Le continent africain connait une transformation rapide de son marche du travail. L'arrivee des generations Y et Z, la digitalisation des processus et la montee du travail a distance bouleversent les pratiques RH traditionnelles.
+      "Le marché du travail africain évolue rapidement. Quelles stratégies adopter pour attirer, fidéliser et développer les talents dans votre entreprise ?",
+    content: `Le continent africain connaît une transformation rapide de son marché du travail. L'arrivée des générations Y et Z, la digitalisation des processus et la montée du travail à distance bouleversent les pratiques RH traditionnelles.
 
 ## Les grandes tendances 2025
 
-### Experience employe au centre
+### Expérience employé au centre
 
-Les entreprises africaines investissent de plus en plus dans l'experience employe. Un environnement de travail attractif, des opportunites de developpement et une reconnaissance reguliere sont devenus des leviers essentiels de retention.
+Les entreprises africaines investissent de plus en plus dans l'expérience employé. Un environnement de travail attractif, des opportunités de développement et une reconnaissance régulière sont devenus des leviers essentiels de rétention.
 
 ### Digitalisation RH
 
-Les outils de gestion des talents, les plateformes d'evaluation 360° et les solutions de recrutement par IA gagnent du terrain. Ces technologies permettent de prendre des decisions plus eclairees et de reduire les biais.
+Les outils de gestion des talents, les plateformes d'évaluation 360° et les solutions de recrutement par IA gagnent du terrain. Ces technologies permettent de prendre des décisions plus éclairées et de réduire les biais.
 
 ### Formation continue
 
-Avec l'evolution rapide des competences requises, la formation continue devient un avantage concurrentiel majeur. Les entreprises qui investissent dans le montee en competences de leurs equipes enregistrent un taux de retention superieur de 35%.
+Avec l'évolution rapide des compétences requises, la formation continue devient un avantage concurrentiel majeur. Les entreprises qui investissent dans le montée en compétences de leurs équipes enregistrent un taux de rétention supérieur de 35%.
 
-### Diversite et inclusion
+### Diversité et inclusion
 
-La diversite au sein des equipes de direction devient un critere de performance. Les entreprises les plus performantes sont celles qui parviennent a creer des environnements inclusifs.
+La diversité au sein des équipes de direction devient un critère de performance. Les entreprises les plus performantes sont celles qui parviennent à créer des environnements inclusifs.
 
 ## Recommandations pour votre entreprise
 
-1. Realisez un audit RH complet
+1. Réalisez un audit RH complet
 2. Investissez dans la formation
 3. Mettez en place un programme de mentorat
-4. Developpez votre marque employeur`,
+4. Développez votre marque employeur`,
     author: "Fatou S.",
     date: "1er juin 2025",
     readTime: "6 min",
@@ -122,34 +122,34 @@ La diversite au sein des equipes de direction devient un critere de performance.
   {
     slug: "5-erreurs-comptables-pme",
     category: "Comptabilite",
-    title: "Les 5 erreurs comptables qui coutent cher aux PME",
+    title: "Les 5 erreurs comptables qui coûtent cher aux PME",
     excerpt:
-      "Une erreur comptable peut avoir des consequences financieres graves. Voici les pieges a eviter pour securiser votre gestion financiere.",
-    content: `La comptabilite est le cœur de toute entreprise. Pourtant, de nombreuses PME commettent des erreurs qui peuvent leur couter tres cher. Voici les 5 erreurs les plus frequentes et comment les eviter.
+      "Une erreur comptable peut avoir des conséquences financières graves. Voici les pièges à éviter pour sécuriser votre gestion financière.",
+    content: `La comptabilité est le cœur de toute entreprise. Pourtant, de nombreuses PME commettent des erreurs qui peuvent leur coûter très cher. Voici les 5 erreurs les plus fréquentes et comment les éviter.
 
-## 1. Ne pas tenir sa comptabilite a jour
+## 1. Ne pas tenir sa comptabilité à jour
 
-Le retard dans la saisie comptable est l'erreur la plus frequente. Elle complique le suivi de la tresorerie et peut entrainer des amendes en cas de controle fiscal.
+Le retard dans la saisie comptable est l'erreur la plus fréquente. Elle complique le suivi de la trésorerie et peut entraîner des amendes en cas de contrôle fiscal.
 
 ## 2. Confondre charges personnelles et professionnelles
 
-L'absence de separation entre compte personnel et compte professionnel est une erreur classique qui complique la tenue des livres et peut avoir des implications fiscales.
+L'absence de séparation entre compte personnel et compte professionnel est une erreur classique qui complique la tenue des livres et peut avoir des implications fiscales.
 
-## 3. Negliger les provisions
+## 3. Négliger les provisions
 
-Ne pas constituer de provisions pour creances douteuses ou pour conges payes conduit a surestimer le resultat de l'entreprise.
+Ne pas constituer de provisions pour créances douteuses ou pour congés payes conduit à surestimer le résultat de l'entreprise.
 
 ## 4. Oublier les amortissements
 
-Les amortissements doivent etre comptabilises regulierement. Les oublier fausse la valeur du patrimoine de l'entreprise.
+Les amortissements doivent être comptabilises régulièrement. Les oublier fausse la valeur du patrimoine de l'entreprise.
 
-## 5. Ne pas reconcilier les comptes bancaires
+## 5. Ne pas réconcilier les comptes bancaires
 
-L'absence de rapprochement bancaire mensuel empeche de detecter les erreurs et les operations non enregistrees.
+L'absence de rapprochement bancaire mensuel empêche de détecter les erreurs et les opérations non enregistrées.
 
 ## Conseil
 
-Faites appel a un professionnel pour la tenue de votre comptabilite. C'est un investissement qui vous fera economiser du temps et de l'argent sur le long terme.`,
+Faites appel a un professionnel pour la tenue de votre comptabilité. C'est un investissement qui vous fera économiser du temps et de l'argent sur le long terme.`,
     author: "Jean-Pierre D.",
     date: "25 mai 2025",
     readTime: "4 min",
@@ -158,49 +158,49 @@ Faites appel a un professionnel pour la tenue de votre comptabilite. C'est un in
   {
     slug: "plan-strategique-entreprise",
     category: "Strategie",
-    title: "Comment elaborer un plan strategique pour votre entreprise",
+    title: "Comment élaborer un plan stratégique pour votre entreprise",
     excerpt:
-      "Un plan strategique efficace est votre feuille de route vers la croissance. Decouvrez notre methodologie eprouvee.",
-    content: `Un plan strategique bien concu est l'outil indispensable pour piloter la croissance de votre entreprise. Il permet de definir une vision claire, de fixer des objectifs mesurables et d'aligner toutes vos ressources vers un but commun.
+      "Un plan stratégique efficace est votre feuille de route vers la croissance. Découvrez notre méthodologie éprouvée.",
+    content: `Un plan stratégique bien conçu est l'outil indispensable pour piloter la croissance de votre entreprise. Il permet de définir une vision claire, de fixer des objectifs mesurables et d'aligner toutes vos ressources vers un but commun.
 
 ## Phase 1 : Le diagnostic
 
-Avant de se projeter, il faut comprendre ou l'on en est. Le diagnostic strategique comprend :
+Avant de se projeter, il faut comprendre ou l'on en est. Le diagnostic stratégique comprend :
 
 - L'analyse interne (forces et faiblesses)
-- L'analyse externe (opportunites et menaces)
+- L'analyse externe (opportunités et menaces)
 - L'analyse de la concurrence
-- L'evaluation des performances passes
+- L'évaluation des performances passes
 
 ## Phase 2 : La vision et les objectifs
 
-Sur la base du diagnostic, definissez :
+Sur la base du diagnostic, définissez :
 
-- Votre vision a long terme (5-10 ans)
-- Vos objectifs strategiques (SMART)
-- Vos axes de developpement prioritaires
+- Votre vision à long terme (5-10 ans)
+- Vos objectifs stratégiques (SMART)
+- Vos axes de développement prioritaires
 
-## Phase 3 : Les strategies d'action
+## Phase 3 : Les stratégies d'action
 
-Pour chaque objectif, definissez :
+Pour chaque objectif, définissez :
 
-- Les actions concretes a mettre en œuvre
+- Les actions concrètes à mettre en œuvre
 - Les responsables
 - Les echéances
 - Les indicateurs de suivi (KPIs)
 
 ## Phase 4 : Le plan de mise en œuvre
 
-Le plan de mise en œuvre detaille :
+Le plan de mise en œuvre détaillé :
 
-- Le budget necessaire
+- Le budget nécessaire
 - Les ressources humaines requises
 - Le calendrier des actions
 - Les risques potentiels et les plans de contingence
 
-## Phase 5 : Le suivi et l'evaluation
+## Phase 5 : Le suivi et l'évaluation
 
-Un plan strategique vivant necessite un suivi regulier. Etablissez un rythme de revue mensuelle ou trimestrielle pour mesurer vos progres et ajuster vos actions.`,
+Un plan stratégique vivant nécessite un suivi régulier. Établissez un rythme de revue mensuelle ou trimestrielle pour mesurer vos progrès et ajuster vos actions.`,
     author: "Amoin A.",
     date: "18 mai 2025",
     readTime: "7 min",
@@ -209,41 +209,41 @@ Un plan strategique vivant necessite un suivi regulier. Etablissez un rythme de 
   {
     slug: "nouvelles-reglementations-commerce-exterieur",
     category: "Reglementation",
-    title: "Nouvelles reglementations du commerce exterieur en CI",
+    title: "Nouvelles réglementations du commerce extérieur en CI",
     excerpt:
-      "Les autorites ivoiriennes ont mis a jour les procedures d'import-export. Ce qu'il faut savoir pour vos operations internationales.",
-    content: `Les autorites ivoiriennes ont recemment adopte de nouvelles reglementations qui impacteront les operations de commerce exterieur. Ces mesures visent a harmoniser les pratiques avec les standards de l'UEMOA et de la CEDEAO.
+      "Les autorités ivoiriennes ont mis à jour les procédures d'import-export. Ce qu'il faut savoir pour vos opérations internationales.",
+    content: `Les autorités ivoiriennes ont récemment adopte de nouvelles réglementations qui impacteront les opérations de commerce extérieur. Ces mesures visent à harmoniser les pratiques avec les standards de l'UEMOA et de la CEDEAO.
 
-## Nouvelles procedures douanieres
+## Nouvelles procédures douanières
 
-### Declaration electronique
+### Déclaration électronique
 
-Toutes les declarations d'import-export doivent desormais etre effectuees via la plateforme GUCE (Guichet Unique du Commerce Exterieur). Les declarations papier ne seront plus acceptees a compter du 1er septembre 2025.
+Toutes les déclarations d'import-export doivent désormais être effectuées via la plateforme GUCE (Guichet Unique du Commerce Extérieur). Les déclarations papier ne seront plus acceptées à compter du 1er septembre 2025.
 
-### Verification des produits
+### Vérification des produits
 
-Un renforcement des controles sanitaires et phytosanitaires est prevu pour les produits agroalimentaires. Les importateurs devront obtenir un certificat de conformite avant l'expedition.
+Un renforcement des contrôles sanitaires et phytosanitaires est prevu pour les produits agroalimentaires. Les importateurs devront obtenir un certificat de conformité avant l'expédition.
 
 ## Incidences fiscales
 
 ### Droit de douane
 
-De nouveaux baremes de droits de douane entrent en vigueur pour certains produits, notamment dans le secteur textile et electronique. Les taux varient entre 5% et 20% selon les categories.
+De nouveaux barèmes de droits de douane entrent en vigueur pour certains produits, notamment dans le secteur textile et électronique. Les taux varient entre 5% et 20% selon les catégories.
 
-### Taxe sur la valeur ajoutee (TV)
+### Taxe sur la valeur ajoutée (TV)
 
-La TVA a l'importation reste fixee a 18%, mais de nouvelles exonerations sont prevues pour les equipements industriels.
+La TVA à l'importation reste fixée à 18%, mais de nouvelles exonérations sont prévues pour les équipements industriels.
 
 ## Mesures d'accompagnement
 
-Le gouvernement a mis en place un fonds de soutien aux PME exportatrices pour les aider a se conformer aux nouvelles exigences. Les entreprises peuvent egalement beneficier d'un accompagnement gratuit aupres du CEPICI.
+Le gouvernement a mis en place un fonds de soutien aux PME exportatrices pour les aider a se conformer aux nouvelles exigences. Les entreprises peuvent également bénéficier d'un accompagnement gratuit auprès du CEPICI.
 
 ## Ce que vous devez faire
 
 1. Inscrivez-vous sur la plateforme GUCE
-2. Verifiez la classification douaniere de vos produits
-3. Mettez a jour vos procedures internes
-4. Formez votre equipe commerciale`,
+2. Vérifiez la classification douanière de vos produits
+3. Mettez à jour vos procédures internes
+4. Formez votre équipe commerciale`,
     author: "Jean-Pierre D.",
     date: "10 mai 2025",
     readTime: "5 min",
