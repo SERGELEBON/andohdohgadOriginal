@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { ClipboardList, Phone, Mail, Trash2 } from 'lucide-react';
@@ -37,6 +39,7 @@ const FIELD_LABELS: Record<string, string> = {
 const HIDDEN_FIELDS = new Set(['name', 'email', 'phone']);
 
 export default function SurveysAdmin() {
+  const confirm = useConfirm();
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -66,7 +69,7 @@ export default function SurveysAdmin() {
   const updateStatus = async (id: string, status: RequestStatus) => {
     const { error } = await supabase.from('surveys').update({ status }).eq('id', id);
     if (error) {
-      alert('Erreur lors de la mise à jour');
+      notify.error('La mise à jour du statut a échoué.', error);
       return;
     }
     setRequests((rs) => rs.map((r) => (r.id === id ? { ...r, status } : r)));
@@ -74,10 +77,10 @@ export default function SurveysAdmin() {
   };
 
   const deleteRequest = async (id: string) => {
-    if (!confirm('Supprimer définitivement cette demande ?')) return;
+    if (!(await confirm({ title: 'Supprimer cette demande ?', description: 'Cette action est définitive.', confirmLabel: 'Supprimer', destructive: true }))) return;
     const { error } = await supabase.from('surveys').delete().eq('id', id);
     if (error) {
-      alert('Erreur lors de la suppression');
+      notify.error('La suppression a échoué.', error);
       return;
     }
     setRequests((rs) => rs.filter((r) => r.id !== id));

@@ -13,16 +13,16 @@ const features = [
   "Bureaux individuels climatises",
   "Espace open-space collaboratif",
   "Salle de réunion équipée",
-  "Connexion internet haut debit",
-  "Cafeteria et espace detente",
-  "Reception du courrier et des appels",
-  "Acces 7j/7, 6h-22h",
+  "Connexion internet haut débit",
+  "Cafétéria et espace détente",
+  "Réception du courrier et des appels",
+  "Accès 7j/7, 6h-22h",
 ];
 
 const plans = [
-  { name: "Nomade", price: "25 000 FCFA", period: "/mois", features: ["Acces espace commun", "WiFi haut debit", "Cafeteria", "2 jours/semaine"], featured: false },
-  { name: "Resident", price: "75 000 FCFA", period: "/mois", features: ["Bureau dedie", "WiFi haut debit", "Cafeteria", "Acces illimite", "Reception courrier", "1h salle de reunion/mois"], featured: true },
-  { name: "Domiciliation", price: "15 000 FCFA", period: "/mois", features: ["Adresse commerciale", "Reception courrier", "Notification arrivee", "Renouvellement annuel"], featured: false },
+  { id: "nomade", name: "Nomade", price: "25 000 FCFA", period: "/mois", features: ["Accès espace commun", "WiFi haut débit", "Cafétéria", "2 jours/semaine"], featured: false },
+  { id: "resident", name: "Résident", price: "75 000 FCFA", period: "/mois", features: ["Bureau dédié", "WiFi haut débit", "Cafétéria", "Accès illimité", "Réception courrier", "1h salle de réunion/mois"], featured: true },
+  { id: "domiciliation", name: "Domiciliation", price: "15 000 FCFA", period: "/mois", features: ["Adresse commerciale", "Réception courrier", "Notification arrivée", "Renouvellement annuel"], featured: false },
 ];
 
 const regSchema = z.object({
@@ -39,7 +39,7 @@ type RegData = z.infer<typeof regSchema>;
 function SpacePresentation() {
   const { ref, isInView } = useScrollAnimation();
   return (
-    <section className="section-padding bg-white" ref={ref}>
+    <section className="section-padding bg-white overflow-x-clip" ref={ref}>
       <div className="container-lg">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div className={`transition-all duration-700 ${isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-10"}`}>
@@ -66,12 +66,12 @@ function SpacePresentation() {
   );
 }
 
-function PricingGrid({ onSelectPlan }: { onSelectPlan: (planName: string) => void }) {
+function PricingGrid({ onSelectPlan }: { onSelectPlan: (planId: string) => void }) {
   const { ref, isInView } = useScrollAnimation();
   return (
     <section className="section-padding bg-offwhite" ref={ref}>
       <div className="container-lg">
-        <SectionTitle label="NOS FORMULES" title="Choisissez la formule adaptee a vos besoins" />
+        <SectionTitle label="NOS FORMULES" title="Choisissez la formule adaptée à vos besoins" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {plans.map((plan, i) => (
             <div key={plan.name} className={`bg-white rounded-2xl p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-card-hover relative ${plan.featured ? "border-2 border-accent shadow-lg" : "border border-gray-200"} ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`} style={{ transitionDelay: `${i * 120}ms` }}>
@@ -87,7 +87,7 @@ function PricingGrid({ onSelectPlan }: { onSelectPlan: (planName: string) => voi
                 ))}
               </ul>
               <button
-                onClick={() => onSelectPlan(plan.name)}
+                onClick={() => onSelectPlan(plan.id)}
                 className={`w-full py-3 rounded-lg text-sm font-semibold transition-all ${plan.featured ? "btn-primary" : "border-2 border-primary text-primary hover:bg-primary hover:text-white"}`}
               >
                 Choisir cette formule
@@ -207,36 +207,36 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-dark mb-1.5">Telephone *</label>
+                    <label className="block text-sm font-medium text-dark mb-1.5">Téléphone *</label>
                     <input type="tel" {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
                     {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-dark mb-1.5">Type d'espace *</label>
                     <select {...register("spaceType")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.spaceType ? "border-red-500" : "border-gray-200"}`}>
-                      <option value="">Selectionnez...</option>
+                      <option value="">Sélectionnez...</option>
                       <option value="individual">Bureau individuel</option>
                       <option value="open">Open-space</option>
-                      <option value="meeting">Salle de reunion</option>
+                      <option value="meeting">Salle de réunion</option>
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-dark mb-1.5">Formule souhaitee *</label>
+                  <label className="block text-sm font-medium text-dark mb-1.5">Formule souhaitée *</label>
                   <select
                     {...register("plan")}
                     defaultValue={selectedPlan.toLowerCase()}
                     className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary bg-accent/5 ${errors.plan ? "border-red-500" : "border-accent/30"}`}
                   >
-                    <option value="">Selectionnez...</option>
+                    <option value="">Sélectionnez...</option>
                     <option value="nomade">Nomade - 25 000 FCFA/mois</option>
-                    <option value="resident">Resident - 75 000 FCFA/mois</option>
+                    <option value="resident">Résident - 75 000 FCFA/mois</option>
                     <option value="domiciliation">Domiciliation - 15 000 FCFA/mois</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-dark mb-1.5">Message</label>
-                  <textarea {...register("message")} rows={3} placeholder="Precisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
+                  <textarea {...register("message")} rows={3} placeholder="Précisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
                 </div>
               {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
               <div className="flex flex-col-reverse sm:flex-row gap-3">
@@ -280,8 +280,8 @@ export default function Coworking() {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSelectPlan = (planName: string) => {
-    setSelectedPlan(planName);
+  const handleSelectPlan = (planId: string) => {
+    setSelectedPlan(planId);
     setIsModalOpen(true);
   };
 

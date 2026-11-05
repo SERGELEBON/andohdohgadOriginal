@@ -12,7 +12,6 @@ export default function AuthCallback() {
   useEffect(() => {
     // Écouter les changements d'état d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth event:', event);
 
       if (event === 'SIGNED_IN' && session) {
         // Rediriger vers le compte utilisateur

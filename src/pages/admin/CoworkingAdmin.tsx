@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Search, Building2, Users, CheckCircle, XCircle, Clock, Eye, Mail, Phone } from 'lucide-react';
@@ -77,7 +78,7 @@ export default function CoworkingAdmin() {
       ));
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Erreur lors de la mise à jour');
+      notify.error('La mise à jour a échoué.', error);
     }
   };
 

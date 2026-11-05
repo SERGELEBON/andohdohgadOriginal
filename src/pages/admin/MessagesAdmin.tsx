@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Mail, MailOpen, Trash2 } from 'lucide-react';
@@ -22,6 +24,7 @@ const statusConfig = {
 };
 
 export default function MessagesAdmin() {
+  const confirm = useConfirm();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
@@ -64,7 +67,7 @@ export default function MessagesAdmin() {
   };
 
   const deleteMessage = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce message ?')) return;
+    if (!(await confirm({ title: 'Supprimer ce message ?', description: 'Cette action est définitive.', confirmLabel: 'Supprimer', destructive: true }))) return;
 
     try {
       const { error } = await supabase
@@ -78,7 +81,7 @@ export default function MessagesAdmin() {
       if (selectedMessage?.id === id) setSelectedMessage(null);
     } catch (error) {
       console.error('Error deleting message:', error);
-      alert('Erreur lors de la suppression');
+      notify.error('La suppression a échoué.', error);
     }
   };
 

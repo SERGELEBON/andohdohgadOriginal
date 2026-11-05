@@ -11,9 +11,10 @@ export default function FloatingWhatsApp() {
       rel="noopener noreferrer"
       aria-label="Contactez-nous sur WhatsApp"
       title="Contactez-nous sur WhatsApp"
-      className="fixed bottom-5 right-5 z-[60] flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] shadow-lg shadow-black/20 transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
+      // Halo en box-shadow (animation "wa-pulse", index.css) : contrairement à un scale(),
+      // une ombre n'élargit jamais la page, donc pas de défilement horizontal sur mobile.
+      className="wa-pulse fixed bottom-5 right-5 z-[60] flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] shadow-lg shadow-black/20 transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
     >
-      <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75 animate-ping" />
       <svg
         viewBox="0 0 32 32"
         className="relative w-8 h-8 fill-white"

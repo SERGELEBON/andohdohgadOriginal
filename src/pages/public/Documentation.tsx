@@ -9,7 +9,7 @@ const filterMapping: Record<string, string> = {
   "Tous": "all",
   "Guides": "guides",
   "Fiscaux": "fiscaux",
-  "Modeles": "modeles",
+  "Modèles": "modeles",
   "Notes": "notes",
 };
 
@@ -72,7 +72,7 @@ Merci de me communiquer les instructions de paiement.`;
     <>
       <PageHeader
         title="Documentation"
-        subtitle="Des guides pratiques, notes fiscales et modeles professionnels elabores par nos experts."
+        subtitle="Des guides pratiques, notes fiscales et modèles professionnels élaborés par nos experts."
         breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Documentation", href: "/documentation" }]}
       />
 

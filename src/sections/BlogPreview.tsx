@@ -78,7 +78,6 @@ export default function BlogPreview() {
       });
 
       setArticles(mappedArticles);
-      console.log('Articles chargés:', mappedArticles.length);
     } catch (error) {
       console.error('Erreur lors du chargement des articles:', error);
     } finally {

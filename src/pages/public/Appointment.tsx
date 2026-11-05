@@ -10,18 +10,18 @@ import { submitAppointment, whatsappFallbackUrl } from "@/lib/supabase/submissio
 
 const TIME_SLOTS: Record<string, string> = {
   morning: "Matin (8h-12h)",
-  afternoon: "Apres-midi (12h-17h)",
+  afternoon: "Après-midi (12h-17h)",
 };
 
 const schema = z.object({
-  firstName: z.string().min(2, "Minimum 2 caracteres"),
-  lastName: z.string().min(2, "Minimum 2 caracteres"),
+  firstName: z.string().min(2, "Minimum 2 caractères"),
+  lastName: z.string().min(2, "Minimum 2 caractères"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Telephone invalide"),
+  phone: z.string().min(8, "Téléphone invalide"),
   company: z.string().optional(),
-  service: z.string().min(1, "Selectionnez un service"),
-  date: z.string().min(1, "Selectionnez une date"),
-  timeSlot: z.string().min(1, "Selectionnez un creneau"),
+  service: z.string().min(1, "Sélectionnez un service"),
+  date: z.string().min(1, "Sélectionnez une date"),
+  timeSlot: z.string().min(1, "Sélectionnez un créneau"),
   message: z.string().optional(),
 });
 
@@ -71,9 +71,9 @@ export default function Appointment() {
               {status === "success" ? (
                 <div className="text-center py-12">
                   <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-                  <h3 className="font-display text-2xl font-semibold text-dark mb-3">Demande envoyee !</h3>
+                  <h3 className="font-display text-2xl font-semibold text-dark mb-3">Demande envoyée !</h3>
                   <p className="text-body max-w-md mx-auto mb-6">Nous avons bien reçu votre demande de rendez-vous. Notre équipe vous contactera dans les 24 heures ouvrées pour confirmer votre rendez-vous.</p>
-                  <a href="/" className="btn-primary">Retour a l'accueil</a>
+                  <a href="/" className="btn-primary">Retour à l'accueil</a>
                 </div>
               ) : (
                 <>
@@ -82,7 +82,7 @@ export default function Appointment() {
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Prenom *</label>
+                        <label className="block text-sm font-medium text-dark mb-1.5">Prénom *</label>
                         <input {...register("firstName")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.firstName ? "border-red-500" : "border-gray-200"}`} />
                         {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
                       </div>
@@ -100,7 +100,7 @@ export default function Appointment() {
                         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Telephone *</label>
+                        <label className="block text-sm font-medium text-dark mb-1.5">Téléphone *</label>
                         <input type="tel" {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
                         {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                       </div>
@@ -123,14 +123,14 @@ export default function Appointment() {
 
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Date souhaitee *</label>
+                        <label className="block text-sm font-medium text-dark mb-1.5">Date souhaitée *</label>
                         <input type="date" {...register("date")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.date ? "border-red-500" : "border-gray-200"}`} />
                         {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Creaneau horaire *</label>
+                        <label className="block text-sm font-medium text-dark mb-1.5">Créneau horaire *</label>
                         <select {...register("timeSlot")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.timeSlot ? "border-red-500" : "border-gray-200"}`}>
-                          <option value="">Selectionnez...</option>
+                          <option value="">Sélectionnez...</option>
                           {Object.entries(TIME_SLOTS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                         </select>
                         {errors.timeSlot && <p className="text-red-500 text-xs mt-1">{errors.timeSlot.message}</p>}
@@ -138,8 +138,8 @@ export default function Appointment() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-dark mb-1.5">Message / Precisions</label>
-                      <textarea {...register("message")} rows={4} placeholder="Decrivez brievement votre besoin..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
+                      <label className="block text-sm font-medium text-dark mb-1.5">Message / Précisions</label>
+                      <textarea {...register("message")} rows={4} placeholder="Décrivez brièvement votre besoin..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
                     </div>
 
                     <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">
@@ -153,8 +153,8 @@ export default function Appointment() {
             {/* Info sidebar */}
             <div className="space-y-6">
               {[
-                { icon: Clock, title: "Delai de confirmation", text: "Nous vous contacterons sous 24h ouvrées." },
-                { icon: FileText, title: "Preparez votre rendez-vous", text: "Ayez a portee de main vos documents comptables recents et vos questions." },
+                { icon: Clock, title: "Délai de confirmation", text: "Nous vous contacterons sous 24h ouvrées." },
+                { icon: FileText, title: "Préparez votre rendez-vous", text: "Ayez à portée de main vos documents comptables récents et vos questions." },
                 { icon: Phone, title: "Besoin d'urgence ?", text: "+225 07 09 57 75 30", isLink: true },
               ].map((item) => (
                 <div key={item.title} className="bg-offwhite rounded-xl p-6">

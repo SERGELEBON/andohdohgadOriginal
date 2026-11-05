@@ -10,7 +10,7 @@ import { team } from "@/data/team";
 function FirmPresentation() {
   const { ref, isInView } = useScrollAnimation();
   return (
-    <section className="section-padding bg-white" ref={ref}>
+    <section className="section-padding bg-white overflow-x-clip" ref={ref}>
       <div className="container-lg">
         <div className="grid lg:grid-cols-[55%_45%] gap-10 lg:gap-16 items-center">
           <div className={`transition-all duration-700 ${isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-16"}`}>
@@ -127,7 +127,7 @@ function TeamGrid() {
   return (
     <section className="section-padding bg-offwhite" ref={ref}>
       <div className="container-lg">
-        <SectionTitle label="NOTRE EQUIPE" title="Les experts derriere votre succes" />
+        <SectionTitle label="NOTRE ÉQUIPE" title="Les experts derrière votre succès" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {team.map((member, i) => (
             <div key={member.name} className={`bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`} style={{ transitionDelay: `${i * 120}ms` }}>

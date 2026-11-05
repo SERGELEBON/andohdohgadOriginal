@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import { X, User, Mail, Lock, Shield } from 'lucide-react';
 
@@ -32,12 +33,12 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }: Crea
     e.preventDefault();
 
     if (!form.email || !form.password || !form.first_name) {
-      alert('Veuillez remplir les champs obligatoires');
+      notify.warning('Veuillez remplir les champs obligatoires.');
       return;
     }
 
     if (form.password.length < 6) {
-      alert('Le mot de passe doit contenir au moins 6 caractères');
+      notify.warning('Le mot de passe doit contenir au moins 6 caractères.');
       return;
     }
 
@@ -73,12 +74,12 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }: Crea
         throw profileError;
       }
 
-      alert(`Utilisateur ${form.email} créé avec succès !`);
+      notify.success(`Utilisateur ${form.email} créé avec succès.`);
       onUserCreated();
       handleClose();
     } catch (error: any) {
       console.error('Error creating user:', error);
-      alert(`Erreur : ${error.message}`);
+      notify.error("La création de l'utilisateur a échoué.", error);
     } finally {
       setLoading(false);
     }

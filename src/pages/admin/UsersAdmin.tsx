@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
 import AdminLayout from '@/components/layout/AdminLayout';
@@ -27,6 +29,7 @@ const roleLabels = {
 const SUPER_ADMIN_EMAIL = 'contact@andoh-dohgad.com';
 
 export default function UsersAdmin() {
+  const confirm = useConfirm();
   const { profile } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +60,7 @@ export default function UsersAdmin() {
   const updateUserRole = async (userId: string, userEmail: string, newRole: string) => {
     // Bloquer la modification du super admin
     if (userEmail === SUPER_ADMIN_EMAIL) {
-      alert('❌ Impossible de modifier le rôle du super administrateur pour des raisons de sécurité.');
+      notify.warning('Le rôle du super administrateur ne peut pas être modifié.');
       return;
     }
 
@@ -73,27 +76,27 @@ export default function UsersAdmin() {
         u.id === userId ? { ...u, role: newRole as any } : u
       ));
 
-      alert('✅ Rôle mis à jour avec succès');
+      notify.success('Rôle mis à jour.');
     } catch (error) {
       console.error('Error updating role:', error);
-      alert('❌ Erreur lors de la mise à jour');
+      notify.error('La mise à jour du rôle a échoué.', error);
     }
   };
 
   const deleteUser = async (userId: string, userEmail: string) => {
     // Bloquer la suppression du super admin
     if (userEmail === SUPER_ADMIN_EMAIL) {
-      alert('❌ Impossible de supprimer le compte super administrateur.');
+      notify.warning('Le compte super administrateur ne peut pas être supprimé.');
       return;
     }
 
     // Bloquer l'auto-suppression
     if (userId === profile?.id) {
-      alert('❌ Vous ne pouvez pas supprimer votre propre compte.');
+      notify.warning('Vous ne pouvez pas supprimer votre propre compte.');
       return;
     }
 
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${userEmail} ?`)) return;
+    if (!(await confirm({ title: 'Supprimer cet utilisateur ?', description: `Le profil de ${userEmail} sera supprimé définitivement.`, confirmLabel: 'Supprimer', destructive: true }))) return;
 
     try {
       const { error } = await supabase
@@ -104,10 +107,10 @@ export default function UsersAdmin() {
       if (error) throw error;
 
       setUsers(users.filter(u => u.id !== userId));
-      alert('✅ Utilisateur supprimé');
+      notify.success('Utilisateur supprimé.');
     } catch (error) {
       console.error('Error deleting user:', error);
-      alert('❌ Erreur lors de la suppression');
+      notify.error('La suppression a échoué.', error);
     }
   };
 
