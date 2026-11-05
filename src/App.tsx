@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Layout from "@/components/layout/Layout";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -20,24 +20,35 @@ import Contact from "@/pages/public/Contact";
 import LegalNotice from "@/pages/public/LegalNotice";
 import PrivacyPolicy from "@/pages/public/PrivacyPolicy";
 import NotFound from "@/pages/public/NotFound";
-import Login from "@/pages/admin/Login";
-import ForgotPassword from "@/pages/auth/ForgotPassword";
-import ResetPassword from "@/pages/auth/ResetPassword";
-import AuthCallback from "@/pages/auth/AuthCallback";
-import MyAccount from "@/pages/public/MyAccount";
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import BlogAdmin from "@/pages/admin/BlogAdmin";
-import BlogEditor from "@/pages/admin/BlogEditor";
-import UsersAdmin from "@/pages/admin/UsersAdmin";
-import AppointmentsAdmin from "@/pages/admin/AppointmentsAdmin";
-import MessagesAdmin from "@/pages/admin/MessagesAdmin";
-import SurveysAdmin from "@/pages/admin/SurveysAdmin";
-import Settings from "@/pages/admin/Settings";
-import CoworkingAdmin from "@/pages/admin/CoworkingAdmin";
-import DocumentationAdmin from "@/pages/admin/DocumentationAdmin";
-import DocumentsManagement from "@/pages/admin/DocumentsManagement";
-import CMSEditor from "@/pages/admin/CMSEditor";
-import ServiceImagesAdmin from "@/pages/admin/ServiceImagesAdmin";
+
+// Espace admin et authentification : chargés à la demande, seulement quand on les ouvre.
+// Les visiteurs du site public ne téléchargent plus le code de l'admin.
+const Login = lazy(() => import("@/pages/admin/Login"));
+const ForgotPassword = lazy(() => import("@/pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/pages/auth/ResetPassword"));
+const AuthCallback = lazy(() => import("@/pages/auth/AuthCallback"));
+const MyAccount = lazy(() => import("@/pages/public/MyAccount"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
+const BlogAdmin = lazy(() => import("@/pages/admin/BlogAdmin"));
+const BlogEditor = lazy(() => import("@/pages/admin/BlogEditor"));
+const UsersAdmin = lazy(() => import("@/pages/admin/UsersAdmin"));
+const AppointmentsAdmin = lazy(() => import("@/pages/admin/AppointmentsAdmin"));
+const MessagesAdmin = lazy(() => import("@/pages/admin/MessagesAdmin"));
+const SurveysAdmin = lazy(() => import("@/pages/admin/SurveysAdmin"));
+const Settings = lazy(() => import("@/pages/admin/Settings"));
+const CoworkingAdmin = lazy(() => import("@/pages/admin/CoworkingAdmin"));
+const DocumentationAdmin = lazy(() => import("@/pages/admin/DocumentationAdmin"));
+const DocumentsManagement = lazy(() => import("@/pages/admin/DocumentsManagement"));
+const CMSEditor = lazy(() => import("@/pages/admin/CMSEditor"));
+const ServiceImagesAdmin = lazy(() => import("@/pages/admin/ServiceImagesAdmin"));
+
+function PageLoader() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center" role="status" aria-label="Chargement">
+      <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-primary" />
+    </div>
+  );
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -85,6 +96,7 @@ function App() {
     <AuthProvider>
       <AutoLogoutManager />
       <ScrollToTop />
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* Public routes with Layout (Header + Footer) */}
         <Route path="/" element={<Layout><Home /></Layout>} />
@@ -210,6 +222,7 @@ function App() {
         {/* 404 - Page not found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </AuthProvider>
   );
 }
