@@ -100,7 +100,7 @@ export default function Services() {
         breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Services", href: "/services" }]}
       />
       <ServicesList />
-      <CTABanner title="Un besoin specifique ? Discutons-en ensemble." buttonText="Prendre rendez-vous" buttonLink="/rendez-vous" />
+      <CTABanner title="Un besoin spécifique ? Discutons-en ensemble." buttonText="Prendre rendez-vous" buttonLink="/rendez-vous" />
     </>
   );
 }

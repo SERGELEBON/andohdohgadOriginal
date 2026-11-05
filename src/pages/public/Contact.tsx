@@ -11,11 +11,11 @@ import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
 import { submitContactMessage, whatsappFallbackUrl } from "@/lib/supabase/submissions";
 
 const schema = z.object({
-  name: z.string().min(2, "Minimum 2 caracteres"),
+  name: z.string().min(2, "Minimum 2 caractères"),
   email: z.string().email("Email invalide"),
   phone: z.string().optional(),
-  subject: z.string().min(1, "Selectionnez un sujet"),
-  message: z.string().min(20, "Minimum 20 caracteres"),
+  subject: z.string().min(1, "Sélectionnez un sujet"),
+  message: z.string().min(20, "Minimum 20 caractères"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -67,8 +67,8 @@ function ContactForm() {
       {status === "success" ? (
         <div className="text-center py-12">
           <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-          <h3 className="font-display text-2xl font-semibold text-dark mb-3">Message envoye !</h3>
-          <p className="text-body">Votre message a bien ete envoye. Nous vous repondrons dans les plus brefs delais.</p>
+          <h3 className="font-display text-2xl font-semibold text-dark mb-3">Message envoyé !</h3>
+          <p className="text-body">Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.</p>
         </div>
       ) : (
         <>
@@ -88,20 +88,20 @@ function ContactForm() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-dark mb-1.5">Telephone / WhatsApp</label>
+              <label className="block text-sm font-medium text-dark mb-1.5">Téléphone / WhatsApp</label>
               <input type="tel" {...register("phone")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
             </div>
             <div>
               <label className="block text-sm font-medium text-dark mb-1.5">Sujet *</label>
               <select {...register("subject")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.subject ? "border-red-500" : "border-gray-200"}`}>
-                <option value="">Selectionnez...</option>
+                <option value="">Sélectionnez...</option>
                 {Object.entries(SUBJECTS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
               {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-dark mb-1.5">Message *</label>
-              <textarea {...register("message")} rows={6} placeholder="Decrivez votre demande en detail..." className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y ${errors.message ? "border-red-500" : "border-gray-200"}`} />
+              <textarea {...register("message")} rows={6} placeholder="Décrivez votre demande en détail..." className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y ${errors.message ? "border-red-500" : "border-gray-200"}`} />
               {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
             </div>
             <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">{status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer le message"}</button>
@@ -116,10 +116,10 @@ function ContactInfo() {
   return (
     <div className="space-y-6">
       <div className="bg-offwhite rounded-xl p-6">
-        <h4 className="font-body font-semibold text-dark mb-5">Nos coordonnees</h4>
+        <h4 className="font-body font-semibold text-dark mb-5">Nos coordonnées</h4>
         <ul className="space-y-4">
           {[
-            { icon: Phone, label: "Telephone", values: ["+225 07 09 57 75 30", "+225 07 09 20 46 62"], link: "tel:+2250709577530" },
+            { icon: Phone, label: "Téléphone", values: ["+225 07 09 57 75 30", "+225 07 09 20 46 62"], link: "tel:+2250709577530" },
             { icon: Mail, label: "Email", values: ["andoh.dohgad@gmail.com"], link: "mailto:andoh.dohgad@gmail.com" },
             { icon: MapPin, label: "Adresse", values: ["AfricaWorks, Plateau Rue du Commerce, Abidjan"] },
             { icon: Clock, label: "Horaires", values: ["Lundi - Vendredi : 8h00 - 17h00", "Samedi : 9h00 - 12h00"] },
@@ -189,7 +189,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
-      <CTABanner title="Vous preferez prendre rendez-vous directement ?" buttonText="Prendre rendez-vous" buttonLink="/rendez-vous" />
+      <CTABanner title="Vous préférez prendre rendez-vous directement ?" buttonText="Prendre rendez-vous" buttonLink="/rendez-vous" />
     </>
   );
 }
