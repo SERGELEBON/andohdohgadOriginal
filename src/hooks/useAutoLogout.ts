@@ -93,7 +93,6 @@ export const useAutoLogout = (options: UseAutoLogoutOptions = {}) => {
   const logout = useCallback(async () => {
     if (loggingOutRef.current) return;
     loggingOutRef.current = true;
-    console.log('🔒 Déconnexion automatique');
     clearTs();
     try {
       await signOut();
