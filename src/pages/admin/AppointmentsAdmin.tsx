@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Calendar, Check, X, Clock } from 'lucide-react';
@@ -71,7 +72,7 @@ export default function AppointmentsAdmin() {
       ));
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Erreur lors de la mise à jour');
+      notify.error('La mise à jour du rendez-vous a échoué.', error);
     }
   };
 

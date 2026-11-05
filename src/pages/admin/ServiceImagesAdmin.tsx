@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
 import { ImageIcon, Upload, RotateCcw, CheckCircle2, AlertCircle, Loader2, ExternalLink } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { services } from '@/data/services';
@@ -51,6 +52,7 @@ function ImageSlot({
   currentUrl?: string | null;
   onSaved: () => Promise<unknown>;
 }) {
+  const confirm = useConfirm();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
@@ -106,7 +108,7 @@ function ImageSlot({
 
   const resetToDefault = async () => {
     if (!isCustom) return;
-    if (!confirm("Rétablir l'image par défaut pour ce service ?")) return;
+    if (!(await confirm({ title: "Rétablir l'image par défaut ?", description: "L'image personnalisée de ce service sera remplacée par l'image d'origine.", confirmLabel: 'Rétablir' }))) return;
     setBusy(true);
     setFeedback(null);
     try {

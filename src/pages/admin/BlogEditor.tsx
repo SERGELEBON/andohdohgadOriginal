@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { notify } from '@/lib/notify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
@@ -104,7 +105,7 @@ export default function BlogEditor() {
       });
     } catch (error) {
       console.error('Error fetching post:', error);
-      alert('Erreur lors du chargement de l\'article');
+      notify.error("Impossible de charger l'article.", error);
     }
   };
 
@@ -137,7 +138,7 @@ export default function BlogEditor() {
 
   const handleSave = async (publish: boolean = false) => {
     if (!form.title_fr || !form.content_fr) {
-      alert('Le titre et le contenu français sont obligatoires');
+      notify.warning('Le titre et le contenu en français sont obligatoires.');
       return;
     }
 
@@ -214,13 +215,13 @@ export default function BlogEditor() {
         if (error) throw error;
       }
 
-      alert(id ? 'Article mis à jour avec succès' : 'Article créé avec succès');
+      notify.success(id ? 'Article mis à jour.' : 'Article créé.');
       if (!id) {
         navigate('/admin/blog');
       }
     } catch (error: any) {
       console.error('Error saving post:', error);
-      alert(`Erreur lors de l'enregistrement: ${error.message}`);
+      notify.error("L'enregistrement de l'article a échoué.", error);
     } finally {
       setLoading(false);
     }

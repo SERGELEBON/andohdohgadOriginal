@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { notify } from '@/lib/notify';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { FileText, Plus, Edit, Trash2, Eye, Download, Search } from 'lucide-react';
 import { useAdminDocuments } from '@/hooks/useDocuments';
@@ -6,6 +8,7 @@ import DocumentForm, { type DocumentFormData } from '@/components/admin/Document
 import type { Document } from '@/hooks/useDocuments';
 
 export default function DocumentsManagement() {
+  const confirm = useConfirm();
   const { documents, loading, createDocument, updateDocument, deleteDocument, refetch } = useAdminDocuments();
 
   const [showForm, setShowForm] = useState(false);
@@ -25,16 +28,16 @@ export default function DocumentsManagement() {
   };
 
   const handleDelete = async (doc: Document) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${doc.translations?.find(t => t.language === 'fr')?.title}" ?`)) {
+    if (!(await confirm({ title: 'Supprimer ce document ?', description: `« ${doc.translations?.find(t => t.language === 'fr')?.title ?? 'Sans titre'} » sera supprimé définitivement.`, confirmLabel: 'Supprimer', destructive: true }))) {
       return;
     }
 
     const result = await deleteDocument(doc.id);
 
     if (result.success) {
-      alert('Document supprimé avec succès');
+      notify.success('Document supprimé.');
     } else {
-      alert(`Erreur: ${result.error}`);
+      notify.error('Opération impossible sur le document.', result.error);
     }
   };
 
@@ -45,10 +48,10 @@ export default function DocumentsManagement() {
       const result = await updateDocument(editingDocument.id, docData, translations);
 
       if (result.success) {
-        alert('Document mis à jour avec succès');
+        notify.success('Document mis à jour.');
         setShowForm(false);
       } else {
-        alert(`Erreur: ${result.error}`);
+        notify.error('Opération impossible sur le document.', result.error);
       }
     } else {
       // Création
@@ -56,10 +59,10 @@ export default function DocumentsManagement() {
       const result = await createDocument(docData, translations);
 
       if (result.success) {
-        alert('Document créé avec succès');
+        notify.success('Document créé.');
         setShowForm(false);
       } else {
-        alert(`Erreur: ${result.error}`);
+        notify.error('Opération impossible sur le document.', result.error);
       }
     }
   };

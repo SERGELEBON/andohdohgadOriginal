@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { notify } from '@/lib/notify';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
@@ -17,6 +19,7 @@ interface BlogPost {
 }
 
 export default function BlogAdmin() {
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +58,7 @@ export default function BlogAdmin() {
   };
 
   const deletePost = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
+    if (!(await confirm({ title: 'Supprimer cet article ?', description: 'Cette action est définitive.', confirmLabel: 'Supprimer', destructive: true }))) return;
 
     try {
       const { error } = await supabase
@@ -67,7 +70,7 @@ export default function BlogAdmin() {
       setPosts(posts.filter(p => p.id !== id));
     } catch (error) {
       console.error('Error deleting post:', error);
-      alert('Erreur lors de la suppression');
+      notify.error('La suppression a échoué.', error);
     }
   };
 
@@ -93,7 +96,7 @@ export default function BlogAdmin() {
       ));
     } catch (error) {
       console.error('Error updating post:', error);
-      alert('Erreur lors de la mise à jour');
+      notify.error('La mise à jour a échoué.', error);
     }
   };
 
