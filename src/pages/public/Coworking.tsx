@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Check, CheckCircle, X, UserPlus } from "lucide-react";
+import { Check, CheckCircle, X, UserPlus, ArrowLeft } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -128,19 +128,51 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
     setValue("plan", selectedPlan.toLowerCase());
   }
 
+  // Échap ferme la fenêtre ; la page derrière ne défile pas
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl p-8 lg:p-12 max-w-2xl w-full my-8 relative animate-in fade-in zoom-in duration-300">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-          aria-label="Fermer"
-        >
-          <X className="w-5 h-5 text-gray-600" />
-        </button>
+    // Le conteneur défile ; la fenêtre est centrée seulement si elle tient dans l'écran,
+    // sinon elle commence en haut : la croix n'est plus jamais coupée (ordinateur et mobile).
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] overflow-y-auto overscroll-contain" onClick={onClose}>
+      <div className="min-h-full flex items-start sm:items-center justify-center p-3 sm:p-6">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="coworking-modal-title"
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-2xl p-6 pt-14 sm:p-10 sm:pt-14 max-w-2xl w-full relative animate-in fade-in zoom-in duration-300"
+      >
+        {/* Barre du haut : retour + croix, toujours visibles */}
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Retour
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            aria-label="Fermer"
+          >
+            <X className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
 
         {status === "success" ? (
           <div className="text-center py-6">
@@ -157,7 +189,7 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
               <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
                 <UserPlus className="w-8 h-8 text-accent" />
               </div>
-              <h2 className="font-display text-2xl lg:text-3xl font-semibold text-dark mb-2">Créer votre compte co-working</h2>
+              <h2 id="coworking-modal-title" className="font-display text-2xl lg:text-3xl font-semibold text-dark mb-2">Créer votre compte co-working</h2>
               <p className="text-body text-sm">Remplissez ce formulaire pour demander l'accès à notre espace.</p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -207,10 +239,14 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
                   <textarea {...register("message")} rows={3} placeholder="Precisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
                 </div>
               {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
-              <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">{status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer ma demande"}</button>
+              <div className="flex flex-col-reverse sm:flex-row gap-3">
+              <button type="button" onClick={onClose} className="w-full sm:w-auto px-6 py-3 rounded-lg border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50">Annuler</button>
+              <button type="submit" disabled={status === "submitting"} className="btn-primary w-full sm:flex-1 disabled:opacity-60">{status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer ma demande"}</button>
+              </div>
             </form>
           </>
         )}
+      </div>
       </div>
     </div>
   );

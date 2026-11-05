@@ -18,6 +18,7 @@ interface Stats {
   activeSubscriptions: number;
   lastMonthRevenue: number;
   newUsersThisMonth: number;
+  totalSurveys: number;
 }
 
 interface RecentActivity {
@@ -41,7 +42,9 @@ export default function AdminDashboard() {
     activeSubscriptions: 0,
     lastMonthRevenue: 0,
     newUsersThisMonth: 0,
+    totalSurveys: 0,
   });
+  const [statsError, setStatsError] = useState('');
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,6 +59,26 @@ export default function AdminDashboard() {
       const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
 
+      const results = await Promise.all([
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).neq('role', 'admin'),
+        supabase.from('appointments').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('surveys').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('contact_messages').select('id', { count: 'exact', head: true }).eq('status', 'new'),
+        supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfMonth.toISOString()),
+        supabase.from('coworking_subscriptions').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+        supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfLastMonth.toISOString()).lte('created_at', endOfLastMonth.toISOString()),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', startOfMonth.toISOString()).neq('role', 'admin'),
+        supabase.from('appointments').select('*').order('created_at', { ascending: false }).limit(3),
+        supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3),
+        supabase.from('surveys').select('*').order('created_at', { ascending: false }).limit(3),
+        supabase.from('surveys').select('id', { count: 'exact', head: true }),
+      ]);
+
+      // Un compteur en erreur ne doit pas s'afficher silencieusement comme « 0 »
+      const failed = results.filter((r) => r.error);
+      failed.forEach((r) => console.error('Dashboard query error:', r.error));
+      setStatsError(failed.length > 0 ? `${failed.length} compteur(s) n'ont pas pu être chargés` : '');
+
       const [
         { count: usersCount },
         { count: appointmentsCount },
@@ -67,20 +90,9 @@ export default function AdminDashboard() {
         { count: newUsersCount },
         { data: recentAppointments },
         { data: recentMessages },
-        { data: recentSurveys }
-      ] = await Promise.all([
-        supabase.from('profiles').select('*', { count: 'exact', head: true }).neq('role', 'admin'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('surveys').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('contact_messages').select('*', { count: 'exact', head: true }).eq('status', 'new'),
-        supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfMonth.toISOString()),
-        supabase.from('coworking_subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-        supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfLastMonth.toISOString()).lte('created_at', endOfLastMonth.toISOString()),
-        supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', startOfMonth.toISOString()).neq('role', 'admin'),
-        supabase.from('appointments').select('*').order('created_at', { ascending: false }).limit(3),
-        supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3),
-        supabase.from('surveys').select('*').order('created_at', { ascending: false }).limit(3)
-      ]);
+        { data: recentSurveys },
+        { count: surveysTotal },
+      ] = results;
 
       const revenue = purchases?.reduce((sum: number, p: any) => sum + parseFloat(p.amount_paid), 0) || 0;
       const lastRevenue = lastMonthPurchases?.reduce((sum: number, p: any) => sum + parseFloat(p.amount_paid), 0) || 0;
@@ -94,6 +106,7 @@ export default function AdminDashboard() {
         activeSubscriptions: subsCount || 0,
         lastMonthRevenue: lastRevenue,
         newUsersThisMonth: newUsersCount || 0,
+        totalSurveys: surveysTotal || 0,
       });
 
       // Combine recent activity
@@ -119,7 +132,7 @@ export default function AdminDashboard() {
         ...((recentSurveys || []).map((sv: any) => ({
           id: sv.id,
           type: 'survey' as const,
-          title: `Demande de service - ${sv.name}`,
+          title: `Sondage - ${sv.name}`,
           description: sv.form_data?.description?.substring(0, 60) || sv.survey_type,
           at: sv.created_at,
           time: new Date(sv.created_at).toLocaleString('fr-FR'),
@@ -177,6 +190,12 @@ export default function AdminDashboard() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 pb-12">
+          {statsError && (
+            <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {statsError}. Rechargez la page ; si le problème persiste, vérifiez la connexion à Supabase.
+            </div>
+          )}
+
           {/* Quick Stats - 4 columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
@@ -246,7 +265,7 @@ export default function AdminDashboard() {
                     <FileText className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm">Demandes de service</p>
+                    <p className="text-white/80 text-sm">Sondages en attente</p>
                     <p className="text-3xl font-bold">{stats.newSurveys}</p>
                   </div>
                 </div>
@@ -255,7 +274,7 @@ export default function AdminDashboard() {
                 </Link>
               </div>
               <div className="pt-4 border-t border-white/20">
-                <p className="text-sm text-white/80">À analyser et traiter</p>
+                <p className="text-sm text-white/80">{stats.totalSurveys} demande(s) au total · 5 formulaires de demande de service</p>
               </div>
             </div>
           </div>

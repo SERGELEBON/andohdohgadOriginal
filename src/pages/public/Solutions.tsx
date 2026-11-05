@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import SectionTitle from "@/components/ui/SectionTitle";
@@ -57,7 +58,7 @@ function ERPTeaser() {
                 Nous developpons un ERP complet integre comptabilite, paie, RH, gestion commerciale et reporting. Une solution 100% adaptee aux realites des entreprises africaines.
               </p>
               <p className="text-accent font-medium text-sm mb-6">Comptabilite &middot; Paie &middot; RH &middot; Gestion commerciale &middot; Reporting</p>
-              <button className="btn-outline text-sm">Etre informe du lancement</button>
+              <Link to="/contact?sujet=erp" className="btn-outline text-sm inline-block">Être informé du lancement</Link>
             </div>
             <div className={`p-6 lg:p-8 transition-all duration-700 delay-200 ${isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}>
               <img src="/images/erp-mockup.jpg" alt="ERP Dashboard" className="rounded-xl shadow-2xl w-full" />
