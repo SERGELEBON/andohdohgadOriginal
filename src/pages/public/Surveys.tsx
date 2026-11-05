@@ -196,9 +196,10 @@ export default function Surveys() {
       console.warn("EmailJS failed (non-critical):", emailError);
     }
 
+    // Le message reste affiché jusqu'au clic sur « Faire une nouvelle demande » ou au départ de la page
     setStatus("success");
     reset();
-    setTimeout(() => setStatus("idle"), 5000);
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const currentFields = 
@@ -338,7 +339,7 @@ export default function Surveys() {
             </div>
 
             {status === "success" ? (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+              <div role="status" aria-live="polite" className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
                 <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
                 <h4 className="font-semibold text-green-800 mb-2">
                   Formulaire envoyé avec succès !
@@ -346,6 +347,13 @@ export default function Surveys() {
                 <p className="text-sm text-green-700">
                   Nous avons bien reçu votre demande et nous vous contacterons dans les plus brefs délais.
                 </p>
+                <button
+                  type="button"
+                  onClick={() => setStatus("idle")}
+                  className="btn-primary mt-5 px-6"
+                >
+                  Faire une nouvelle demande
+                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

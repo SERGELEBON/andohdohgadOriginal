@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,13 +26,22 @@ const SUBJECTS: Record<string, string> = {
   accounting: "Service comptable",
   hr: "Service RH",
   coworking: "Co-working",
+  erp: "Lancement de l'ERP Andoh & Dohgad",
   other: "Autre",
 };
 
 function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [whatsappUrl, setWhatsappUrl] = useState("");
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
+  // Lien « Être informé du lancement » (page Solutions) : /contact?sujet=erp pré-remplit le formulaire
+  const [searchParams] = useSearchParams();
+  const presetSubject = searchParams.get("sujet");
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: presetSubject === "erp"
+      ? { subject: "erp", message: "Bonjour, je souhaite être informé(e) du lancement de l'ERP Andoh & Dohgad." }
+      : undefined,
+  });
 
   const onSubmit = async (data: FormData) => {
     setStatus("submitting");

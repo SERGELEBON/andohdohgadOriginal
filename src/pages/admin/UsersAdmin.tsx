@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
 import AdminLayout from '@/components/layout/AdminLayout';
 import CreateUserModal from '@/components/admin/CreateUserModal';
+import EditUserModal from '@/components/admin/EditUserModal';
 import { Search, Shield, Edit, UserPlus, Trash2, Lock } from 'lucide-react';
 
 interface User {
@@ -11,6 +12,7 @@ interface User {
   first_name: string | null;
   last_name: string | null;
   phone: string | null;
+  company_name?: string | null;
   role: 'admin' | 'coworking_client' | 'standard_client' | 'visitor';
   created_at: string;
 }
@@ -30,6 +32,7 @@ export default function UsersAdmin() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -208,6 +211,7 @@ export default function UsersAdmin() {
                               ? `${user.first_name} ${user.last_name}`
                               : 'Non renseigné'}
                           </div>
+                          {user.company_name && <div className="text-xs text-gray-500">{user.company_name}</div>}
                         </div>
                       </div>
                     </td>
@@ -239,8 +243,11 @@ export default function UsersAdmin() {
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <button
+                          type="button"
+                          onClick={() => setEditingUser(user)}
                           className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors"
                           title="Éditer"
+                          aria-label={`Modifier ${user.email}`}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
@@ -261,6 +268,17 @@ export default function UsersAdmin() {
             </tbody>
           </table>
         </div>
+
+        <EditUserModal
+          user={editingUser}
+          roleLocked={editingUser?.email === SUPER_ADMIN_EMAIL}
+          roleLabels={roleLabels}
+          onClose={() => setEditingUser(null)}
+          onSaved={(updated) => {
+            setUsers((list) => list.map((u) => (u.id === updated.id ? { ...u, ...updated } : u)));
+            setEditingUser(null);
+          }}
+        />
 
         {/* Create User Modal */}
         <CreateUserModal
