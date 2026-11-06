@@ -10,7 +10,7 @@ import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
 import { submitServiceRequest, whatsappFallbackUrl } from "@/lib/supabase/submissions";
 
 const features = [
-  "Bureaux individuels climatises",
+  "Bureaux individuels climatisés",
   "Espace open-space collaboratif",
   "Salle de réunion équipée",
   "Connexion internet haut débit",

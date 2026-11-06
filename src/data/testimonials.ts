@@ -2,7 +2,7 @@ import type { Testimonial } from "@/types";
 
 export const testimonials: Testimonial[] = [
   {
-    quote: "Andoh & Dohgad a transformé notre approche de la gestion financière. Leur expertise comptable et leur accompagnement personnalise nous ont permis de structurer notre entreprise et d'atteindre nos objectifs de croissance en moins d'un an.",
+    quote: "Andoh & Dohgad a transformé notre approche de la gestion financière. Leur expertise comptable et leur accompagnement personnalisé nous ont permis de structurer notre entreprise et d'atteindre nos objectifs de croissance en moins d'un an.",
     author: "Marie Kone",
     role: "Fondatrice, AgroPlus CI",
     rating: 5,

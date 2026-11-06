@@ -11,7 +11,7 @@ export const services: Service[] = [
     heroImage: "/images/blog-fiscalite.jpg",
     title: "Accompagnement comptable et fiscal",
     shortDescription:
-      "Tenue comptable, déclarations fiscales, optimisation fiscale et conseil personnalise pour maîtriser votre environnement financier.",
+      "Tenue comptable, déclarations fiscales, optimisation fiscale et conseil personnalisé pour maîtriser votre environnement financier.",
     fullDescription:
       "Andoh & Dohgad Consulting vous accompagne dans la gestion de votre comptabilité et de vos obligations fiscales. Notre équipe d'experts assure la tenue de vos livres, l'établissement de vos états financiers et le respect de vos déclarations auprès des autorités compétentes.",
     problematics: [
@@ -77,7 +77,7 @@ export const services: Service[] = [
     fullDescription:
       "Vous avez un projet entrepreneurial ? Nous vous guidons de A à Z dans la création de votre entreprise, du choix du statut juridique à l'immatriculation finale.",
     problematics: [
-      "Statut juridique mal adapte",
+      "Statut juridique mal adapté",
       "Formalités complexes",
       "Manque de conseil structure",
       "Délai de création long",
@@ -91,7 +91,7 @@ export const services: Service[] = [
       { step: "04", title: "Immatriculation", description: "Obtention du RCCM et lancement" },
     ],
     features: [
-      "Choix du statut juridique adapte",
+      "Choix du statut juridique adapté",
       "Vérification de la dénomination sociale",
       "Constitution du dossier et formalités",
       "Immatriculation au RCCM et à la DGI",
@@ -144,7 +144,7 @@ export const services: Service[] = [
       "Besoin de montée en compétence rapide",
     ],
     valueProposition:
-      "Des formateurs praticiens, des cas concrets et des supports pédagogiques adaptes au contexte africain.",
+      "Des formateurs praticiens, des cas concrets et des supports pédagogiques adaptés au contexte africain.",
     process: [
       { step: "01", title: "Identification des besoins", description: "Évaluation des écarts de compétences" },
       { step: "02", title: "Conception du programme", description: "Développement de contenus sur mesure" },
@@ -171,7 +171,7 @@ export const services: Service[] = [
     problematics: [
       "Pas de bureau professionnel",
       "Besoin d'une adresse commerciale",
-      "Environnement de travail isole",
+      "Environnement de travail isolé",
       "Cout d'un bureau trop élevé",
     ],
     valueProposition:

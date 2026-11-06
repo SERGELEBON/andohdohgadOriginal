@@ -11,7 +11,7 @@ export const solutions: Solution[] = [
   },
   {
     icon: LayoutDashboard,
-    title: "Tableaux de bord personnalises",
+    title: "Tableaux de bord personnalisés",
     description: "Visualisez vos indicateurs clés de performance en temps réel avec des tableaux de bord interactifs.",
     features: ["KPIs personnalisables", "Graphiques interactifs", "Partage avec votre conseiller"],
     status: "Disponible",
@@ -27,7 +27,7 @@ export const solutions: Solution[] = [
     icon: UserCircle,
     title: "Espace client sécurisé",
     description: "Accédez à vos documents, échangez avec votre conseiller et suivez vos missions en temps réel.",
-    features: ["Documents centralises", "Messagerie intégrée", "Notifications en temps réel"],
+    features: ["Documents centralisés", "Messagerie intégrée", "Notifications en temps réel"],
     status: "Disponible",
   },
 ];
