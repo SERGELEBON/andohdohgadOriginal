@@ -79,6 +79,21 @@ const PAGES: Record<string, Meta> = {
   "/mon-compte": { title: "Mon compte — Andoh & Dohgad Consulting", description: "Gérez votre espace client." },
 };
 
+const ADMIN_TITLES: Record<string, string> = {
+  "/admin": "Tableau de bord",
+  "/admin/demandes-service": "Demandes de service",
+  "/admin/appointments": "Rendez-vous",
+  "/admin/messages": "Messages",
+  "/admin/blog": "Blog",
+  "/admin/users": "Utilisateurs",
+  "/admin/settings": "Paramètres",
+  "/admin/cms": "Contenu du site",
+  "/admin/services": "Images services",
+  "/admin/coworking": "Co-working",
+  "/admin/documents": "Documents",
+  "/admin/docs": "Achats docs",
+};
+
 const NOINDEX = ["/connexion", "/inscription", "/forgot-password", "/reset-password", "/auth/callback", "/mon-compte", "/admin"];
 
 function setMeta(attr: "name" | "property", key: string, content: string) {
@@ -136,6 +151,14 @@ export default function RouteSeo() {
   const { pathname } = useLocation();
   useEffect(() => {
     if (pageSeoPath === pathname) return; // la page a déjà ses propres métas (<Seo />)
+    if (pathname.startsWith("/admin")) {
+      const label = ADMIN_TITLES[pathname.replace(/\/$/, "")];
+      applySeo(pathname, {
+        title: `${label ? label + " — " : ""}Administration | Andoh & Dohgad`,
+        description: "Espace d'administration Andoh & Dohgad Consulting.",
+      });
+      return;
+    }
     const base = "/" + (pathname.split("/")[1] ?? "");
     const meta = PAGES[pathname.replace(/\/$/, "") || "/"] ?? PAGES[base] ?? PAGES["/"];
     applySeo(pathname, meta);

@@ -27,7 +27,7 @@ export default function Home() {
     <>
       {/* Session expired notification */}
       {showSessionExpired && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md animate-in slide-in-from-top-4 duration-300">
           <div className="bg-amber-50 border-l-4 border-amber-500 rounded-lg shadow-lg p-4 max-w-md flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
             <div className="flex-1">

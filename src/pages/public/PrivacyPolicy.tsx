@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
               <li>Formulaire de contact</li>
               <li>Formulaire de prise de rendez-vous</li>
               <li>Formulaire d'inscription au co-working</li>
-              <li>Formulaires de sondages</li>
+              <li>Formulaires de demande de service</li>
               <li>Téléchargement de documents</li>
             </ul>
 
