@@ -44,9 +44,9 @@ function SpacePresentation() {
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div className={`transition-all duration-700 ${isInView ? "opacity-100 translate-x-0 translate-y-0" : "opacity-0 translate-y-6 lg:translate-y-0 lg:-translate-x-10"}`}>
             <span className="text-xs font-semibold uppercase tracking-[2px] text-secondary mb-3 block">ESPACE DE TRAVAIL</span>
-            <h2 className="font-display text-2xl lg:text-4xl font-semibold text-dark mb-6">Votre bureau au coeur d'Abidjan</h2>
+            <h2 className="font-display text-2xl lg:text-4xl font-semibold text-dark mb-6">Votre bureau au cœur d'Abidjan</h2>
             <p className="text-body leading-relaxed mb-6">
-              Situe au Plateau, le quartier des affaires d'Abidjan, notre espace de co-working offre un environnement professionnel, moderne et inspirant.
+              Situé au Plateau, le quartier des affaires d'Abidjan, notre espace de co-working offre un environnement professionnel, moderne et inspirant.
             </p>
             <ul className="space-y-3">
               {features.map((f) => (
@@ -287,7 +287,7 @@ export default function Coworking() {
 
   return (
     <>
-      <PageHeader title="Co-working & Domiciliation" subtitle="Un espace de travail moderne et professionnel au coeur du Plateau, Abidjan." breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Co-working", href: "/co-working" }]} />
+      <PageHeader title="Co-working & Domiciliation" subtitle="Un espace de travail moderne et professionnel au cœur du Plateau, Abidjan." breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Co-working", href: "/co-working" }]} />
       <SpacePresentation />
       <PricingGrid onSelectPlan={handleSelectPlan} />
       <CTASection onOpenModal={() => setIsModalOpen(true)} />

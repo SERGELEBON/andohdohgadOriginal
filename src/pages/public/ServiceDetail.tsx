@@ -1,4 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { Seo } from "@/components/RouteSeo";
 import { useEffect } from "react";
 import { Check, Phone, Send } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
@@ -25,6 +26,7 @@ export default function ServiceDetail() {
 
   return (
     <>
+      <Seo title={`${service.title} — Andoh & Dohgad Consulting`} description={service.shortDescription} />
       <PageHeader
         title={service.title}
         subtitle={service.shortDescription}
@@ -38,7 +40,7 @@ export default function ServiceDetail() {
 
       <section className="section-padding bg-white" ref={ref}>
         <div className="container-lg">
-          <div className="grid lg:grid-cols-[65%_35%] gap-10 lg:gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)] gap-10 lg:gap-16">
             {/* Main content */}
             <div className={`transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
