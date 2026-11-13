@@ -178,11 +178,12 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="/admin/surveys" element={
+        <Route path="/admin/demandes-service" element={
           <ProtectedRoute allowedRoles="admin">
             <SurveysAdmin />
           </ProtectedRoute>
         } />
+        <Route path="/admin/surveys" element={<Navigate to="/admin/demandes-service" replace />} />
 
         <Route path="/admin/settings" element={
           <ProtectedRoute allowedRoles="admin">
