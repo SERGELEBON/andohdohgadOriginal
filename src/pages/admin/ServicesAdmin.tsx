@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { notify } from '@/lib/notify';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import AdminLayout from '@/components/layout/AdminLayout';
@@ -6,6 +8,7 @@ import { Plus, Edit, Trash2, Eye, EyeOff, Search } from 'lucide-react';
 import type { Service } from '@/hooks/useDynamicContent';
 
 export default function ServicesAdmin() {
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,12 +48,12 @@ export default function ServicesAdmin() {
       ));
     } catch (error) {
       console.error('Error updating service:', error);
-      alert('Erreur lors de la mise à jour');
+      notify.error('La mise à jour a échoué.', error);
     }
   };
 
   const deleteService = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) return;
+    if (!(await confirm({ title: 'Supprimer ce service ?', description: 'Cette action est définitive.', confirmLabel: 'Supprimer', destructive: true }))) return;
 
     try {
       const { error } = await supabase
@@ -62,7 +65,7 @@ export default function ServicesAdmin() {
       setServices(services.filter(s => s.id !== id));
     } catch (error) {
       console.error('Error deleting service:', error);
-      alert('Erreur lors de la suppression');
+      notify.error('La suppression a échoué.', error);
     }
   };
 

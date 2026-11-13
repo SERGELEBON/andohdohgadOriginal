@@ -19,5 +19,11 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // Pas de boîtes natives bloquantes : utiliser notify (sonner) et useConfirm
+      'no-alert': 'error',
+      // Pas de traces de debug en production (les erreurs restent journalisées)
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
   },
 ])

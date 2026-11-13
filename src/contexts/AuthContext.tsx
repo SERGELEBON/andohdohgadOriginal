@@ -145,7 +145,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
     }
 
-    console.log('✅ Signup successful:', data);
   };
 
   const signIn = async (email: string, password: string) => {

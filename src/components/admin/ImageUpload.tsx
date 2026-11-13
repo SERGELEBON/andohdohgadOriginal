@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { notify } from '@/lib/notify';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import { Upload, X, Loader2, CheckCircle } from 'lucide-react';
 
@@ -28,14 +29,14 @@ export default function ImageUpload({
 
     // Validation du type de fichier
     if (!acceptedFormats.split(',').includes(file.type)) {
-      alert(`Format non supporté. Formats acceptés : ${acceptedFormats}`);
+      notify.warning(`Format non supporté. Formats acceptés : ${acceptedFormats}`);
       return;
     }
 
     // Validation de la taille
     const fileSizeMB = file.size / (1024 * 1024);
     if (fileSizeMB > maxSizeMB) {
-      alert(`Le fichier est trop volumineux (${fileSizeMB.toFixed(1)}MB). Taille max : ${maxSizeMB}MB`);
+      notify.warning(`Fichier trop volumineux (${fileSizeMB.toFixed(1)} Mo). Taille maximale : ${maxSizeMB} Mo.`);
       return;
     }
 
@@ -87,7 +88,7 @@ export default function ImageUpload({
       }, 1000);
     } catch (error: any) {
       console.error('Error uploading image:', error);
-      alert(`Erreur lors de l'upload : ${error.message}`);
+      notify.error("L'envoi de l'image a échoué.", error);
       setPreviewUrl(currentImageUrl || '');
     } finally {
       setUploading(false);

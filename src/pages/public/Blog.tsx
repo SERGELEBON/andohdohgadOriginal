@@ -95,7 +95,7 @@ export default function Blog() {
 
       <section className="section-padding bg-offwhite" ref={ref}>
         <div className="container-lg">
-          <div className="grid lg:grid-cols-[1fr_320px] gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10">
             {/* Main */}
             <div>
               {/* Category filter */}

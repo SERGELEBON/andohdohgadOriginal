@@ -11,7 +11,7 @@ function SolutionsGrid() {
   return (
     <section className="section-padding bg-white" ref={ref}>
       <div className="container-lg">
-        <SectionTitle label="SOLUTIONS NUMERIQUES" title="Des outils pour digitaliser votre gestion" />
+        <SectionTitle label="SOLUTIONS NUMÉRIQUES" title="Des outils pour digitaliser votre gestion" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {solutions.map((sol, i) => {
             const Icon = sol.icon;
@@ -52,12 +52,12 @@ function ERPTeaser() {
         <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #5C0F8B 0%, #3D0A5E 100%)" }}>
           <div className="grid lg:grid-cols-[60%_40%] gap-8 items-center">
             <div className={`p-8 lg:p-12 transition-all duration-700 ${isInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}>
-              <span className="inline-block px-3 py-1 bg-accent/20 text-accent text-xs font-semibold rounded-full mb-4 uppercase tracking-wider">Projet en developpement</span>
-              <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">ERP Andoh & Dohgad — Bientot disponible</h3>
+              <span className="inline-block px-3 py-1 bg-accent/20 text-accent text-xs font-semibold rounded-full mb-4 uppercase tracking-wider">Projet en développement</span>
+              <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">ERP Andoh & Dohgad — Bientôt disponible</h3>
               <p className="text-white/80 text-sm lg:text-base leading-relaxed mb-6">
-                Nous developpons un ERP complet integre comptabilite, paie, RH, gestion commerciale et reporting. Une solution 100% adaptee aux realites des entreprises africaines.
+                Nous développons un ERP complet intégré comptabilité, paie, RH, gestion commerciale et reporting. Une solution 100% adaptée aux réalités des entreprises africaines.
               </p>
-              <p className="text-accent font-medium text-sm mb-6">Comptabilite &middot; Paie &middot; RH &middot; Gestion commerciale &middot; Reporting</p>
+              <p className="text-accent font-medium text-sm mb-6">Comptabilité &middot; Paie &middot; RH &middot; Gestion commerciale &middot; Reporting</p>
               <Link to="/contact?sujet=erp" className="btn-outline text-sm inline-block">Être informé du lancement</Link>
             </div>
             <div className={`p-6 lg:p-8 transition-all duration-700 delay-200 ${isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}>
@@ -74,7 +74,7 @@ export default function SolutionsPage() {
   return (
     <>
       <PageHeader
-        title="Nos solutions numeriques"
+        title="Nos solutions numériques"
         subtitle="Des outils technologiques innovants pour moderniser la gestion de votre entreprise."
         breadcrumbs={[{ label: "Accueil", href: "/" }, { label: "Solutions", href: "/solutions" }]}
       />
