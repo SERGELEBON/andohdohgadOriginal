@@ -132,7 +132,7 @@ export default function AdminDashboard() {
         ...((recentSurveys || []).map((sv: any) => ({
           id: sv.id,
           type: 'survey' as const,
-          title: `Sondage - ${sv.name}`,
+          title: `Demande de service - ${sv.name}`,
           description: sv.form_data?.description?.substring(0, 60) || sv.survey_type,
           at: sv.created_at,
           time: new Date(sv.created_at).toLocaleString('fr-FR'),
@@ -265,7 +265,7 @@ export default function AdminDashboard() {
                     <FileText className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm">Sondages en attente</p>
+                    <p className="text-white/80 text-sm">Demandes de service en attente</p>
                     <p className="text-3xl font-bold">{stats.newSurveys}</p>
                   </div>
                 </div>

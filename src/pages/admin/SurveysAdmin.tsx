@@ -112,7 +112,7 @@ export default function SurveysAdmin() {
     <AdminLayout>
       <div className="p-6 lg:p-8 mt-6">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-dark mb-2">Sondages</h1>
+          <h1 className="text-2xl font-bold text-dark mb-2">Demandes de service</h1>
           <p className="text-gray-600">
             Les 5 formulaires de demande de service du site — {stats.pending} en attente
           </p>
