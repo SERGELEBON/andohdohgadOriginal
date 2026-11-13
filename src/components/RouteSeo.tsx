@@ -5,79 +5,15 @@ import { useLocation } from "react-router-dom";
  * Titre + description + canonical + Open Graph + Twitter, par page.
  * À placer UNE fois dans le Layout public (voir README).
  */
-const SITE_URL = "https://andoh-dohgad.netlify.app"; // ← mettre le domaine final ici
-const SITE_NAME = "Andoh & Dohgad Consulting";
+import seo from "@/data/seo-pages.json";
+
+const SITE_URL = seo.siteUrl; // domaine final : modifier dans src/data/seo-pages.json
+const SITE_NAME = seo.siteName;
 const OG_IMAGE = `${SITE_URL}/og-image.jpg`; // image 1200x630 dans /public
 
-type Meta = { title: string; description: string };
+type Meta = { title: string; description: string; canonical?: string };
 
-const PAGES: Record<string, Meta> = {
-  "/": {
-    title: "Andoh & Dohgad Consulting — Cabinet de conseil en Côte d'Ivoire",
-    description:
-      "Cabinet de conseil multidisciplinaire à Abidjan : comptabilité, fiscalité, ressources humaines, création d'entreprise et co-working.",
-  },
-  "/a-propos": {
-    title: "À propos — Andoh & Dohgad Consulting",
-    description:
-      "Découvrez notre cabinet, notre équipe et nos valeurs : un accompagnement de proximité pour les entreprises en Côte d'Ivoire.",
-  },
-  "/services": {
-    title: "Nos services — Comptabilité, fiscalité, RH | Andoh & Dohgad",
-    description:
-      "Accompagnement comptable et fiscal, gestion RH, création d'entreprise, conseil stratégique et formation. Découvrez tous nos services.",
-  },
-  "/solutions": {
-    title: "Solutions digitales & ERP — Andoh & Dohgad Consulting",
-    description:
-      "Nos solutions de gestion : comptabilité, paie, RH et gestion commerciale dans un espace sécurisé. ERP bientôt disponible.",
-  },
-  "/documentation": {
-    title: "Documentation & ressources — Andoh & Dohgad Consulting",
-    description:
-      "Guides, modèles et ressources pratiques en comptabilité, fiscalité et RH pour les entreprises ivoiriennes.",
-  },
-  "/blog": {
-    title: "Blog & actualités — Andoh & Dohgad Consulting",
-    description:
-      "Actualités fiscales, conseils comptables et RH, et analyses pour entrepreneurs en Côte d'Ivoire.",
-  },
-  "/rendez-vous": {
-    title: "Prendre rendez-vous — Andoh & Dohgad Consulting",
-    description:
-      "Réservez un rendez-vous avec un conseiller : choisissez le service, la date et le créneau horaire. Confirmation sous 24h ouvrées.",
-  },
-  "/co-working": {
-    title: "Co-working & domiciliation à Abidjan — Andoh & Dohgad",
-    description:
-      "Espaces de co-working équipés et domiciliation d'entreprise à Abidjan. Réservez votre poste ou votre bureau.",
-  },
-  "/demande-service": {
-    title: "Demande de service — Andoh & Dohgad Consulting",
-    description:
-      "Décrivez votre besoin et recevez une proposition adaptée de nos experts en comptabilité, fiscalité et RH.",
-  },
-  "/sondages": {
-    title: "Demande de service — Andoh & Dohgad Consulting",
-    description:
-      "Décrivez votre besoin et recevez une proposition adaptée de nos experts en comptabilité, fiscalité et RH.",
-  },
-  "/contact": {
-    title: "Contact — Andoh & Dohgad Consulting",
-    description:
-      "Contactez notre cabinet par téléphone, WhatsApp ou via le formulaire. Réponse rapide de nos conseillers.",
-  },
-  "/mentions-legales": {
-    title: "Mentions légales — Andoh & Dohgad Consulting",
-    description: "Mentions légales du site Andoh & Dohgad Consulting.",
-  },
-  "/politique-confidentialite": {
-    title: "Politique de confidentialité — Andoh & Dohgad Consulting",
-    description: "Comment Andoh & Dohgad Consulting collecte, utilise et protège vos données personnelles.",
-  },
-  "/connexion": { title: "Connexion — Andoh & Dohgad Consulting", description: "Connectez-vous à votre espace client." },
-  "/mon-compte": { title: "Mon compte — Andoh & Dohgad Consulting", description: "Gérez votre espace client." },
-};
+const PAGES: Record<string, Meta> = seo.pages;
 
 const ADMIN_TITLES: Record<string, string> = {
   "/admin": "Tableau de bord",
@@ -118,7 +54,7 @@ function setCanonical(href: string) {
 
 /** Pour les pages dynamiques (service, article) : <Seo title=... description=... /> dans la page. */
 function applySeo(path: string, meta: Meta, image = OG_IMAGE) {
-  const url = SITE_URL + (path === "/" ? "/" : path.replace(/\/$/, ""));
+  const url = SITE_URL + (meta.canonical ?? (path === "/" ? "/" : path.replace(/\/$/, "")));
   document.title = meta.title;
   setMeta("name", "description", meta.description);
   setCanonical(url);
