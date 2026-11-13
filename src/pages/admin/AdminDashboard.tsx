@@ -269,7 +269,7 @@ export default function AdminDashboard() {
                     <p className="text-3xl font-bold">{stats.newSurveys}</p>
                   </div>
                 </div>
-                <Link to="/admin/surveys" className="text-white/90 hover:text-white transition-colors">
+                <Link to="/admin/demandes-service" className="text-white/90 hover:text-white transition-colors">
                   <ArrowUpRight className="w-5 h-5" />
                 </Link>
               </div>
