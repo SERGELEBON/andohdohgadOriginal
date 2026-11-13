@@ -31,9 +31,9 @@ export default function LegalNotice() {
 
             <h2 className="font-display text-2xl font-semibold text-dark mb-4 mt-8">Hébergement</h2>
             <p className="text-body mb-6">
-              Ce site est hébergé par Vercel Inc.<br />
-              340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis<br />
-              Site web : <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">vercel.com</a>
+              Ce site est hébergé par Netlify, Inc.<br />
+              San Francisco, Californie, États-Unis<br />
+              Site web : <a href="https://www.netlify.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">netlify.com</a>
             </p>
 
             <h2 className="font-display text-2xl font-semibold text-dark mb-4 mt-8">Propriété intellectuelle</h2>

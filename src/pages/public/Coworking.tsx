@@ -192,28 +192,28 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
               <h2 id="coworking-modal-title" className="font-display text-2xl lg:text-3xl font-semibold text-dark mb-2">Créer votre compte co-working</h2>
               <p className="text-body text-sm">Remplissez ce formulaire pour demander l'accès à notre espace.</p>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-dark mb-1.5">Nom complet *</label>
-                    <input {...register("name")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.name ? "border-red-500" : "border-gray-200"}`} />
-                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                    <label htmlFor="cowork-name" className="block text-sm font-medium text-dark mb-1.5">Nom complet *</label>
+                    <input id="cowork-name" required aria-required="true" aria-invalid={errors.name ? "true" : "false"} aria-describedby={errors.name ? "cowork-name-error" : undefined} {...register("name")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.name ? "border-red-500" : "border-gray-200"}`} />
+                    {errors.name && <p id="cowork-name-error" role="alert" className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-dark mb-1.5">Email *</label>
-                    <input type="email" {...register("email")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.email ? "border-red-500" : "border-gray-200"}`} />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                    <label htmlFor="cowork-email" className="block text-sm font-medium text-dark mb-1.5">Email *</label>
+                    <input type="email" id="cowork-email" required aria-required="true" aria-invalid={errors.email ? "true" : "false"} aria-describedby={errors.email ? "cowork-email-error" : undefined} {...register("email")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.email ? "border-red-500" : "border-gray-200"}`} />
+                    {errors.email && <p id="cowork-email-error" role="alert" className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-dark mb-1.5">Téléphone *</label>
-                    <input type="tel" {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
-                    {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+                    <label htmlFor="cowork-phone" className="block text-sm font-medium text-dark mb-1.5">Téléphone *</label>
+                    <input type="tel" id="cowork-phone" required aria-required="true" aria-invalid={errors.phone ? "true" : "false"} aria-describedby={errors.phone ? "cowork-phone-error" : undefined} {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
+                    {errors.phone && <p id="cowork-phone-error" role="alert" className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-dark mb-1.5">Type d'espace *</label>
-                    <select {...register("spaceType")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.spaceType ? "border-red-500" : "border-gray-200"}`}>
+                    <label htmlFor="cowork-spaceType" className="block text-sm font-medium text-dark mb-1.5">Type d'espace *</label>
+                    <select id="cowork-spaceType" required aria-required="true" aria-invalid={errors.spaceType ? "true" : "false"} {...register("spaceType")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary ${errors.spaceType ? "border-red-500" : "border-gray-200"}`}>
                       <option value="">Sélectionnez...</option>
                       <option value="individual">Bureau individuel</option>
                       <option value="open">Open-space</option>
@@ -235,8 +235,8 @@ function RegistrationModal({ isOpen, onClose, selectedPlan }: { isOpen: boolean;
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-dark mb-1.5">Message</label>
-                  <textarea {...register("message")} rows={3} placeholder="Précisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
+                  <label htmlFor="cowork-message" className="block text-sm font-medium text-dark mb-1.5">Message</label>
+                  <textarea id="cowork-message" {...register("message")} rows={3} placeholder="Précisez vos besoins..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-y" />
                 </div>
               {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
               <div className="flex flex-col-reverse sm:flex-row gap-3">

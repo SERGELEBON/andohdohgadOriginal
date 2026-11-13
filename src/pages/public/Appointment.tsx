@@ -79,67 +79,67 @@ export default function Appointment() {
                 <>
                   <h3 className="font-body text-xl font-semibold text-dark mb-6">Formulaire de demande de rendez-vous</h3>
                   {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Prénom *</label>
-                        <input {...register("firstName")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.firstName ? "border-red-500" : "border-gray-200"}`} />
-                        {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
+                        <label htmlFor="rdv-firstName" className="block text-sm font-medium text-dark mb-1.5">Prénom *</label>
+                        <input id="rdv-firstName" required aria-required="true" aria-invalid={errors.firstName ? "true" : "false"} aria-describedby={errors.firstName ? "rdv-firstName-error" : undefined} {...register("firstName")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.firstName ? "border-red-500" : "border-gray-200"}`} />
+                        {errors.firstName && <p id="rdv-firstName-error" role="alert" className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Nom *</label>
-                        <input {...register("lastName")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.lastName ? "border-red-500" : "border-gray-200"}`} />
-                        {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
+                        <label htmlFor="rdv-lastName" className="block text-sm font-medium text-dark mb-1.5">Nom *</label>
+                        <input id="rdv-lastName" required aria-required="true" aria-invalid={errors.lastName ? "true" : "false"} aria-describedby={errors.lastName ? "rdv-lastName-error" : undefined} {...register("lastName")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.lastName ? "border-red-500" : "border-gray-200"}`} />
+                        {errors.lastName && <p id="rdv-lastName-error" role="alert" className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
                       </div>
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Email *</label>
-                        <input type="email" {...register("email")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.email ? "border-red-500" : "border-gray-200"}`} />
-                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                        <label htmlFor="rdv-email" className="block text-sm font-medium text-dark mb-1.5">Email *</label>
+                        <input type="email" id="rdv-email" required aria-required="true" aria-invalid={errors.email ? "true" : "false"} aria-describedby={errors.email ? "rdv-email-error" : undefined} {...register("email")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.email ? "border-red-500" : "border-gray-200"}`} />
+                        {errors.email && <p id="rdv-email-error" role="alert" className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Téléphone *</label>
-                        <input type="tel" {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
-                        {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+                        <label htmlFor="rdv-phone" className="block text-sm font-medium text-dark mb-1.5">Téléphone *</label>
+                        <input type="tel" id="rdv-phone" required aria-required="true" aria-invalid={errors.phone ? "true" : "false"} aria-describedby={errors.phone ? "rdv-phone-error" : undefined} {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
+                        {errors.phone && <p id="rdv-phone-error" role="alert" className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-dark mb-1.5">Entreprise</label>
-                      <input {...register("company")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                      <label htmlFor="rdv-company" className="block text-sm font-medium text-dark mb-1.5">Entreprise</label>
+                      <input id="rdv-company" {...register("company")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-dark mb-1.5">Service concerné *</label>
-                      <select {...register("service")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.service ? "border-red-500" : "border-gray-200"}`}>
+                      <label htmlFor="rdv-service" className="block text-sm font-medium text-dark mb-1.5">Service concerné *</label>
+                      <select id="rdv-service" required aria-required="true" aria-invalid={errors.service ? "true" : "false"} aria-describedby={errors.service ? "rdv-service-error" : undefined} {...register("service")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.service ? "border-red-500" : "border-gray-200"}`}>
                         <option value="">Sélectionnez...</option>
                         {services.map((s) => <option key={s.slug} value={s.slug}>{s.title}</option>)}
                         <option value="autre">Autre / Demande générale</option>
                       </select>
-                      {errors.service && <p className="text-red-500 text-xs mt-1">{errors.service.message}</p>}
+                      {errors.service && <p id="rdv-service-error" role="alert" className="text-red-500 text-xs mt-1">{errors.service.message}</p>}
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Date souhaitée *</label>
-                        <input type="date" {...register("date")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.date ? "border-red-500" : "border-gray-200"}`} />
-                        {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>}
+                        <label htmlFor="rdv-date" className="block text-sm font-medium text-dark mb-1.5">Date souhaitée *</label>
+                        <input type="date" id="rdv-date" required aria-required="true" aria-invalid={errors.date ? "true" : "false"} aria-describedby={errors.date ? "rdv-date-error" : undefined} {...register("date")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.date ? "border-red-500" : "border-gray-200"}`} />
+                        {errors.date && <p id="rdv-date-error" role="alert" className="text-red-500 text-xs mt-1">{errors.date.message}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-dark mb-1.5">Créneau horaire *</label>
-                        <select {...register("timeSlot")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.timeSlot ? "border-red-500" : "border-gray-200"}`}>
+                        <label htmlFor="rdv-timeSlot" className="block text-sm font-medium text-dark mb-1.5">Créneau horaire *</label>
+                        <select id="rdv-timeSlot" required aria-required="true" aria-invalid={errors.timeSlot ? "true" : "false"} aria-describedby={errors.timeSlot ? "rdv-timeSlot-error" : undefined} {...register("timeSlot")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.timeSlot ? "border-red-500" : "border-gray-200"}`}>
                           <option value="">Sélectionnez...</option>
                           {Object.entries(TIME_SLOTS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                         </select>
-                        {errors.timeSlot && <p className="text-red-500 text-xs mt-1">{errors.timeSlot.message}</p>}
+                        {errors.timeSlot && <p id="rdv-timeSlot-error" role="alert" className="text-red-500 text-xs mt-1">{errors.timeSlot.message}</p>}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-dark mb-1.5">Message / Précisions</label>
-                      <textarea {...register("message")} rows={4} placeholder="Décrivez brièvement votre besoin..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
+                      <label htmlFor="rdv-message" className="block text-sm font-medium text-dark mb-1.5">Message / Précisions</label>
+                      <textarea id="rdv-message" {...register("message")} rows={4} placeholder="Décrivez brièvement votre besoin..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
                     </div>
 
                     <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">
