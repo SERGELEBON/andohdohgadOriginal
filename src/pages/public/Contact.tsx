@@ -74,35 +74,35 @@ function ContactForm() {
         <>
           <h3 className="font-body text-xl font-semibold text-dark mb-6">Envoyez-nous un message</h3>
           {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-dark mb-1.5">Nom *</label>
-                <input {...register("name")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.name ? "border-red-500" : "border-gray-200"}`} />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                <label htmlFor="contact-name" className="block text-sm font-medium text-dark mb-1.5">Nom *</label>
+                <input id="contact-name" required aria-required="true" aria-invalid={errors.name ? "true" : "false"} aria-describedby={errors.name ? "contact-name-error" : undefined} {...register("name")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.name ? "border-red-500" : "border-gray-200"}`} />
+                {errors.name && <p id="contact-name-error" role="alert" className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium text-dark mb-1.5">Email *</label>
-                <input type="email" {...register("email")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.email ? "border-red-500" : "border-gray-200"}`} />
-                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                <label htmlFor="contact-email" className="block text-sm font-medium text-dark mb-1.5">Email *</label>
+                <input type="email" id="contact-email" required aria-required="true" aria-invalid={errors.email ? "true" : "false"} aria-describedby={errors.email ? "contact-email-error" : undefined} {...register("email")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.email ? "border-red-500" : "border-gray-200"}`} />
+                {errors.email && <p id="contact-email-error" role="alert" className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-dark mb-1.5">Téléphone / WhatsApp</label>
-              <input type="tel" {...register("phone")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+              <label htmlFor="contact-phone" className="block text-sm font-medium text-dark mb-1.5">Téléphone / WhatsApp</label>
+              <input type="tel" id="contact-phone" {...register("phone")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-dark mb-1.5">Sujet *</label>
-              <select {...register("subject")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.subject ? "border-red-500" : "border-gray-200"}`}>
+              <label htmlFor="contact-subject" className="block text-sm font-medium text-dark mb-1.5">Sujet *</label>
+              <select id="contact-subject" required aria-required="true" aria-invalid={errors.subject ? "true" : "false"} aria-describedby={errors.subject ? "contact-subject-error" : undefined} {...register("subject")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.subject ? "border-red-500" : "border-gray-200"}`}>
                 <option value="">Sélectionnez...</option>
                 {Object.entries(SUBJECTS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
-              {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
+              {errors.subject && <p id="contact-subject-error" role="alert" className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-dark mb-1.5">Message *</label>
-              <textarea {...register("message")} rows={6} placeholder="Décrivez votre demande en détail..." className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y ${errors.message ? "border-red-500" : "border-gray-200"}`} />
-              {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
+              <label htmlFor="contact-message" className="block text-sm font-medium text-dark mb-1.5">Message *</label>
+              <textarea id="contact-message" required aria-required="true" aria-invalid={errors.message ? "true" : "false"} aria-describedby={errors.message ? "contact-message-error" : undefined} {...register("message")} rows={6} placeholder="Décrivez votre demande en détail..." className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y ${errors.message ? "border-red-500" : "border-gray-200"}`} />
+              {errors.message && <p id="contact-message-error" role="alert" className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
             </div>
             <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">{status === "submitting" ? "Envoi en cours..." : status === "error" ? "Réessayer l'envoi" : "Envoyer le message"}</button>
           </form>

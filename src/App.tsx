@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Layout from "@/components/layout/Layout";
+import RouteSeo from "@/components/RouteSeo";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useAutoLogout } from "@/hooks/useAutoLogout";
 import SessionWarning from "@/components/auth/SessionWarning";
@@ -96,6 +97,7 @@ function App() {
     <AuthProvider>
       <AutoLogoutManager />
       <ScrollToTop />
+      <RouteSeo />
       <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* Public routes with Layout (Header + Footer) */}
