@@ -42,7 +42,7 @@ function SpacePresentation() {
     <section className="section-padding bg-white overflow-x-clip" ref={ref}>
       <div className="container-lg">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          <div className={`transition-all duration-700 ${isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-10"}`}>
+          <div className={`transition-all duration-700 ${isInView ? "opacity-100 translate-x-0 translate-y-0" : "opacity-0 translate-y-6 lg:translate-y-0 lg:-translate-x-10"}`}>
             <span className="text-xs font-semibold uppercase tracking-[2px] text-secondary mb-3 block">ESPACE DE TRAVAIL</span>
             <h2 className="font-display text-2xl lg:text-4xl font-semibold text-dark mb-6">Votre bureau au coeur d'Abidjan</h2>
             <p className="text-body leading-relaxed mb-6">
@@ -57,8 +57,8 @@ function SpacePresentation() {
               ))}
             </ul>
           </div>
-          <div className={`transition-all duration-700 delay-200 ${isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}>
-            <img src="/images/coworking-main.jpg" alt="Espace de co-working" className="rounded-2xl shadow-xl w-full object-cover aspect-[4/3]" />
+          <div className={`transition-all duration-700 delay-200 ${isInView ? "opacity-100 translate-x-0 translate-y-0" : "opacity-0 translate-y-6 lg:translate-y-0 lg:translate-x-10"}`}>
+            <img src="/images/coworking-main.jpg" alt="Espace de co-working" className="block rounded-2xl shadow-xl w-full max-w-full h-auto object-cover aspect-[4/3]" />
           </div>
         </div>
       </div>

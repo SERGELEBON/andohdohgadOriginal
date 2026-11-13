@@ -143,21 +143,22 @@ Merci de me communiquer les instructions de paiement.`;
 
       {/* Purchase Modal */}
       {selectedDoc && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/50" onClick={() => {
+        <div className="fixed inset-0 z-[200] overflow-y-auto overscroll-contain">
+          <div className="fixed inset-0 bg-black/50" onClick={() => {
             setSelectedDoc(null);
             setCustomerName("");
             setCustomerEmail("");
             setCustomerPhone("");
           }} />
-          <div className="relative bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl z-10">
+          <div className="relative min-h-full flex items-start sm:items-center justify-center p-3 sm:p-6 pointer-events-none">
+          <div role="dialog" aria-modal="true" className="relative bg-white rounded-2xl p-6 pt-16 sm:p-8 sm:pt-16 max-w-md w-full shadow-2xl z-10 pointer-events-auto">
             <button onClick={() => {
               setSelectedDoc(null);
               setCustomerName("");
               setCustomerEmail("");
               setCustomerPhone("");
-            }} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-              <X className="w-5 h-5" />
+            }} type="button" aria-label="Fermer" className="absolute top-3 right-3 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+              <X className="w-5 h-5 text-gray-700" />
             </button>
 
             <FileText className="w-12 h-12 text-primary mb-4" />
@@ -216,6 +217,7 @@ Merci de me communiquer les instructions de paiement.`;
                 Mobile Money
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
