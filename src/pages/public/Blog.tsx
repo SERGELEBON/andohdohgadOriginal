@@ -179,9 +179,10 @@ export default function Blog() {
                   <input
                     type="email"
                     placeholder="Votre email"
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary"
+                    aria-label="Votre adresse e-mail"
+                    className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary"
                   />
-                  <button className="btn-primary px-3 py-2">
+                  <button type="button" aria-label="S'abonner à la newsletter" className="btn-primary px-3 py-2 shrink-0">
                     <Send className="w-4 h-4" />
                   </button>
                 </div>

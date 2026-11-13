@@ -165,9 +165,9 @@ export const services: Service[] = [
     heroImage: "/images/coworking-main.jpg",
     title: "Co-working & Domiciliation d'entreprise",
     shortDescription:
-      "Espaces de travail modernes, domiciliation commerciale et accompagnement entrepreneurial au coeur d'Abidjan.",
+      "Espaces de travail modernes, domiciliation commerciale et accompagnement entrepreneurial au cœur d'Abidjan.",
     fullDescription:
-      "Bénéficiez d'un espace de travail professionnel au coeur du Plateau et d'un service de domiciliation commerciale pour légitimer votre présence à Abidjan.",
+      "Bénéficiez d'un espace de travail professionnel au cœur du Plateau et d'un service de domiciliation commerciale pour légitimer votre présence à Abidjan.",
     problematics: [
       "Pas de bureau professionnel",
       "Besoin d'une adresse commerciale",
@@ -175,7 +175,7 @@ export const services: Service[] = [
       "Cout d'un bureau trop élevé",
     ],
     valueProposition:
-      "Un espace moderne, une communauté d'entrepreneurs et un accompagnement professionnel intégré — tout ce dont vous avez besoin pour vous concentrer sur votre coeur de métier.",
+      "Un espace moderne, une communauté d'entrepreneurs et un accompagnement professionnel intégré — tout ce dont vous avez besoin pour vous concentrer sur votre cœur de métier.",
     process: [
       { step: "01", title: "Visite des locaux", description: "Découverte de nos espaces de travail" },
       { step: "02", title: "Choix de la formule", description: "Sélection selon vos besoins" },
