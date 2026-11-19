@@ -14,7 +14,7 @@ import { submitContactMessage, whatsappFallbackUrl } from "@/lib/supabase/submis
 const schema = z.object({
   name: z.string().min(2, "Minimum 2 caractères"),
   email: z.string().email("Email invalide"),
-  phone: z.string().optional(),
+  phone: z.string().trim().min(8, "Téléphone invalide (8 chiffres minimum)"),
   subject: z.string().min(1, "Sélectionnez un sujet"),
   message: z.string().min(20, "Minimum 20 caractères"),
 });
@@ -89,8 +89,9 @@ function ContactForm() {
               </div>
             </div>
             <div>
-              <label htmlFor="contact-phone" className="block text-sm font-medium text-dark mb-1.5">Téléphone / WhatsApp</label>
-              <input type="tel" id="contact-phone" {...register("phone")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+              <label htmlFor="contact-phone" className="block text-sm font-medium text-dark mb-1.5">Téléphone / WhatsApp *</label>
+              <input type="tel" id="contact-phone" required aria-required="true" aria-invalid={errors.phone ? "true" : "false"} aria-describedby={errors.phone ? "contact-phone-error" : undefined} {...register("phone")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.phone ? "border-red-500" : "border-gray-200"}`} />
+              {errors.phone && <p id="contact-phone-error" role="alert" className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
             </div>
             <div>
               <label htmlFor="contact-subject" className="block text-sm font-medium text-dark mb-1.5">Sujet *</label>
