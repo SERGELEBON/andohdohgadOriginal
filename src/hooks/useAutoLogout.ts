@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase/supabaseClient';
 /**
  * Déconnexion automatique
  *
- * - Déconnexion après 30 minutes d'inactivité
- * - Déconnexion après 24h de session (même si actif)
+ * - Déconnexion après 15 minutes d'inactivité
+ * - Déconnexion après 8 h de session (même si actif)
  * - Avertissement 2 minutes avant
  *
  * Les horodatages sont stockés dans localStorage (et non en mémoire) pour que :
@@ -19,8 +19,8 @@ import { supabase } from '@/lib/supabase/supabaseClient';
  * l'utilisateur restait connecté indéfiniment.
  */
 
-export const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-const MAX_SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 heures
+export const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+const MAX_SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 heures (une journée de travail)
 const WARNING_BEFORE_LOGOUT = 2 * 60 * 1000; // 2 minutes
 const CHECK_INTERVAL = 15 * 1000; // vérification toutes les 15 s
 const ACTIVITY_THROTTLE = 5 * 1000; // 1 enregistrement d'activité max toutes les 5 s
