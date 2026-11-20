@@ -12,11 +12,11 @@ import SubmitErrorBox from "@/components/ui/SubmitErrorBox";
 import { submitContactMessage, whatsappFallbackUrl } from "@/lib/supabase/submissions";
 
 const schema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
-  email: z.string().email("Email invalide"),
-  phone: z.string().trim().min(8, "Téléphone invalide (8 chiffres minimum)"),
+  name: z.string().min(2, "Minimum 2 caractères").max(200, "200 caractères maximum"),
+  email: z.string().email("Email invalide").max(320, "Email trop long"),
+  phone: z.string().trim().min(8, "Téléphone invalide (8 chiffres minimum)").max(40, "Numéro trop long"),
   subject: z.string().min(1, "Sélectionnez un sujet"),
-  message: z.string().min(20, "Minimum 20 caractères"),
+  message: z.string().min(20, "Minimum 20 caractères").max(5000, "5 000 caractères maximum"),
 });
 
 type FormData = z.infer<typeof schema>;

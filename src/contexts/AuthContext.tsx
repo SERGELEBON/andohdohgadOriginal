@@ -4,7 +4,7 @@ import type { User, Session } from '@supabase/supabase-js';
 
 import { supabase } from '../lib/supabase/supabaseClient';
 
-// Horodatages utilisés par useAutoLogout (déconnexion après 30 min d'inactivité)
+// Horodatages utilisés par useAutoLogout (déconnexion après 15 min d'inactivité)
 const AUTO_LOGOUT_KEYS = { lastActivity: 'ad_last_activity', sessionStart: 'ad_session_start' };
 const startAutoLogoutSession = () => {
   try {
