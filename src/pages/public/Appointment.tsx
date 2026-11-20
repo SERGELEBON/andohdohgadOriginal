@@ -14,15 +14,15 @@ const TIME_SLOTS: Record<string, string> = {
 };
 
 const schema = z.object({
-  firstName: z.string().min(2, "Minimum 2 caractères"),
-  lastName: z.string().min(2, "Minimum 2 caractères"),
-  email: z.string().email("Email invalide"),
-  phone: z.string().min(8, "Téléphone invalide"),
+  firstName: z.string().min(2, "Minimum 2 caractères").max(100, "100 caractères maximum"),
+  lastName: z.string().min(2, "Minimum 2 caractères").max(100, "100 caractères maximum"),
+  email: z.string().email("Email invalide").max(320, "Email trop long"),
+  phone: z.string().min(8, "Téléphone invalide").max(40, "Numéro trop long"),
   company: z.string().trim().min(2, "Indiquez votre entreprise (ou « Particulier »)"),
   service: z.string().min(1, "Sélectionnez un service"),
   date: z.string().min(1, "Sélectionnez une date"),
   timeSlot: z.string().min(1, "Sélectionnez un créneau"),
-  message: z.string().trim().min(10, "Précisez votre besoin (10 caractères minimum)"),
+  message: z.string().trim().min(10, "Précisez votre besoin (10 caractères minimum)").max(5000, "5 000 caractères maximum"),
 });
 
 type FormData = z.infer<typeof schema>;

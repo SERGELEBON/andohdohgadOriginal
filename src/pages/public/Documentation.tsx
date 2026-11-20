@@ -57,7 +57,7 @@ export default function Documentation() {
 Merci de me communiquer les instructions de paiement.`;
 
     const whatsappUrl = `https://wa.me/2250709577530?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     
     // Fermer la modal après redirection
     setTimeout(() => {
