@@ -356,16 +356,28 @@ export default function Surveys() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {currentFields.map((field) => (
+                  {currentFields.map((field) => {
+                    // Étiquette reliée au champ + obligatoire annoncé (navigateur et lecteurs d'écran)
+                    const fieldId = `${activeSurvey}-${field.name}`;
+                    const hasError = Boolean(errors[field.name as keyof FormData]);
+                    const a11y = {
+                      id: fieldId,
+                      required: field.required,
+                      "aria-required": field.required ? ("true" as const) : undefined,
+                      "aria-invalid": hasError ? ("true" as const) : ("false" as const),
+                      "aria-describedby": hasError ? `${fieldId}-error` : undefined,
+                    };
+                    return (
                     <div key={field.name} className={field.type === "textarea" ? "md:col-span-2" : ""}>
-                      <label className="block text-sm font-medium text-dark mb-2">
-                        {field.label} {field.required && <span className="text-red-500">*</span>}
+                      <label htmlFor={fieldId} className="block text-sm font-medium text-dark mb-2">
+                        {field.label} {field.required && <span className="text-red-500" aria-hidden="true">*</span>}
                       </label>
 
                       {field.type === "select" ? (
                         <select
+                          {...a11y}
                           {...register(field.name as any)}
                           className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all ${
                             errors[field.name as keyof FormData]
@@ -382,6 +394,7 @@ export default function Surveys() {
                         </select>
                       ) : field.type === "textarea" ? (
                         <textarea
+                          {...a11y}
                           {...register(field.name as any)}
                           rows={4}
                           placeholder={field.placeholder}
@@ -394,6 +407,7 @@ export default function Surveys() {
                       ) : (
                         <input
                           type={field.type}
+                          {...a11y}
                           {...register(field.name as any)}
                           placeholder={field.placeholder}
                           className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all ${
@@ -405,13 +419,14 @@ export default function Surveys() {
                       )}
 
                       {errors[field.name as keyof FormData] && (
-                        <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+                        <p id={`${fieldId}-error`} role="alert" className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
                           <AlertCircle className="w-3 h-3" />
                           {errors[field.name as keyof FormData]?.message as string}
                         </p>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {status === "error" && <SubmitErrorBox whatsappUrl={whatsappUrl} />}

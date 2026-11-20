@@ -18,11 +18,11 @@ const schema = z.object({
   lastName: z.string().min(2, "Minimum 2 caractères"),
   email: z.string().email("Email invalide"),
   phone: z.string().min(8, "Téléphone invalide"),
-  company: z.string().optional(),
+  company: z.string().trim().min(2, "Indiquez votre entreprise (ou « Particulier »)"),
   service: z.string().min(1, "Sélectionnez un service"),
   date: z.string().min(1, "Sélectionnez une date"),
   timeSlot: z.string().min(1, "Sélectionnez un créneau"),
-  message: z.string().optional(),
+  message: z.string().trim().min(10, "Précisez votre besoin (10 caractères minimum)"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -107,8 +107,9 @@ export default function Appointment() {
                     </div>
 
                     <div>
-                      <label htmlFor="rdv-company" className="block text-sm font-medium text-dark mb-1.5">Entreprise</label>
-                      <input id="rdv-company" {...register("company")} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                      <label htmlFor="rdv-company" className="block text-sm font-medium text-dark mb-1.5">Entreprise *</label>
+                      <input id="rdv-company" required aria-required="true" aria-invalid={errors.company ? "true" : "false"} aria-describedby={errors.company ? "rdv-company-error" : undefined} placeholder="Nom de l'entreprise ou « Particulier »" {...register("company")} className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 ${errors.company ? "border-red-500" : "border-gray-200"}`} />
+                      {errors.company && <p id="rdv-company-error" role="alert" className="text-red-500 text-xs mt-1">{errors.company.message}</p>}
                     </div>
 
                     <div>
@@ -138,8 +139,9 @@ export default function Appointment() {
                     </div>
 
                     <div>
-                      <label htmlFor="rdv-message" className="block text-sm font-medium text-dark mb-1.5">Message / Précisions</label>
-                      <textarea id="rdv-message" {...register("message")} rows={4} placeholder="Décrivez brièvement votre besoin..." className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
+                      <label htmlFor="rdv-message" className="block text-sm font-medium text-dark mb-1.5">Message / Précisions *</label>
+                      <textarea id="rdv-message" required aria-required="true" aria-invalid={errors.message ? "true" : "false"} aria-describedby={errors.message ? "rdv-message-error" : undefined} {...register("message")} rows={4} placeholder="Décrivez brièvement votre besoin..." className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y ${errors.message ? "border-red-500" : "border-gray-200"}`} />
+                      {errors.message && <p id="rdv-message-error" role="alert" className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
                     </div>
 
                     <button type="submit" disabled={status === "submitting"} className="btn-primary w-full disabled:opacity-60">

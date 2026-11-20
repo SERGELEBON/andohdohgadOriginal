@@ -11,6 +11,7 @@ import {
 
 interface Stats {
   totalUsers: number;
+  adminUsers: number;
   pendingAppointments: number;
   newSurveys: number;
   newMessages: number;
@@ -35,6 +36,7 @@ export default function AdminDashboard() {
   const { profile } = useAuth();
   const [stats, setStats] = useState<Stats>({
     totalUsers: 0,
+    adminUsers: 0,
     pendingAppointments: 0,
     newSurveys: 0,
     newMessages: 0,
@@ -60,18 +62,20 @@ export default function AdminDashboard() {
       const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
 
       const results = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).neq('role', 'admin'),
+        // Tous les comptes, administrateurs compris : même chiffre que la page Utilisateurs
+        supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('appointments').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('surveys').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('contact_messages').select('id', { count: 'exact', head: true }).eq('status', 'new'),
         supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfMonth.toISOString()),
         supabase.from('coworking_subscriptions').select('id', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('documentation_purchases').select('amount_paid').eq('payment_status', 'completed').gte('created_at', startOfLastMonth.toISOString()).lte('created_at', endOfLastMonth.toISOString()),
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', startOfMonth.toISOString()).neq('role', 'admin'),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', startOfMonth.toISOString()),
         supabase.from('appointments').select('*').order('created_at', { ascending: false }).limit(3),
         supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3),
         supabase.from('surveys').select('*').order('created_at', { ascending: false }).limit(3),
         supabase.from('surveys').select('id', { count: 'exact', head: true }),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'admin'),
       ]);
 
       // Un compteur en erreur ne doit pas s'afficher silencieusement comme « 0 »
@@ -92,6 +96,7 @@ export default function AdminDashboard() {
         { data: recentMessages },
         { data: recentSurveys },
         { count: surveysTotal },
+        { count: adminCount },
       ] = results;
 
       const revenue = purchases?.reduce((sum: number, p: any) => sum + parseFloat(p.amount_paid), 0) || 0;
@@ -99,6 +104,7 @@ export default function AdminDashboard() {
 
       setStats({
         totalUsers: usersCount || 0,
+        adminUsers: adminCount || 0,
         pendingAppointments: appointmentsCount || 0,
         newSurveys: surveysCount || 0,
         newMessages: messagesCount || 0,
@@ -200,9 +206,9 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
               icon={<Users className="w-6 h-6" />}
-              label="Total Utilisateurs"
+              label="Total utilisateurs"
               value={stats.totalUsers}
-              subValue={`+${stats.newUsersThisMonth} ce mois`}
+              subValue={`dont ${stats.adminUsers} administrateur${stats.adminUsers > 1 ? "s" : ""} · +${stats.newUsersThisMonth} ce mois`}
               color="blue"
               trend="up"
               href="/admin/users"
